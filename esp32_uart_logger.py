@@ -6,7 +6,6 @@ import os
 import threading
 import time
 import re
-import hashlib  # NEW: for deterministic per-device offset
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
@@ -122,31 +121,14 @@ def _sanitize_for_filename(text: str) -> str:
     return text or "device"
 
 
-def _per_device_ping_offset(port_name: str) -> float:
-    """
-    Deterministic offset in [0, PING_INTERVAL) based on the port name.
-
-    This ensures different ports will (almost always) get different phases,
-    so they don't all ping at the same time.
-    """
-    data = (port_name or "").encode("utf-8", "ignore")
-    h = hashlib.sha1(data).digest()
-    # Use first 2 bytes as an integer 0..65535
-    val = int.from_bytes(h[:2], "big")
-    frac = val / 65535.0  # in [0, 1]
-    return frac * PING_INTERVAL
-
-
 class SerialLogger(threading.Thread):
-    def __init__(self, port_info: ListPortInfo, baudrate: int = BAUDRATE):
+    def __init__(self, port_info: ListPortInfo, baudrate: int = BAUDRATE, phase_offset: float = 0.0):
         super().__init__(daemon=True)
         self.port_info = port_info
         self.baudrate = baudrate
         self.stop_event = threading.Event()
-        self.tstate = TelemetryState()  # NEW: per-device OT telemetry
-
-        # NEW: per-device ping phase offset (0 .. PING_INTERVAL)
-        self.ping_offset = _per_device_ping_offset(self.port_info.device)
+        self.tstate = TelemetryState()  # per-device OT telemetry
+        self.phase_offset = phase_offset
 
     def make_log_path(self) -> str:
         """
@@ -216,6 +198,7 @@ class SerialLogger(threading.Thread):
 
         print(f"[{port_name}] Logging UART to {log_path}")
         print(f"[{port_name}] Will ping OT parent every {PING_INTERVAL:.1f}s when known.")
+        print(f"[{port_name}] Ping phase offset: {self.phase_offset:.3f}s")
 
         try:
             with ser, open(log_path, "a", encoding="utf-8") as log_file:
@@ -233,8 +216,8 @@ class SerialLogger(threading.Thread):
                 except serial.SerialException as exc:
                     print(f"[{port_name}] WARNING: could not request ipaddr: {exc}")
 
-                # NEW: start pings at a per-device offset so multiple devices are de-synchronized.
-                next_ping_at = time.time() + self.ping_offset
+                # Start pings at a per-device offset so multiple devices are de-synchronized.
+                next_ping_at = time.time() + self.phase_offset
 
                 while not self.stop_event.is_set():
                     now = time.time()
@@ -273,7 +256,7 @@ class SerialLogger(threading.Thread):
                     log_file.write(f"[{timestamp}] {text}\n")
                     log_file.flush()
 
-                    # NEW: feed into OT parser to track parent + prefix
+                    # feed into OT parser to track parent + prefix
                     process_ot_line(timestamp, text, self.tstate)
         finally:
             print(f"[{port_name}] Logger stopped.")
@@ -310,10 +293,21 @@ def main():
         while True:
             current_ports = scan_ports()
 
-            # Start loggers for newly seen devices
+            # Determine per-device phases for all currently attached devices
+            all_devs_sorted = sorted(current_ports.keys())
+            total = len(all_devs_sorted)
+            phase_map: Dict[str, float] = {}
+            if total > 0:
+                step = PING_INTERVAL / float(total)
+                for idx, dev_name in enumerate(all_devs_sorted):
+                    phase_map[dev_name] = idx * step
+
+            # Start loggers for newly seen devices, with their assigned phase offset
             for dev_name, info in current_ports.items():
                 if dev_name not in active_loggers:
-                    logger = SerialLogger(info, BAUDRATE)
+                    phase_offset = phase_map.get(dev_name, 0.0)
+                    print(f"[{dev_name}] Starting logger with phase offset {phase_offset:.3f}s")
+                    logger = SerialLogger(info, BAUDRATE, phase_offset=phase_offset)
                     active_loggers[dev_name] = logger
                     logger.start()
 
