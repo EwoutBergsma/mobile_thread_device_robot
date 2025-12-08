@@ -38,7 +38,13 @@ RLOC_ADDR_RE = re.compile(
     re.IGNORECASE,
 )
 
-PARENT_RLOC_RE = re.compile(r"Rloc:\s*([0-9a-fA-F]{1,4})", re.IGNORECASE)
+# Only match the simple OT CLI line from `parent`:
+#   Rloc: 7000
+PARENT_RLOC_RE = re.compile(
+    r"^Rloc:\s+([0-9a-fA-F]{1,4})\s*$",
+    re.IGNORECASE,
+)
+
 STATES = {"child", "router", "leader", "detached", "disabled"}
 ANSI_ESCAPE_RE = re.compile(r'\x1B\[[0-9;?]*[ -/]*[@-~]')
 
@@ -92,7 +98,7 @@ def process_ot_line(ts_iso: str, line: str, tstate: TelemetryState) -> None:
         return
 
     # --- parent RLOC16 from 'parent' output ---
-    m = PARENT_RLOC_RE.search(line)
+    m = PARENT_RLOC_RE.search(stripped)
     if m:
         r = m.group(1)
         try:

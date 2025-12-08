@@ -1,3 +1,4 @@
+# Special thanks to Edward for the original version of this script, check his repo at: https://github.com/kkSeaWater/n0rdic-halfconductor
 import argparse
 from datetime import datetime
 from pathlib import Path
