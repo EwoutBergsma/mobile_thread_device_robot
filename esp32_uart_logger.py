@@ -6,6 +6,7 @@ import os
 import threading
 import time
 import re
+import hashlib  # NEW: for deterministic per-device offset
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
@@ -121,6 +122,21 @@ def _sanitize_for_filename(text: str) -> str:
     return text or "device"
 
 
+def _per_device_ping_offset(port_name: str) -> float:
+    """
+    Deterministic offset in [0, PING_INTERVAL) based on the port name.
+
+    This ensures different ports will (almost always) get different phases,
+    so they don't all ping at the same time.
+    """
+    data = (port_name or "").encode("utf-8", "ignore")
+    h = hashlib.sha1(data).digest()
+    # Use first 2 bytes as an integer 0..65535
+    val = int.from_bytes(h[:2], "big")
+    frac = val / 65535.0  # in [0, 1]
+    return frac * PING_INTERVAL
+
+
 class SerialLogger(threading.Thread):
     def __init__(self, port_info: ListPortInfo, baudrate: int = BAUDRATE):
         super().__init__(daemon=True)
@@ -128,6 +144,9 @@ class SerialLogger(threading.Thread):
         self.baudrate = baudrate
         self.stop_event = threading.Event()
         self.tstate = TelemetryState()  # NEW: per-device OT telemetry
+
+        # NEW: per-device ping phase offset (0 .. PING_INTERVAL)
+        self.ping_offset = _per_device_ping_offset(self.port_info.device)
 
     def make_log_path(self) -> str:
         """
@@ -202,8 +221,8 @@ class SerialLogger(threading.Thread):
             with ser, open(log_path, "a", encoding="utf-8") as log_file:
                 # Set txpower once at startup
                 try:
-                    print(f"[{port_name}] Setting txpower 0 dBm on OpenThread CLI")
-                    ser.write(b"txpower 0\r\n")
+                    print(f"[{port_name}] Setting txpower -13 dBm on OpenThread CLI")
+                    ser.write(b"txpower -13\r\n")
                     time.sleep(0.1)
                 except serial.SerialException as exc:
                     print(f"[{port_name}] WARNING: could not set txpower: {exc}")
@@ -214,13 +233,21 @@ class SerialLogger(threading.Thread):
                 except serial.SerialException as exc:
                     print(f"[{port_name}] WARNING: could not request ipaddr: {exc}")
 
-                next_ping_at = time.time()
+                # NEW: start pings at a per-device offset so multiple devices are de-synchronized.
+                next_ping_at = time.time() + self.ping_offset
 
                 while not self.stop_event.is_set():
                     now = time.time()
                     if now >= next_ping_at:
                         self._send_periodic_commands(ser)
-                        next_ping_at = now + PING_INTERVAL
+
+                        # Keep a strict 1 s period per device by advancing from the
+                        # previous scheduled time, not from "now".
+                        next_ping_at += PING_INTERVAL
+
+                        # In case we were delayed and are still behind, catch up.
+                        while next_ping_at <= now:
+                            next_ping_at += PING_INTERVAL
 
                     try:
                         data = ser.readline()  # read until newline or timeout
