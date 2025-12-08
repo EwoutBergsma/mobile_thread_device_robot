@@ -4,87 +4,230 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import glob
 import os
+import numpy as np
 
-# Directories (relative, no leading slash)
+# Directories (relative)
 DATA_DIR = "data"
 GRAPHS_DIR = "graphs"
 
-# Ensure graphs directory exists
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
-# Regex for lines like:
-# [2025-12-04T17:54:36.720] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 427/427.000/427 ms.
-line_re = re.compile(
+# RTT lines
+rtt_re = re.compile(
     r"""
-    \[(?P<ts>[^\]]+)\]               # [2025-12-04T17:54:36.720]
-    .*?Round-trip\ min/avg/max\ =\   # Round-trip min/avg/max =
-    (?P<min>\d+(?:\.\d+)?)/          # min
-    (?P<avg>\d+(?:\.\d+)?)/          # avg
-    (?P<max>\d+(?:\.\d+)?)\ ms\.?    # max ms.
+    \[(?P<ts>[^\]]+)\]               
+    .*?Round-trip\ min/avg/max\ =\   
+    (?P<min>\d+(?:\.\d+)?)/          
+    (?P<avg>\d+(?:\.\d+)?)/          
+    (?P<max>\d+(?:\.\d+)?)\ ms\.?    
     """,
-    re.VERBOSE
+    re.VERBOSE,
 )
 
-def process_log_file(log_path: str, rtt_by_file: dict):
+# Parent lines (Ext Addr)
+parent_re = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]      
+    .*?Ext\ Addr:\s*
+    (?P<addr>[0-9A-Fa-f]+)  
+    """,
+    re.VERBOSE,
+)
+
+# AttachState lines for parent search intervals
+attach_re = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]      
+    .*?AttachState\s+
+    (?P<from_state>\S+)\s*->\s*(?P<to_state>\S+)
+    """,
+    re.VERBOSE,
+)
+
+
+def parse_timestamp(ts_str: str) -> datetime:
+    try:
+        return datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S.%f")
+    except ValueError:
+        return datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
+
+
+def process_log_file(log_path: str,
+                     rtt_by_file: dict,
+                     rtt_near_by_file: dict,
+                     rtt_bg_by_file: dict):
     print(f"\n[PROCESS] Starting file: {log_path}")
 
-    timestamps = []
+    timestamps_rtt = []
     avg_rtts_ms = []
 
+    parent_timestamps = []
+    parent_ids = []
+
+    # search intervals: list of (start_ts, end_ts)
+    search_intervals = []
+    search_active = False
+    search_start_ts = None
+
     with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
-        for line_no, line in enumerate(f, start=1):
-            m = line_re.search(line)
-            if not m:
-                continue
+        for line_no, raw_line in enumerate(f, start=1):
+            line = raw_line.rstrip("\n")
 
-            # Print the line that is actually used for processing
-            # print(f"  [USE] Line {line_no}: {line.rstrip()}")
+            # --- RTT detection ---
+            m_rtt = rtt_re.search(line)
+            if m_rtt:
+                ts_str = m_rtt.group("ts")
+                avg_str = m_rtt.group("avg")
+                ts = parse_timestamp(ts_str)
+                avg_ms = float(avg_str)
 
-            ts_str = m.group("ts")
-            avg_str = m.group("avg")
+                timestamps_rtt.append(ts)
+                avg_rtts_ms.append(avg_ms)
 
-            # parse timestamp like 2025-12-04T17:54:36.720
-            try:
-                ts = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S.%f")
-            except ValueError:
-                # fallback if no milliseconds
-                ts = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
+                print(f"  [USE RTT] Line {line_no}: {line}")
 
-            avg_ms = float(avg_str)
+            # --- Parent detection ---
+            m_parent = parent_re.search(line)
+            if m_parent:
+                ts_str = m_parent.group("ts")
+                ext_addr = m_parent.group("addr")
+                if len(ext_addr) < 8:
+                    print(f"  [SKIP PARENT] Line {line_no}: suspicious short addr '{ext_addr}'")
+                    continue
 
-            timestamps.append(ts)
-            avg_rtts_ms.append(avg_ms)
+                ts = parse_timestamp(ts_str)
+                parent_timestamps.append(ts)
+                parent_ids.append(ext_addr)
 
-    if not timestamps:
-        print(f"[SKIP] No ping RTT lines found in {log_path}")
+                print(f"  [USE PARENT] Line {line_no}: {line}")
+                print(f"               -> Parent Ext Addr: {ext_addr}")
+
+            # --- Attach state detection for parent search intervals ---
+            m_attach = attach_re.search(line)
+            if m_attach:
+                ts_str = m_attach.group("ts")
+                from_state = m_attach.group("from_state")
+                to_state = m_attach.group("to_state")
+                ts = parse_timestamp(ts_str)
+
+                print(f"  [ATTACH] Line {line_no}: {from_state} -> {to_state}")
+
+                # Heuristic: search active from Start->ParentReq until ParentReq->Idle
+                if to_state == "ParentReq" and not search_active:
+                    search_active = True
+                    search_start_ts = ts
+                    print(f"    [SEARCH START] {ts}")
+
+                if from_state == "ParentReq" and to_state == "Idle" and search_active:
+                    search_intervals.append((search_start_ts, ts))
+                    print(f"    [SEARCH END]   {ts} (interval {search_start_ts} -> {ts})")
+                    search_active = False
+                    search_start_ts = None
+
+    # Close any unterminated search interval at last RTT timestamp (if present)
+    if search_active and timestamps_rtt:
+        end_ts = timestamps_rtt[-1]
+        search_intervals.append((search_start_ts, end_ts))
+        print(f"    [SEARCH END @EOF] {end_ts} (interval {search_start_ts} -> {end_ts})")
+        search_active = False
+        search_start_ts = None
+
+    filename = Path(log_path).name
+
+    # --- RTT stuff ---
+    if not timestamps_rtt:
+        print(f"[SUMMARY] {log_path}: 0 RTT samples parsed.")
+    else:
+        print(f"[SUMMARY] {log_path}: {len(timestamps_rtt)} RTT samples parsed.")
+        rtt_by_file[filename] = avg_rtts_ms
+
+        # Per-file RTT scatter
+        plt.figure()
+        plt.plot(timestamps_rtt, avg_rtts_ms, marker=".", linestyle="")
+        plt.xlabel("Time")
+        plt.ylabel("RTT (ms)")
+        plt.title(f"Ping RTT\n{filename}")
+        plt.grid(True)
+        plt.xticks(rotation=45, ha="right")
+        plt.tight_layout()
+        out_path = Path(GRAPHS_DIR) / f"{Path(filename).stem}_rtt.png"
+        plt.savefig(out_path)
+        plt.close()
+        print(f"[OK] Saved RTT graph for {filename} -> {out_path}")
+
+    # --- classify RTTs as near-search vs background using intervals ---
+    near_search_rtts = []
+    background_rtts = []
+
+    if timestamps_rtt and search_intervals:
+        # sort intervals for safety
+        search_intervals.sort(key=lambda ab: ab[0])
+
+        def is_in_interval(ts):
+            for start, end in search_intervals:
+                if start <= ts <= end:
+                    return True
+                if ts < start:
+                    # intervals are sorted; can stop early
+                    return False
+            return False
+
+        for ts_rtt, rtt in zip(timestamps_rtt, avg_rtts_ms):
+            if is_in_interval(ts_rtt):
+                near_search_rtts.append(rtt)
+            else:
+                background_rtts.append(rtt)
+    else:
+        # no search intervals: everything is background
+        background_rtts = avg_rtts_ms.copy() if timestamps_rtt else []
+
+    if near_search_rtts:
+        rtt_near_by_file[filename] = near_search_rtts
+        print(f"[SUMMARY] {filename}: {len(near_search_rtts)} RTT samples NEAR parent search.")
+    if background_rtts:
+        rtt_bg_by_file[filename] = background_rtts
+        print(f"[SUMMARY] {filename}: {len(background_rtts)} RTT samples in BACKGROUND.")
+
+    # per-file boxplot: near-search vs background
+    if near_search_rtts and background_rtts:
+        plt.figure()
+        plt.boxplot(
+            [near_search_rtts, background_rtts],
+            labels=["Near parent search", "Background"],
+            showfliers=True,
+        )
+        plt.ylabel("RTT (ms)")
+        plt.title(f"RTT vs Parent Search\n{filename}")
+        plt.tight_layout()
+        vs_path = Path(GRAPHS_DIR) / f"{Path(filename).stem}_rtt_search_vs_background.png"
+        plt.savefig(vs_path)
+        plt.close()
+        print(f"[OK] Saved RTT vs parent-search boxplot for {filename} -> {vs_path}")
+
+    # --- Parent plot ---
+    if not parent_timestamps:
+        print(f"[SUMMARY] {log_path}: no valid parent data (Ext Addr) found.")
         return
 
-    print(f"[SUMMARY] {log_path}: {len(timestamps)} RTT samples parsed.")
+    print(f"[SUMMARY] {log_path}: {len(parent_timestamps)} parent sample(s) parsed.")
+    unique_parents = sorted(set(parent_ids))
+    parent_to_index = {p: i for i, p in enumerate(unique_parents)}
+    y_values = [parent_to_index[p] for p in parent_ids]
 
-    # Store RTT samples for this file for the global box plot later
-    filename = Path(log_path).name
-    rtt_by_file[filename] = avg_rtts_ms
-
-    # Build and save per-file plot
     plt.figure()
-    # Only dots, no line
-    plt.plot(timestamps, avg_rtts_ms, marker=".", linestyle="")
-
+    plt.scatter(parent_timestamps, y_values)
     plt.xlabel("Time")
-    plt.ylabel("RTT (ms)")
-
-    # Newline before the filename in the title, and no "over Time"
-    plt.title(f"Ping RTT\n{filename}")
-
+    plt.ylabel("Parent")
+    plt.yticks(range(len(unique_parents)), unique_parents)
+    plt.title(f"Parent\n{filename}")
     plt.grid(True)
+    plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
-
-    out_name = Path(filename).stem + "_rtt.png"
-    out_path = Path(GRAPHS_DIR) / out_name
-    plt.savefig(out_path)
+    parents_path = Path(GRAPHS_DIR) / f"{Path(filename).stem}_parents.png"
+    plt.savefig(parents_path)
     plt.close()
+    print(f"[OK] Saved parent graph for {filename} -> {parents_path}")
 
-    print(f"[OK] Saved graph for {filename} -> {out_path}")
 
 def main():
     log_files = glob.glob(str(Path(DATA_DIR) / "*.log"))
@@ -97,18 +240,59 @@ def main():
     for lf in log_files:
         print(f"  - {lf}")
 
-    # Collect RTT samples per file for box plot
     rtt_by_file = {}
+    rtt_near_by_file = {}
+    rtt_bg_by_file = {}
 
     for log_path in log_files:
-        process_log_file(log_path, rtt_by_file)
+        process_log_file(log_path, rtt_by_file, rtt_near_by_file, rtt_bg_by_file)
 
-    # Create a box plot comparing all files
+    # ---- print stats ----
+    if rtt_by_file:
+        print("\n[STATS] RTT per file (all samples):")
+        for fname, values in rtt_by_file.items():
+            arr = np.array(values)
+            print(
+                f"  {fname}: "
+                f"n={len(arr)}, "
+                f"median={np.median(arr):.1f} ms, "
+                f"mean={np.mean(arr):.1f} ms, "
+                f"p90={np.percentile(arr, 90):.1f} ms, "
+                f"max={np.max(arr):.1f} ms"
+            )
+
+    if rtt_near_by_file:
+        print("\n[STATS] RTT NEAR parent search per file:")
+        for fname, values in rtt_near_by_file.items():
+            arr = np.array(values)
+            print(
+                f"  {fname}: "
+                f"n={len(arr)}, "
+                f"median={np.median(arr):.1f} ms, "
+                f"mean={np.mean(arr):.1f} ms, "
+                f"p90={np.percentile(arr, 90):.1f} ms, "
+                f"max={np.max(arr):.1f} ms"
+            )
+
+    if rtt_bg_by_file:
+        print("\n[STATS] RTT BACKGROUND per file:")
+        for fname, values in rtt_bg_by_file.items():
+            arr = np.array(values)
+            print(
+                f"  {fname}: "
+                f"n={len(arr)}, "
+                f"median={np.median(arr):.1f} ms, "
+                f"mean={np.mean(arr):.1f} ms, "
+                f"p90={np.percentile(arr, 90):.1f} ms, "
+                f"max={np.max(arr):.1f} ms"
+            )
+
+    # ---- global RTT boxplot per file ----
     if not rtt_by_file:
-        print("[INFO] No RTT data collected; skipping box plot.")
+        print("[INFO] No RTT data collected; skipping RTT box plot.")
         return
 
-    print("[INFO] Creating box plot comparing all files...")
+    print("\n[INFO] Creating RTT box plot comparing all files...")
 
     labels = list(rtt_by_file.keys())
     data = [rtt_by_file[label] for label in labels]
@@ -124,7 +308,8 @@ def main():
     plt.savefig(boxplot_path)
     plt.close()
 
-    print(f"[OK] Saved box plot -> {boxplot_path}")
+    print(f"[OK] Saved RTT box plot -> {boxplot_path}")
+
 
 if __name__ == "__main__":
     main()
