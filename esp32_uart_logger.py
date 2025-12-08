@@ -18,7 +18,6 @@ BAUDRATE = 115200
 SCAN_INTERVAL = 2.0  # seconds between rescans for new/removed devices
 PING_INTERVAL = 1.0  # seconds between OT CLI pings to parent
 
-
 # --- OpenThread parent / RLOC parsing helpers (adapted from pyserial_esp.py) ---
 
 @dataclass
