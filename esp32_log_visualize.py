@@ -13,7 +13,8 @@ GRAPHS_DIR = "graphs"
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
 # Regex for RTT lines like:
-# [2025-12-04T17:54:36.720] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+# [2025-12-04T17:52:44.956] 1 packets transmitted, 1 packets received.
+# Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
 rtt_re = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]               # [2025-12-04T17:54:36.720]
@@ -21,6 +22,17 @@ rtt_re = re.compile(
     (?P<min>\d+(?:\.\d+)?)/          # min
     (?P<avg>\d+(?:\.\d+)?)/          # avg
     (?P<max>\d+(?:\.\d+)?)\ ms\.?    # max ms.
+    """,
+    re.VERBOSE
+)
+
+# Regex for ANY packet-loss line (0.0%, 10.0%, 100.0%, etc.)
+# Example: [2025-12-04T17:52:44.956] 1 packets transmitted, 0 packets received. Packet loss = 100.0%.
+loss_re = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]          # timestamp in brackets
+    .*?Packet\ loss\s*=\s*
+    (?P<loss>\d+(?:\.\d+)?)%    # e.g. 0.0, 10.0, 100.0
     """,
     re.VERBOSE
 )
@@ -43,11 +55,15 @@ def parse_timestamp(ts_str: str) -> datetime:
     except ValueError:
         return datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
 
+
 def process_log_file(log_path: str, rtt_by_file: dict):
     print(f"\n[PROCESS] Starting file: {log_path}")
 
     timestamps_rtt = []
     avg_rtts_ms = []
+
+    # Track times where packet loss is not 0.0%
+    loss_timestamps = []
 
     parent_timestamps = []
     parent_ids = []
@@ -56,7 +72,19 @@ def process_log_file(log_path: str, rtt_by_file: dict):
         for line_no, line in enumerate(f, start=1):
             line_stripped = line.rstrip("\n")
 
-            # --- RTT detection ---
+            # --- Packet loss detection (any loss != 0.0%) ---
+            m_loss = loss_re.search(line_stripped)
+            if m_loss:
+                ts_loss_str = m_loss.group("ts")
+                loss_pct_str = m_loss.group("loss")
+                ts_loss = parse_timestamp(ts_loss_str)
+                loss_pct = float(loss_pct_str)
+
+                if loss_pct > 0.0:
+                    print(f"  [LOSS] Non-zero packet loss {loss_pct}% at {ts_loss_str}")
+                    loss_timestamps.append(ts_loss)
+
+            # --- RTT detection (only lines with Round-trip stats) ---
             m_rtt = rtt_re.search(line_stripped)
             if m_rtt:
                 print(f"  [USE RTT] Line {line_no}: {line_stripped}")
@@ -89,24 +117,58 @@ def process_log_file(log_path: str, rtt_by_file: dict):
                 parent_timestamps.append(ts)
                 parent_ids.append(ext_addr)
 
-    # --- RTT plotting / data collection ---
-    if not timestamps_rtt:
-        print(f"[SUMMARY] {log_path}: 0 RTT samples parsed.")
+    # --- RTT + packet-loss plotting / data collection ---
+    if not timestamps_rtt and not loss_timestamps:
+        print(f"[SUMMARY] {log_path}: 0 RTT samples and no non-zero packet loss.")
     else:
         print(f"[SUMMARY] {log_path}: {len(timestamps_rtt)} RTT samples parsed.")
+        print(f"[SUMMARY] {log_path}: {len(loss_timestamps)} non-zero packet loss event(s).")
 
         filename = Path(log_path).name
-        rtt_by_file[filename] = avg_rtts_ms
+
+        # Only include files with RTT for the boxplot
+        if timestamps_rtt:
+            rtt_by_file[filename] = avg_rtts_ms
 
         plt.figure()
-        plt.plot(timestamps_rtt, avg_rtts_ms, marker=".", linestyle="")
+
+        # Plot RTT as points (if any)
+        if timestamps_rtt:
+            plt.plot(
+                timestamps_rtt,
+                avg_rtts_ms,
+                marker=".",
+                linestyle="",
+                label="RTT avg (ms)"
+            )
+
+        # Vertical dashed lines where packet loss > 0 (including 100%)
+        if loss_timestamps:
+            for i, ts_loss in enumerate(loss_timestamps):
+                if i == 0:
+                    # First one gets the label for the legend
+                    plt.axvline(
+                        ts_loss,
+                        linestyle="--",
+                        color="red",
+                        alpha=0.7,
+                        label="Non-zero packet loss"
+                    )
+                else:
+                    plt.axvline(
+                        ts_loss,
+                        linestyle="--",
+                        color="red",
+                        alpha=0.7
+                    )
+
         plt.xlabel("Time")
         plt.ylabel("RTT (ms)")
         plt.title(f"Ping RTT\n{filename}")
         plt.grid(True)
-        # make time diagonal for timeseries
         plt.xticks(rotation=45, ha="right")
         plt.tight_layout()
+        plt.legend()
 
         out_name = Path(filename).stem + "_rtt.png"
         out_path = Path(GRAPHS_DIR) / out_name
@@ -146,6 +208,7 @@ def process_log_file(log_path: str, rtt_by_file: dict):
 
     print(f"[OK] Saved parent graph for {filename} -> {parents_out_path}")
 
+
 def main():
     log_files = glob.glob(str(Path(DATA_DIR) / "*.log"))
 
@@ -183,6 +246,7 @@ def main():
     plt.close()
 
     print(f"[OK] Saved RTT box plot -> {boxplot_path}")
+
 
 if __name__ == "__main__":
     main()
