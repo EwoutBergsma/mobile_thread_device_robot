@@ -2,14 +2,13 @@ import re
 from datetime import datetime
 import matplotlib.pyplot as plt
 from pathlib import Path
-import glob
 import os
 
 # Directories
 DATA_DIR = "data"
 GRAPHS_DIR = "graphs"
 
-# Ensure graphs directory exists
+# Ensure base graphs directory exists
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
 # Regex for RTT lines like:
@@ -68,6 +67,19 @@ def process_log_file(log_path: str, rtt_by_file: dict):
     parent_timestamps = []
     parent_ids = []
 
+    log_path_obj = Path(log_path)
+    data_dir_path = Path(DATA_DIR)
+
+    # path of this log relative to DATA_DIR (e.g. "subdir1/subdir2/file.log")
+    rel_log_path = log_path_obj.relative_to(data_dir_path)
+
+    # directory under GRAPHS_DIR that mirrors the data structure (e.g. "graphs/subdir1/subdir2")
+    graph_dir = Path(GRAPHS_DIR) / rel_log_path.parent
+    graph_dir.mkdir(parents=True, exist_ok=True)
+
+    # label for plots/boxplot: use relative path to avoid collisions
+    label_for_file = str(rel_log_path)
+
     with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
         for line_no, line in enumerate(f, start=1):
             line_stripped = line.rstrip("\n")
@@ -124,11 +136,9 @@ def process_log_file(log_path: str, rtt_by_file: dict):
         print(f"[SUMMARY] {log_path}: {len(timestamps_rtt)} RTT samples parsed.")
         print(f"[SUMMARY] {log_path}: {len(loss_timestamps)} non-zero packet loss event(s).")
 
-        filename = Path(log_path).name
-
         # Only include files with RTT for the boxplot
         if timestamps_rtt:
-            rtt_by_file[filename] = avg_rtts_ms
+            rtt_by_file[label_for_file] = avg_rtts_ms
 
         plt.figure()
 
@@ -164,18 +174,18 @@ def process_log_file(log_path: str, rtt_by_file: dict):
 
         plt.xlabel("Time")
         plt.ylabel("RTT (ms)")
-        plt.title(f"Ping RTT\n{filename}")
+        plt.title(f"Ping RTT\n{label_for_file}")
         plt.grid(True)
         plt.xticks(rotation=45, ha="right")
         plt.tight_layout()
         plt.legend()
 
-        out_name = Path(filename).stem + "_rtt.png"
-        out_path = Path(GRAPHS_DIR) / out_name
+        out_name = log_path_obj.stem + "_rtt.png"
+        out_path = graph_dir / out_name
         plt.savefig(out_path)
         plt.close()
 
-        print(f"[OK] Saved RTT graph for {filename} -> {out_path}")
+        print(f"[OK] Saved RTT graph for {label_for_file} -> {out_path}")
 
     # --- Parent plotting ---
     if not parent_timestamps:
@@ -184,7 +194,6 @@ def process_log_file(log_path: str, rtt_by_file: dict):
 
     print(f"[SUMMARY] {log_path}: {len(parent_timestamps)} parent sample(s) parsed.")
 
-    filename = Path(log_path).name
     unique_parents = sorted(set(parent_ids))
     parent_to_index = {p: i for i, p in enumerate(unique_parents)}
     y_values = [parent_to_index[p] for p in parent_ids]
@@ -194,29 +203,36 @@ def process_log_file(log_path: str, rtt_by_file: dict):
     plt.xlabel("Time")
     plt.ylabel("Parent")
     plt.yticks(range(len(unique_parents)), unique_parents)
-    # title without "over time"
-    plt.title(f"Parent\n{filename}")
+    plt.title(f"Parent\n{label_for_file}")
     plt.grid(True)
-    # make time diagonal for timeseries
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
 
-    parents_out_name = Path(filename).stem + "_parents.png"
-    parents_out_path = Path(GRAPHS_DIR) / parents_out_name
+    parents_out_name = log_path_obj.stem + "_parents.png"
+    parents_out_path = graph_dir / parents_out_name
     plt.savefig(parents_out_path)
     plt.close()
 
-    print(f"[OK] Saved parent graph for {filename} -> {parents_out_path}")
+    print(f"[OK] Saved parent graph for {label_for_file} -> {parents_out_path}")
 
 
 def main():
-    log_files = glob.glob(str(Path(DATA_DIR) / "*.log"))
+    # Collect all .log files under DATA_DIR, skipping any directory that starts with '.'
+    log_files = []
+
+    for root, dirs, files in os.walk(DATA_DIR):
+        # In-place prune of dirs: prevents os.walk from descending into dot-directories
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+
+        for fname in files:
+            if fname.endswith(".log"):
+                log_files.append(os.path.join(root, fname))
 
     if not log_files:
         print(f"[INFO] No .log files found in {DATA_DIR}")
         return
 
-    print(f"[INFO] Found {len(log_files)} .log file(s) in {DATA_DIR}:")
+    print(f"[INFO] Found {len(log_files)} .log file(s) in {DATA_DIR} (excluding dot-directories):")
     for lf in log_files:
         print(f"  - {lf}")
 
@@ -235,12 +251,17 @@ def main():
     data = [rtt_by_file[label] for label in labels]
 
     plt.figure()
-    plt.boxplot(data, labels=labels, showfliers=True)
+    plt.boxplot(
+        data,
+        labels=labels,
+        showfliers=False  # <- hide outliers from the boxplot
+    )
     plt.ylabel("RTT (ms)")
     plt.title("Ping RTT Boxplot per File")
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
 
+    # Keep the summary boxplot at the root of GRAPHS_DIR
     boxplot_path = Path(GRAPHS_DIR) / "all_files_rtt_boxplot.png"
     plt.savefig(boxplot_path)
     plt.close()
