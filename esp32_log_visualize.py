@@ -93,7 +93,7 @@ def process_log_file(log_path: str, rtt_by_file: dict):
                 loss_pct = float(loss_pct_str)
 
                 if loss_pct > 0.0:
-                    print(f"  [LOSS] Non-zero packet loss {loss_pct}% at {ts_loss_str}")
+                    print(f"  [LOSS] Packet loss {loss_pct}% at {ts_loss_str}")
                     loss_timestamps.append(ts_loss)
 
             # --- RTT detection (only lines with Round-trip stats) ---
@@ -131,10 +131,10 @@ def process_log_file(log_path: str, rtt_by_file: dict):
 
     # --- RTT + packet-loss plotting / data collection ---
     if not timestamps_rtt and not loss_timestamps:
-        print(f"[SUMMARY] {log_path}: 0 RTT samples and no non-zero packet loss.")
+        print(f"[SUMMARY] {log_path}: 0 RTT samples and no packet loss.")
     else:
         print(f"[SUMMARY] {log_path}: {len(timestamps_rtt)} RTT samples parsed.")
-        print(f"[SUMMARY] {log_path}: {len(loss_timestamps)} non-zero packet loss event(s).")
+        print(f"[SUMMARY] {log_path}: {len(loss_timestamps)} packet loss event(s).")
 
         # Only include files with RTT for the boxplot
         if timestamps_rtt:
@@ -162,7 +162,7 @@ def process_log_file(log_path: str, rtt_by_file: dict):
                         linestyle="--",
                         color="red",
                         alpha=0.7,
-                        label="Non-zero packet loss"
+                        label="Packet loss"
                     )
                 else:
                     plt.axvline(
