@@ -3,6 +3,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from pathlib import Path
 import os
+from glob import glob
 
 # Directories
 DATA_DIR = "data"
@@ -55,30 +56,22 @@ def parse_timestamp(ts_str: str) -> datetime:
         return datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
 
 
-def process_log_file(log_path: str, rtt_by_file: dict):
+def parse_log_file(log_path: str):
+    """
+    Read a log file and extract:
+      - RTT timestamps and averages
+      - packet-loss timestamps (loss > 0)
+      - parent timestamps and hex addresses
+    """
     print(f"\n[PROCESS] Starting file: {log_path}")
 
-    timestamps_rtt = []
-    avg_rtts_ms = []
+    timestamps_rtt: list[datetime] = []
+    avg_rtts_ms: list[float] = []
 
-    # Track times where packet loss is not 0.0%
-    loss_timestamps = []
+    loss_timestamps: list[datetime] = []
 
-    parent_timestamps = []
-    parent_ids = []
-
-    log_path_obj = Path(log_path)
-    data_dir_path = Path(DATA_DIR)
-
-    # path of this log relative to DATA_DIR (e.g. "subdir1/subdir2/file.log")
-    rel_log_path = log_path_obj.relative_to(data_dir_path)
-
-    # directory under GRAPHS_DIR that mirrors the data structure (e.g. "graphs/subdir1/subdir2")
-    graph_dir = Path(GRAPHS_DIR) / rel_log_path.parent
-    graph_dir.mkdir(parents=True, exist_ok=True)
-
-    # label for plots/boxplot: use relative path to avoid collisions
-    label_for_file = str(rel_log_path)
+    parent_timestamps: list[datetime] = []
+    parent_ids: list[str] = []
 
     with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
         for line_no, line in enumerate(f, start=1):
@@ -129,71 +122,65 @@ def process_log_file(log_path: str, rtt_by_file: dict):
                 parent_timestamps.append(ts)
                 parent_ids.append(ext_addr)
 
-    # --- RTT + packet-loss plotting / data collection ---
-    if not timestamps_rtt and not loss_timestamps:
-        print(f"[SUMMARY] {log_path}: 0 RTT samples and no packet loss.")
-    else:
-        print(f"[SUMMARY] {log_path}: {len(timestamps_rtt)} RTT samples parsed.")
-        print(f"[SUMMARY] {log_path}: {len(loss_timestamps)} packet loss event(s).")
+    return timestamps_rtt, avg_rtts_ms, loss_timestamps, parent_timestamps, parent_ids
 
-        # Only include files with RTT for the boxplot
-        if timestamps_rtt:
-            rtt_by_file[label_for_file] = avg_rtts_ms
 
-        plt.figure()
+def plot_rtt_and_loss(
+    label_for_file: str,
+    timestamps_rtt: list[datetime],
+    avg_rtts_ms: list[float],
+    loss_timestamps: list[datetime],
+    out_path: Path,
+) -> None:
+    plt.figure()
 
-        # Plot RTT as points (if any)
-        if timestamps_rtt:
-            plt.plot(
-                timestamps_rtt,
-                avg_rtts_ms,
-                marker=".",
-                linestyle="",
-                label="RTT avg (ms)"
-            )
+    # Plot RTT as points (if any)
+    if timestamps_rtt:
+        plt.plot(
+            timestamps_rtt,
+            avg_rtts_ms,
+            marker=".",
+            linestyle="",
+            label="RTT avg (ms)",
+        )
 
-        # Vertical dashed lines where packet loss > 0 (including 100%)
-        if loss_timestamps:
-            for i, ts_loss in enumerate(loss_timestamps):
-                if i == 0:
-                    # First one gets the label for the legend
-                    plt.axvline(
-                        ts_loss,
-                        linestyle="--",
-                        color="red",
-                        alpha=0.7,
-                        label="Packet loss"
-                    )
-                else:
-                    plt.axvline(
-                        ts_loss,
-                        linestyle="--",
-                        color="red",
-                        alpha=0.7
-                    )
+    # Vertical dashed lines where packet loss > 0 (including 100%)
+    if loss_timestamps:
+        for i, ts_loss in enumerate(loss_timestamps):
+            if i == 0:
+                # First one gets the label for the legend
+                plt.axvline(
+                    ts_loss,
+                    linestyle="--",
+                    color="red",
+                    alpha=0.7,
+                    label="Packet loss",
+                )
+            else:
+                plt.axvline(
+                    ts_loss,
+                    linestyle="--",
+                    color="red",
+                    alpha=0.7,
+                )
 
-        plt.xlabel("Time")
-        plt.ylabel("RTT (ms)")
-        plt.title(f"Ping RTT\n{label_for_file}")
-        plt.grid(True)
-        plt.xticks(rotation=45, ha="right")
-        plt.tight_layout()
-        plt.legend()
+    plt.xlabel("Time")
+    plt.ylabel("RTT (ms)")
+    plt.title(f"Ping RTT\n{label_for_file}")
+    plt.grid(True)
+    plt.xticks(rotation=45, ha="right")
+    plt.tight_layout()
+    plt.legend()
+    plt.savefig(out_path)
+    plt.close()
 
-        out_name = log_path_obj.stem + "_rtt.png"
-        out_path = graph_dir / out_name
-        plt.savefig(out_path)
-        plt.close()
 
-        print(f"[OK] Saved RTT graph for {label_for_file} -> {out_path}")
-
-    # --- Parent plotting ---
-    if not parent_timestamps:
-        print(f"[SUMMARY] {log_path}: no valid parent data (Ext Addr) found.")
-        return
-
-    print(f"[SUMMARY] {log_path}: {len(parent_timestamps)} parent sample(s) parsed.")
-
+def plot_parents(
+    label_for_file: str,
+    parent_timestamps: list[datetime],
+    parent_ids: list[str],
+    out_path: Path,
+) -> None:
     unique_parents = sorted(set(parent_ids))
     parent_to_index = {p: i for i, p in enumerate(unique_parents)}
     y_values = [parent_to_index[p] for p in parent_ids]
@@ -207,26 +194,102 @@ def process_log_file(log_path: str, rtt_by_file: dict):
     plt.grid(True)
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
+    plt.savefig(out_path)
+    plt.close()
+
+
+def process_log_file(log_path: str, rtt_by_file: dict):
+    # Work out paths/labels for this file
+    log_path_obj = Path(log_path)
+    data_dir_path = Path(DATA_DIR)
+
+    # path of this log relative to DATA_DIR (e.g. "subdir1/subdir2/file.log")
+    rel_log_path = log_path_obj.relative_to(data_dir_path)
+
+    # directory under GRAPHS_DIR that mirrors the data structure (e.g. "graphs/subdir1/subdir2")
+    graph_dir = Path(GRAPHS_DIR) / rel_log_path.parent
+    graph_dir.mkdir(parents=True, exist_ok=True)
+
+    # label for plots/boxplot: use relative path to avoid collisions
+    label_for_file = str(rel_log_path)
+
+    (
+        timestamps_rtt,
+        avg_rtts_ms,
+        loss_timestamps,
+        parent_timestamps,
+        parent_ids,
+    ) = parse_log_file(log_path)
+
+    # --- RTT + packet-loss summary / data collection ---
+    if not timestamps_rtt and not loss_timestamps:
+        print(f"[SUMMARY] {log_path}: 0 RTT samples and no packet loss.")
+    else:
+        print(f"[SUMMARY] {log_path}: {len(timestamps_rtt)} RTT samples parsed.")
+        print(f"[SUMMARY] {log_path}: {len(loss_timestamps)} packet loss event(s).")
+
+        # Only include files with RTT for the boxplot
+        if timestamps_rtt:
+            rtt_by_file[label_for_file] = avg_rtts_ms
+
+        out_name = log_path_obj.stem + "_rtt.png"
+        out_path = graph_dir / out_name
+
+        plot_rtt_and_loss(
+            label_for_file=label_for_file,
+            timestamps_rtt=timestamps_rtt,
+            avg_rtts_ms=avg_rtts_ms,
+            loss_timestamps=loss_timestamps,
+            out_path=out_path,
+        )
+
+        print(f"[OK] Saved RTT graph for {label_for_file} -> {out_path}")
+
+    # --- Parent plotting ---
+    if not parent_timestamps:
+        print(f"[SUMMARY] {log_path}: no valid parent data (Ext Addr) found.")
+        return
+
+    print(f"[SUMMARY] {log_path}: {len(parent_timestamps)} parent sample(s) parsed.")
 
     parents_out_name = log_path_obj.stem + "_parents.png"
     parents_out_path = graph_dir / parents_out_name
-    plt.savefig(parents_out_path)
-    plt.close()
+
+    plot_parents(
+        label_for_file=label_for_file,
+        parent_timestamps=parent_timestamps,
+        parent_ids=parent_ids,
+        out_path=parents_out_path,
+    )
 
     print(f"[OK] Saved parent graph for {label_for_file} -> {parents_out_path}")
 
 
 def main():
-    # Collect all .log files under DATA_DIR, skipping any directory that starts with '.'
+    # Collect all .log files under DATA_DIR using glob, skipping any directory
+    # that starts with '.' (same behavior as the previous os.walk version).
+    data_dir_path = Path(DATA_DIR)
+    pattern = os.path.join(DATA_DIR, "**", "*.log")
+    all_candidates = glob(pattern, recursive=True)
+
     log_files = []
+    for path_str in all_candidates:
+        p = Path(path_str)
 
-    for root, dirs, files in os.walk(DATA_DIR):
-        # In-place prune of dirs: prevents os.walk from descending into dot-directories
-        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        # Get parts relative to DATA_DIR, e.g. ("subdir1", "subdir2", "file.log")
+        try:
+            rel_parts = p.relative_to(data_dir_path).parts
+        except ValueError:
+            # Shouldn't happen for this pattern, but be safe
+            continue
 
-        for fname in files:
-            if fname.endswith(".log"):
-                log_files.append(os.path.join(root, fname))
+        # Check only directory parts (exclude the filename)
+        dir_parts = rel_parts[:-1]
+        if any(part.startswith(".") for part in dir_parts):
+            # Skip any file that lives in a dot-directory
+            continue
+
+        log_files.append(path_str)
 
     if not log_files:
         print(f"[INFO] No .log files found in {DATA_DIR}")
@@ -236,7 +299,7 @@ def main():
     for lf in log_files:
         print(f"  - {lf}")
 
-    rtt_by_file = {}
+    rtt_by_file: dict[str, list[float]] = {}
 
     for log_path in log_files:
         process_log_file(log_path, rtt_by_file)
@@ -254,7 +317,7 @@ def main():
     plt.boxplot(
         data,
         labels=labels,
-        showfliers=False  # <- hide outliers from the boxplot
+        showfliers=False,  # <- hide outliers from the boxplot
     )
     plt.ylabel("RTT (ms)")
     plt.title("Ping RTT Boxplot per File")
