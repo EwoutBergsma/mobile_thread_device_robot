@@ -10,3 +10,11 @@ __________
 `uart_devttyacm0_578e013641_20251204_175233.log`
 Now with pinging every second
 
+__________
+
+`uart_devttyacm0_5777002735_20251208_190228.log`
+`uart_devttyacm1_578e013641_20251208_190228_PPS.log`
+Tried doing all routers and end devices to -13 dbm
+Mistake found, end devices did not understand the txpower command (see beginning of logs)
+__________
+
