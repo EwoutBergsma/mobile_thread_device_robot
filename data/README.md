@@ -25,4 +25,7 @@ __________
 
 These appear to be good results with every device properly set to -13 dbm txpower. Weirdly this became two separate logs, not sure why. For this reason perhaps we should try to also periodially check what the current transmit power of the device is.
 Also, this was a relatively short run.
+
+Oh wait I might have disconnected and connected the USB cables between these two logs, that is probably why. Interestingly the txpower was not recent, apparently the USB connection was remembered to some extend by the Raspberry Pi.
 __________
+
