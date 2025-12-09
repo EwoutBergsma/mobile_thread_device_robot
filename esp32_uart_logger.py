@@ -18,6 +18,9 @@ BAUDRATE = 115200
 SCAN_INTERVAL = 2.0  # seconds between rescans for new/removed devices
 PING_INTERVAL = 1.0  # seconds between OT CLI pings to parent
 
+TXPOWER_ATTEMPTS = 3  # sometimes the first command is corrupted
+TXPOWER_RETRY_DELAY = 0.1  # seconds between repeated sends
+
 # --- OpenThread parent / RLOC parsing helpers (adapted from pyserial_esp.py) ---
 
 @dataclass
@@ -203,11 +206,16 @@ class SerialLogger(threading.Thread):
 
         try:
             with ser, open(log_path, "a", encoding="utf-8") as log_file:
-                # Set txpower once at startup
+                # Set txpower multiple times at startup
                 try:
-                    print(f"[{port_name}] Setting txpower -13 dBm on OpenThread CLI")
-                    ser.write(b"txpower -13\r\n")
-                    time.sleep(0.1)
+                    print(
+                        f"[{port_name}] Setting txpower -13 dBm on OpenThread CLI "
+                        f"(x{TXPOWER_ATTEMPTS})"
+                    )
+                    for attempt in range(1, TXPOWER_ATTEMPTS + 1):
+                        ser.write(b"txpower -13\r\n")
+                        ser.flush()
+                        time.sleep(TXPOWER_RETRY_DELAY)
                 except serial.SerialException as exc:
                     print(f"[{port_name}] WARNING: could not set txpower: {exc}")
 
