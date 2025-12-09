@@ -13,8 +13,11 @@ DATA_DIR = "data"
 GRAPHS_DIR = "graphs"
 
 # Length (in bytes) of the ping reply ICMPv6 message in the log.
-# From your snippet: len:56 for echo reply.
 PING_REPLY_LEN = 56
+
+# Fixed y-axis ranges (set to None to auto-scale)
+RTT_YLIM = (0, 1000)       # ms
+RSS_YLIM = (-120, -40)     # dBm
 
 # Ensure base graphs directory exists
 os.makedirs(GRAPHS_DIR, exist_ok=True)
@@ -34,7 +37,6 @@ rtt_re = re.compile(
 )
 
 # Regex for ANY packet-loss line (0.0%, 10.0%, 100.0%, etc.)
-# Example: [2025-12-04T17:52:44.956] 1 packets transmitted, 0 packets received. Packet loss = 100.0%.
 loss_re = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]          # timestamp in brackets
@@ -45,7 +47,6 @@ loss_re = re.compile(
 )
 
 # Regex for parent lines, using RLOC16 as parent IDs
-# Example: [2025-12-09T12:42:59.089] Rloc: c00
 parent_re = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]      # timestamp in brackets
@@ -55,11 +56,7 @@ parent_re = re.compile(
     re.VERBOSE
 )
 
-# Regex for OT state lines like:
-# [ts] child
-# [ts] detached
-# [ts] router
-# [ts] leader
+# Regex for OT state lines
 state_re = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]              # timestamp
@@ -68,15 +65,7 @@ state_re = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
-# Regex for *ping reply* RSS lines:
-# Example:
-# [2025-12-09T11:20:47.453] I(149610) OPENTHREAD:[I] MeshForwarder-:
-#   Received IPv6 ICMP6 msg, len:56, chksum:c1d2, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-90.0
-#
-# Or UDP variant:
-#   Received IPv6 UDP msg, len:81, ...
-#
-# We don't care if it's UDP or ICMP6; we filter by len == PING_REPLY_LEN.
+# Regex for *ping reply* RSS lines (MeshForwarder Received IPv6 ... msg)
 rss_re = re.compile(
     r"""
     ^\[(?P<ts>[^\]]+)\]\s+                      # timestamp at start of line
@@ -154,7 +143,6 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
     Timeline includes all timestamps where we have RTT, loss, parent, state, or RSS info.
     """
 
-    # Map timestamps -> parents / states
     parents_at_ts: Dict[datetime, List[str]] = defaultdict(list)
     for ts, pid in zip(metrics.parent_timestamps, metrics.parent_ids):
         parents_at_ts[ts].append(pid)
@@ -163,7 +151,6 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
     for ts, st in zip(metrics.state_timestamps, metrics.states):
         states_at_ts[ts].append(st)
 
-    # Union of all timestamps where anything happens
     all_ts_set = set()
     all_ts_set.update(metrics.rtt_timestamps)
     all_ts_set.update(metrics.loss_timestamps)
@@ -185,7 +172,6 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
     eff_parents: List[str] = []
 
     for ts in all_ts:
-        # Update state / parent if we have new info at this timestamp
         if ts in states_at_ts:
             current_state = states_at_ts[ts][-1].strip().lower()
 
@@ -202,14 +188,7 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
 
 def parse_log_file(log_path: str) -> LogMetrics:
     """
-    Read a log file and extract:
-      - RTT timestamps and averages
-      - packet-loss timestamps (loss > 0)
-      - parent timestamps and RLOC16 values
-      - OT state changes
-      - RSS samples *only* for ping replies:
-        MeshForwarder "Received IPv6 <type> msg" lines where len == PING_REPLY_LEN
-      - derived effective-parent timeline (state + parent combined)
+    Read a log file and extract metrics.
     """
     print(f"\n[PROCESS] Starting file: {log_path}")
 
@@ -247,13 +226,10 @@ def parse_log_file(log_path: str) -> LogMetrics:
             m_rtt = rtt_re.search(line_stripped)
             if m_rtt:
                 print(f"  [USE RTT] Line {line_no}: {line_stripped}")
-
                 ts_str = m_rtt.group("ts")
                 avg_str = m_rtt.group("avg")
-
                 ts = parse_timestamp(ts_str)
                 avg_ms = float(avg_str)
-
                 metrics.rtt_timestamps.append(ts)
                 metrics.rtt_avgs_ms.append(avg_ms)
 
@@ -262,29 +238,24 @@ def parse_log_file(log_path: str) -> LogMetrics:
             if m_parent:
                 ts_str = m_parent.group("ts")
                 rloc16 = m_parent.group("rloc")
-
                 ts = parse_timestamp(ts_str)
-
                 print(f"  [USE PARENT] Line {line_no}: {line_stripped}")
                 print(f"               -> Parent RLOC16: {rloc16}")
-
                 metrics.parent_timestamps.append(ts)
                 metrics.parent_ids.append(rloc16)
 
-            # --- State detection (child/detached/router/leader/disabled) ---
+            # --- State detection ---
             m_state = state_re.search(line_stripped)
             if m_state:
                 ts_str = m_state.group("ts")
                 state_str = m_state.group("state")
                 ts = parse_timestamp(ts_str)
-
                 state_norm = state_str.strip().lower()
                 print(f"  [STATE] {state_norm} at {ts_str}")
-
                 metrics.state_timestamps.append(ts)
                 metrics.states.append(state_norm)
 
-            # --- RSS detection for ping replies (MeshForwarder "Received IPv6 <type> msg" lines) ---
+            # --- RSS detection for ping replies ---
             m_rss = rss_re.search(line_stripped)
             if m_rss:
                 length = int(m_rss.group("len"))
@@ -293,81 +264,49 @@ def parse_log_file(log_path: str) -> LogMetrics:
                     rss_str = m_rss.group("rss")
                     ts = parse_timestamp(ts_str)
                     rss_val = float(rss_str)
-
                     print(f"  [PING RSS] len={length} -> {rss_val} dBm at {ts_str}")
                     metrics.rss_timestamps.append(ts)
                     metrics.rss_values.append(rss_val)
 
-    # Build effective-parent timeline once all events are collected
     build_parent_timeline(metrics)
-
     return metrics
 
 
-def plot_rtt_and_loss(
-    label_for_file: str,
+def plot_rtt(
+    ax,
     metrics: LogMetrics,
-    out_path: Path,
 ) -> None:
+    """
+    Plot RTT on the provided Axes (no packet-loss here).
+    """
     timestamps_rtt = metrics.rtt_timestamps
     avg_rtts_ms = metrics.rtt_avgs_ms
-    loss_timestamps = metrics.loss_timestamps
 
-    plt.figure()
-
-    # Plot RTT as points (if any)
     if timestamps_rtt:
-        plt.plot(
+        ax.plot(
             timestamps_rtt,
             avg_rtts_ms,
             marker=".",
             linestyle="",
             label="RTT avg (ms)",
         )
+        ax.legend()
 
-    # Vertical dashed lines where packet loss > 0 (including 100%)
-    if loss_timestamps:
-        for i, ts_loss in enumerate(loss_timestamps):
-            if i == 0:
-                # First one gets the label for the legend
-                plt.axvline(
-                    ts_loss,
-                    linestyle="--",
-                    color="red",
-                    alpha=0.7,
-                    label="Packet loss",
-                )
-            else:
-                plt.axvline(
-                    ts_loss,
-                    linestyle="--",
-                    color="red",
-                    alpha=0.7,
-                )
+    ax.set_ylabel("RTT (ms)")
+    ax.set_title("Ping RTT")
+    ax.grid(True)
 
-    plt.xlabel("Time")
-    plt.ylabel("RTT (ms)")
-    plt.title(f"Ping RTT\n{label_for_file}")
-    plt.grid(True)
-    plt.xticks(rotation=45, ha="right")
-    plt.tight_layout()
-    plt.legend()
-    plt.savefig(out_path)
-    plt.close()
+    if RTT_YLIM is not None:
+        ax.set_ylim(*RTT_YLIM)
 
 
 def plot_parents(
-    label_for_file: str,
+    ax,
     metrics: LogMetrics,
-    out_path: Path,
 ) -> None:
     """
-    Plot parent over time using the *effective* parent:
-      - 'detached' / blank state -> 'No Parent'
-      - parent RLOC16 otherwise
-    If the effective timeline is missing, falls back to raw parent events.
+    Plot parent over time using the *effective* parent.
     """
-    # Prefer the derived effective timeline
     if metrics.eff_parent_timestamps:
         parent_timestamps = metrics.eff_parent_timestamps
         parent_ids = metrics.eff_parents
@@ -376,60 +315,87 @@ def plot_parents(
         parent_ids = metrics.parent_ids
 
     if not parent_timestamps:
+        ax.set_title("Parent")
+        ax.text(
+            0.5,
+            0.5,
+            "No parent data",
+            transform=ax.transAxes,
+            ha="center",
+            va="center",
+        )
+        ax.set_yticks([])
+        ax.grid(True)
         return
 
     unique_parents = sorted(set(parent_ids))
     parent_to_index = {p: i for i, p in enumerate(unique_parents)}
     y_values = [parent_to_index[p] for p in parent_ids]
 
-    plt.figure()
-    plt.scatter(parent_timestamps, y_values)
-    plt.xlabel("Time")
-    plt.ylabel("Parent (effective)")
-    plt.yticks(range(len(unique_parents)), unique_parents)
-    plt.title(f"Parent\n{label_for_file}")
-    plt.grid(True)
-    plt.xticks(rotation=45, ha="right")
-    plt.tight_layout()
-    plt.savefig(out_path)
-    plt.close()
+    ax.scatter(parent_timestamps, y_values)
+    ax.set_ylabel("Parent")
+    ax.set_yticks(range(len(unique_parents)))
+    ax.set_yticklabels(unique_parents)
+    ax.set_title("Parent")
+    ax.grid(True)
 
 
-def plot_rss(
-    label_for_file: str,
+def plot_rss_and_loss(
+    ax,
     metrics: LogMetrics,
-    out_path: Path,
 ) -> None:
     """
-    Plot RSS over time using the extracted ping-reply RSS samples.
+    Plot RSS over time and packet-loss vertical lines on the same Axes.
     """
     timestamps_rss = metrics.rss_timestamps
     rss_values = metrics.rss_values
+    loss_timestamps = metrics.loss_timestamps
+
+    plotted_any = False
+
+    # RSS scatter
+    if timestamps_rss:
+        ax.plot(
+            timestamps_rss,
+            rss_values,
+            marker=".",
+            linestyle="",
+            label=f"Ping RSS",
+        )
+        plotted_any = True
+
+    # Packet loss vertical lines
+    if loss_timestamps:
+        for i, ts_loss in enumerate(loss_timestamps):
+            ax.axvline(
+                ts_loss,
+                linestyle="--",
+                color="red",
+                alpha=0.7,
+                label="Packet loss" if i == 0 else None,
+            )
+        plotted_any = True
 
     if not timestamps_rss:
-        return
+        # Make it clear there's no RSS samples, just loss markers (if any)
+        ax.text(
+            0.5,
+            0.5,
+            "No RSS data",
+            transform=ax.transAxes,
+            ha="center",
+            va="center",
+        )
 
-    plt.figure()
-    plt.plot(
-        timestamps_rss,
-        rss_values,
-        marker=".",
-        linestyle="",
-        label=f"Ping RSS (len={PING_REPLY_LEN})",
-    )
-    plt.xlabel("Time")
-    plt.ylabel("RSS (dBm)")
-    plt.title(f"Ping RSS over Time\n{label_for_file}")
-    plt.grid(True)
-    plt.xticks(rotation=45, ha="right")
+    if plotted_any:
+        ax.legend()
 
-    # Optional: invert y-axis so stronger (less negative) RSS is "higher" visually
-    # plt.gca().invert_yaxis()
+    ax.set_ylabel("RSS (dBm)")
+    ax.set_title("Ping RSS & Packet Loss")
+    ax.grid(True)
 
-    plt.tight_layout()
-    plt.legend()
-    plt.savefig(out_path)
-    plt.close()
+    if RSS_YLIM is not None:
+        ax.set_ylim(*RSS_YLIM)
 
 
 def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None:
@@ -437,77 +403,71 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
     log_path_obj = Path(log_path)
     data_dir_path = Path(DATA_DIR)
 
-    # path of this log relative to DATA_DIR (e.g. "subdir1/subdir2/file.log")
     rel_log_path = log_path_obj.relative_to(data_dir_path)
 
-    # directory under GRAPHS_DIR that mirrors the data structure (e.g. "graphs/subdir1/subdir2")
     graph_dir = Path(GRAPHS_DIR) / rel_log_path.parent
     graph_dir.mkdir(parents=True, exist_ok=True)
 
-    # label for plots/boxplot: use relative path to avoid collisions
     label_for_file = str(rel_log_path)
 
     metrics = parse_log_file(log_path)
 
-    # --- RTT + packet-loss summary / data collection ---
+    # --- Summaries / RTT collection ---
     if not metrics.rtt_timestamps and not metrics.loss_timestamps:
         print(f"[SUMMARY] {log_path}: 0 RTT samples and no packet loss.")
     else:
         print(f"[SUMMARY] {log_path}: {len(metrics.rtt_timestamps)} RTT samples parsed.")
         print(f"[SUMMARY] {log_path}: {len(metrics.loss_timestamps)} packet loss event(s).")
-
-        # Only include files with RTT for the boxplot
         if metrics.rtt_timestamps:
             rtt_by_file[label_for_file] = metrics.rtt_avgs_ms
 
-        out_name = log_path_obj.stem + "_rtt.png"
-        out_path = graph_dir / out_name
-
-        plot_rtt_and_loss(
-            label_for_file=label_for_file,
-            metrics=metrics,
-            out_path=out_path,
-        )
-
-        print(f"[OK] Saved RTT graph for {label_for_file} -> {out_path}")
-
-    # --- RSS plotting (ping replies only) ---
     if metrics.rss_timestamps:
-        rss_out_name = log_path_obj.stem + "_rss.png"
-        rss_out_path = graph_dir / rss_out_name
-
-        plot_rss(
-            label_for_file=label_for_file,
-            metrics=metrics,
-            out_path=rss_out_path,
-        )
-
-        print(f"[OK] Saved RSS graph for {label_for_file} -> {rss_out_path}")
+        print(f"[SUMMARY] {log_path}: {len(metrics.rss_timestamps)} ping RSS sample(s) found.")
     else:
         print(f"[SUMMARY] {log_path}: no ping RSS data (len={PING_REPLY_LEN}) found.")
 
-    # --- Parent plotting ---
-    if not metrics.parent_timestamps:
+    if metrics.parent_timestamps:
+        print(f"[SUMMARY] {log_path}: {len(metrics.parent_timestamps)} parent sample(s) parsed.")
+    else:
         print(f"[SUMMARY] {log_path}: no valid parent data (RLOC16) found.")
+
+    # If there's absolutely nothing to plot, skip.
+    if (
+        not metrics.rtt_timestamps
+        and not metrics.loss_timestamps
+        and not metrics.rss_timestamps
+        and not metrics.parent_timestamps
+    ):
+        print(f"[INFO] {log_path}: no time-series data to plot; skipping figure.")
         return
 
-    print(f"[SUMMARY] {log_path}: {len(metrics.parent_timestamps)} parent sample(s) parsed.")
-
-    parents_out_name = log_path_obj.stem + "_parents.png"
-    parents_out_path = graph_dir / parents_out_name
-
-    plot_parents(
-        label_for_file=label_for_file,
-        metrics=metrics,
-        out_path=parents_out_path,
+    # --- Combined figure (RTT, RSS+loss, Parent stacked) ---
+    fig, axes = plt.subplots(
+        nrows=3,
+        ncols=1,
+        sharex=True,
+        figsize=(12, 8),
     )
+    ax_rtt, ax_rss, ax_parent = axes
 
-    print(f"[OK] Saved parent graph for {label_for_file} -> {parents_out_path}")
+    plot_rtt(ax=ax_rtt, metrics=metrics)
+    plot_rss_and_loss(ax=ax_rss, metrics=metrics)
+    plot_parents(ax=ax_parent, metrics=metrics)
+
+    ax_parent.set_xlabel("Time")
+    fig.autofmt_xdate(rotation=45)
+    fig.suptitle(label_for_file, y=0.98)   # only place where filename appears
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
+
+    out_name = log_path_obj.stem + "_timeseries.png"
+    out_path = graph_dir / out_name
+    fig.savefig(out_path)
+    plt.close(fig)
+
+    print(f"[OK] Saved combined time-series graph for {label_for_file} -> {out_path}")
 
 
 def main():
-    # Collect all .log files under DATA_DIR using glob, skipping any directory
-    # that starts with '.' (same behavior as the previous os.walk version).
     data_dir_path = Path(DATA_DIR)
     pattern = os.path.join(DATA_DIR, "**", "*.log")
     all_candidates = glob(pattern, recursive=True)
@@ -515,18 +475,13 @@ def main():
     log_files: List[str] = []
     for path_str in all_candidates:
         p = Path(path_str)
-
-        # Get parts relative to DATA_DIR, e.g. ("subdir1", "subdir2", "file.log")
         try:
             rel_parts = p.relative_to(data_dir_path).parts
         except ValueError:
-            # Shouldn't happen for this pattern, but be safe
             continue
 
-        # Check only directory parts (exclude the filename)
         dir_parts = rel_parts[:-1]
         if any(part.startswith(".") for part in dir_parts):
-            # Skip any file that lives in a dot-directory
             continue
 
         log_files.append(path_str)
@@ -557,14 +512,13 @@ def main():
     plt.boxplot(
         data,
         labels=labels,
-        showfliers=False,  # <- hide outliers from the boxplot
+        showfliers=False,
     )
     plt.ylabel("RTT (ms)")
     plt.title("Ping RTT Boxplot per File")
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
 
-    # Keep the summary boxplot at the root of GRAPHS_DIR
     boxplot_path = Path(GRAPHS_DIR) / "all_files_rtt_boxplot.png"
     plt.savefig(boxplot_path)
     plt.close()
