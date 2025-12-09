@@ -159,7 +159,8 @@ class SerialLogger(threading.Thread):
             last_state = self.tstate.last_state
             last_parent_ts = self.tstate.last_parent_ts
 
-        cmds = [b"state\r\n", b"parent\r\n"]
+        # Query current txpower, then state, then parent
+        cmds = [b"txpower\r\n", b"state\r\n", b"parent\r\n"]
 
         parent_ip = None
         st_lower = (last_state or "").lower()
