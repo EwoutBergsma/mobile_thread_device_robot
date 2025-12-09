@@ -12,6 +12,10 @@ from collections import defaultdict
 DATA_DIR = "data"
 GRAPHS_DIR = "graphs"
 
+# Length (in bytes) of the ping reply ICMPv6 message in the log.
+# From your snippet: len:56 for echo reply.
+PING_REPLY_LEN = 56
+
 # Ensure base graphs directory exists
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
@@ -64,6 +68,25 @@ state_re = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
+# Regex for *ping reply* RSS lines:
+# Example:
+# [2025-12-09T11:20:47.453] I(149610) OPENTHREAD:[I] MeshForwarder-:
+#   Received IPv6 ICMP6 msg, len:56, chksum:c1d2, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-90.0
+#
+# Or UDP variant:
+#   Received IPv6 UDP msg, len:81, ...
+#
+# We don't care if it's UDP or ICMP6; we filter by len == PING_REPLY_LEN.
+rss_re = re.compile(
+    r"""
+    ^\[(?P<ts>[^\]]+)\]\s+                      # timestamp at start of line
+    .*?MeshForwarder-:\s+Received\ IPv6\s+\S+\s+msg,\s+
+    len:(?P<len>\d+),.*?                        # capture len:NN
+    rss:(?P<rss>-?\d+(?:\.\d+)?)                # capture rss:-90.0
+    """,
+    re.VERBOSE
+)
+
 # Helper to parse timestamps like 2025-12-04T17:52:42.396
 def parse_timestamp(ts_str: str) -> datetime:
     try:
@@ -80,6 +103,10 @@ class LogMetrics:
     parent_timestamps: List[datetime]
     parent_ids: List[str]
 
+    # RSS samples (ONLY ping replies with len == PING_REPLY_LEN)
+    rss_timestamps: List[datetime]
+    rss_values: List[float]
+
     # State events
     state_timestamps: List[datetime]
     states: List[str]
@@ -91,8 +118,6 @@ class LogMetrics:
 
 def compute_effective_parent(state: Optional[str], parent: Optional[str]) -> str:
     """
-    Implement the same logic as the other script’s effective_parent():
-
     - If state is blank or "blank" or None -> "No Parent"
     - If state == "detached" -> "No Parent"
     - Else, if parent missing/none/nan/"" -> "No Parent"
@@ -126,7 +151,7 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
       - 'detached' or blank state => 'No Parent'
       - missing/none/nan parent => 'No Parent'
 
-    Timeline includes all timestamps where we have RTT, loss, parent, or state info.
+    Timeline includes all timestamps where we have RTT, loss, parent, state, or RSS info.
     """
 
     # Map timestamps -> parents / states
@@ -144,6 +169,7 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
     all_ts_set.update(metrics.loss_timestamps)
     all_ts_set.update(metrics.parent_timestamps)
     all_ts_set.update(metrics.state_timestamps)
+    all_ts_set.update(metrics.rss_timestamps)
 
     if not all_ts_set:
         metrics.eff_parent_timestamps = []
@@ -181,6 +207,8 @@ def parse_log_file(log_path: str) -> LogMetrics:
       - packet-loss timestamps (loss > 0)
       - parent timestamps and RLOC16 values
       - OT state changes
+      - RSS samples *only* for ping replies:
+        MeshForwarder "Received IPv6 <type> msg" lines where len == PING_REPLY_LEN
       - derived effective-parent timeline (state + parent combined)
     """
     print(f"\n[PROCESS] Starting file: {log_path}")
@@ -191,6 +219,8 @@ def parse_log_file(log_path: str) -> LogMetrics:
         loss_timestamps=[],
         parent_timestamps=[],
         parent_ids=[],
+        rss_timestamps=[],
+        rss_values=[],
         state_timestamps=[],
         states=[],
         eff_parent_timestamps=[],
@@ -253,6 +283,20 @@ def parse_log_file(log_path: str) -> LogMetrics:
 
                 metrics.state_timestamps.append(ts)
                 metrics.states.append(state_norm)
+
+            # --- RSS detection for ping replies (MeshForwarder "Received IPv6 <type> msg" lines) ---
+            m_rss = rss_re.search(line_stripped)
+            if m_rss:
+                length = int(m_rss.group("len"))
+                if length == PING_REPLY_LEN:
+                    ts_str = m_rss.group("ts")
+                    rss_str = m_rss.group("rss")
+                    ts = parse_timestamp(ts_str)
+                    rss_val = float(rss_str)
+
+                    print(f"  [PING RSS] len={length} -> {rss_val} dBm at {ts_str}")
+                    metrics.rss_timestamps.append(ts)
+                    metrics.rss_values.append(rss_val)
 
     # Build effective-parent timeline once all events are collected
     build_parent_timeline(metrics)
@@ -351,6 +395,43 @@ def plot_parents(
     plt.close()
 
 
+def plot_rss(
+    label_for_file: str,
+    metrics: LogMetrics,
+    out_path: Path,
+) -> None:
+    """
+    Plot RSS over time using the extracted ping-reply RSS samples.
+    """
+    timestamps_rss = metrics.rss_timestamps
+    rss_values = metrics.rss_values
+
+    if not timestamps_rss:
+        return
+
+    plt.figure()
+    plt.plot(
+        timestamps_rss,
+        rss_values,
+        marker=".",
+        linestyle="",
+        label=f"Ping RSS (len={PING_REPLY_LEN})",
+    )
+    plt.xlabel("Time")
+    plt.ylabel("RSS (dBm)")
+    plt.title(f"Ping RSS over Time\n{label_for_file}")
+    plt.grid(True)
+    plt.xticks(rotation=45, ha="right")
+
+    # Optional: invert y-axis so stronger (less negative) RSS is "higher" visually
+    # plt.gca().invert_yaxis()
+
+    plt.tight_layout()
+    plt.legend()
+    plt.savefig(out_path)
+    plt.close()
+
+
 def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None:
     # Work out paths/labels for this file
     log_path_obj = Path(log_path)
@@ -389,6 +470,21 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
         )
 
         print(f"[OK] Saved RTT graph for {label_for_file} -> {out_path}")
+
+    # --- RSS plotting (ping replies only) ---
+    if metrics.rss_timestamps:
+        rss_out_name = log_path_obj.stem + "_rss.png"
+        rss_out_path = graph_dir / rss_out_name
+
+        plot_rss(
+            label_for_file=label_for_file,
+            metrics=metrics,
+            out_path=rss_out_path,
+        )
+
+        print(f"[OK] Saved RSS graph for {label_for_file} -> {rss_out_path}")
+    else:
+        print(f"[SUMMARY] {log_path}: no ping RSS data (len={PING_REPLY_LEN}) found.")
 
     # --- Parent plotting ---
     if not metrics.parent_timestamps:
