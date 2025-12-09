@@ -39,13 +39,13 @@ loss_re = re.compile(
     re.VERBOSE
 )
 
-# Regex for parent lines, only accept hex addresses as parent IDs
-# Example: [2025-12-04T17:52:42.400] Ext Addr: 4649555e5f62298c
+# Regex for parent lines, using RLOC16 as parent IDs
+# Example: [2025-12-09T12:42:59.089] Rloc: c00
 parent_re = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]      # timestamp in brackets
-    .*?Ext\ Addr:\s*
-    (?P<addr>[0-9A-Fa-f]+)  # hex-only address
+    .*?Rloc:\s*
+    (?P<rloc>[0-9A-Fa-f]+)  # hex-only RLOC16 value
     """,
     re.VERBOSE
 )
@@ -72,7 +72,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
     Read a log file and extract:
       - RTT timestamps and averages
       - packet-loss timestamps (loss > 0)
-      - parent timestamps and hex addresses
+      - parent timestamps and RLOC16 values
     """
     print(f"\n[PROCESS] Starting file: {log_path}")
 
@@ -114,24 +114,19 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 metrics.rtt_timestamps.append(ts)
                 metrics.rtt_avgs_ms.append(avg_ms)
 
-            # --- Parent detection (hex-only Ext Addr:) ---
+            # --- Parent detection (RLOC16 from "Rloc:" lines) ---
             m_parent = parent_re.search(line_stripped)
             if m_parent:
                 ts_str = m_parent.group("ts")
-                ext_addr = m_parent.group("addr")
-
-                # Extra sanity checks if you want (e.g. length >= 8)
-                if len(ext_addr) < 8:
-                    print(f"  [SKIP PARENT] Line {line_no}: suspicious short addr '{ext_addr}'")
-                    continue
+                rloc16 = m_parent.group("rloc")
 
                 ts = parse_timestamp(ts_str)
 
                 print(f"  [USE PARENT] Line {line_no}: {line_stripped}")
-                print(f"               -> Parent Ext Addr: {ext_addr}")
+                print(f"               -> Parent RLOC16: {rloc16}")
 
                 metrics.parent_timestamps.append(ts)
-                metrics.parent_ids.append(ext_addr)
+                metrics.parent_ids.append(rloc16)
 
     return metrics
 
@@ -203,7 +198,7 @@ def plot_parents(
     plt.figure()
     plt.scatter(parent_timestamps, y_values)
     plt.xlabel("Time")
-    plt.ylabel("Parent")
+    plt.ylabel("Parent (RLOC16)")
     plt.yticks(range(len(unique_parents)), unique_parents)
     plt.title(f"Parent\n{label_for_file}")
     plt.grid(True)
@@ -254,7 +249,7 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
 
     # --- Parent plotting ---
     if not metrics.parent_timestamps:
-        print(f"[SUMMARY] {log_path}: no valid parent data (Ext Addr) found.")
+        print(f"[SUMMARY] {log_path}: no valid parent data (RLOC16) found.")
         return
 
     print(f"[SUMMARY] {log_path}: {len(metrics.parent_timestamps)} parent sample(s) parsed.")
