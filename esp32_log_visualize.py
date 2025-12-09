@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import os
 from glob import glob
+from dataclasses import dataclass
+from typing import List, Dict
 
 # Directories
 DATA_DIR = "data"
@@ -56,7 +58,16 @@ def parse_timestamp(ts_str: str) -> datetime:
         return datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
 
 
-def parse_log_file(log_path: str):
+@dataclass
+class LogMetrics:
+    rtt_timestamps: List[datetime]
+    rtt_avgs_ms: List[float]
+    loss_timestamps: List[datetime]
+    parent_timestamps: List[datetime]
+    parent_ids: List[str]
+
+
+def parse_log_file(log_path: str) -> LogMetrics:
     """
     Read a log file and extract:
       - RTT timestamps and averages
@@ -65,13 +76,13 @@ def parse_log_file(log_path: str):
     """
     print(f"\n[PROCESS] Starting file: {log_path}")
 
-    timestamps_rtt: list[datetime] = []
-    avg_rtts_ms: list[float] = []
-
-    loss_timestamps: list[datetime] = []
-
-    parent_timestamps: list[datetime] = []
-    parent_ids: list[str] = []
+    metrics = LogMetrics(
+        rtt_timestamps=[],
+        rtt_avgs_ms=[],
+        loss_timestamps=[],
+        parent_timestamps=[],
+        parent_ids=[],
+    )
 
     with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
         for line_no, line in enumerate(f, start=1):
@@ -87,7 +98,7 @@ def parse_log_file(log_path: str):
 
                 if loss_pct > 0.0:
                     print(f"  [LOSS] Packet loss {loss_pct}% at {ts_loss_str}")
-                    loss_timestamps.append(ts_loss)
+                    metrics.loss_timestamps.append(ts_loss)
 
             # --- RTT detection (only lines with Round-trip stats) ---
             m_rtt = rtt_re.search(line_stripped)
@@ -100,8 +111,8 @@ def parse_log_file(log_path: str):
                 ts = parse_timestamp(ts_str)
                 avg_ms = float(avg_str)
 
-                timestamps_rtt.append(ts)
-                avg_rtts_ms.append(avg_ms)
+                metrics.rtt_timestamps.append(ts)
+                metrics.rtt_avgs_ms.append(avg_ms)
 
             # --- Parent detection (hex-only Ext Addr:) ---
             m_parent = parent_re.search(line_stripped)
@@ -119,19 +130,21 @@ def parse_log_file(log_path: str):
                 print(f"  [USE PARENT] Line {line_no}: {line_stripped}")
                 print(f"               -> Parent Ext Addr: {ext_addr}")
 
-                parent_timestamps.append(ts)
-                parent_ids.append(ext_addr)
+                metrics.parent_timestamps.append(ts)
+                metrics.parent_ids.append(ext_addr)
 
-    return timestamps_rtt, avg_rtts_ms, loss_timestamps, parent_timestamps, parent_ids
+    return metrics
 
 
 def plot_rtt_and_loss(
     label_for_file: str,
-    timestamps_rtt: list[datetime],
-    avg_rtts_ms: list[float],
-    loss_timestamps: list[datetime],
+    metrics: LogMetrics,
     out_path: Path,
 ) -> None:
+    timestamps_rtt = metrics.rtt_timestamps
+    avg_rtts_ms = metrics.rtt_avgs_ms
+    loss_timestamps = metrics.loss_timestamps
+
     plt.figure()
 
     # Plot RTT as points (if any)
@@ -177,10 +190,12 @@ def plot_rtt_and_loss(
 
 def plot_parents(
     label_for_file: str,
-    parent_timestamps: list[datetime],
-    parent_ids: list[str],
+    metrics: LogMetrics,
     out_path: Path,
 ) -> None:
+    parent_timestamps = metrics.parent_timestamps
+    parent_ids = metrics.parent_ids
+
     unique_parents = sorted(set(parent_ids))
     parent_to_index = {p: i for i, p in enumerate(unique_parents)}
     y_values = [parent_to_index[p] for p in parent_ids]
@@ -198,7 +213,7 @@ def plot_parents(
     plt.close()
 
 
-def process_log_file(log_path: str, rtt_by_file: dict):
+def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None:
     # Work out paths/labels for this file
     log_path_obj = Path(log_path)
     data_dir_path = Path(DATA_DIR)
@@ -213,52 +228,43 @@ def process_log_file(log_path: str, rtt_by_file: dict):
     # label for plots/boxplot: use relative path to avoid collisions
     label_for_file = str(rel_log_path)
 
-    (
-        timestamps_rtt,
-        avg_rtts_ms,
-        loss_timestamps,
-        parent_timestamps,
-        parent_ids,
-    ) = parse_log_file(log_path)
+    metrics = parse_log_file(log_path)
 
     # --- RTT + packet-loss summary / data collection ---
-    if not timestamps_rtt and not loss_timestamps:
+    if not metrics.rtt_timestamps and not metrics.loss_timestamps:
         print(f"[SUMMARY] {log_path}: 0 RTT samples and no packet loss.")
     else:
-        print(f"[SUMMARY] {log_path}: {len(timestamps_rtt)} RTT samples parsed.")
-        print(f"[SUMMARY] {log_path}: {len(loss_timestamps)} packet loss event(s).")
+        print(f"[SUMMARY] {log_path}: {len(metrics.rtt_timestamps)} RTT samples parsed.")
+        print(f"[SUMMARY] {log_path}: {len(metrics.loss_timestamps)} packet loss event(s).")
 
         # Only include files with RTT for the boxplot
-        if timestamps_rtt:
-            rtt_by_file[label_for_file] = avg_rtts_ms
+        if metrics.rtt_timestamps:
+            rtt_by_file[label_for_file] = metrics.rtt_avgs_ms
 
         out_name = log_path_obj.stem + "_rtt.png"
         out_path = graph_dir / out_name
 
         plot_rtt_and_loss(
             label_for_file=label_for_file,
-            timestamps_rtt=timestamps_rtt,
-            avg_rtts_ms=avg_rtts_ms,
-            loss_timestamps=loss_timestamps,
+            metrics=metrics,
             out_path=out_path,
         )
 
         print(f"[OK] Saved RTT graph for {label_for_file} -> {out_path}")
 
     # --- Parent plotting ---
-    if not parent_timestamps:
+    if not metrics.parent_timestamps:
         print(f"[SUMMARY] {log_path}: no valid parent data (Ext Addr) found.")
         return
 
-    print(f"[SUMMARY] {log_path}: {len(parent_timestamps)} parent sample(s) parsed.")
+    print(f"[SUMMARY] {log_path}: {len(metrics.parent_timestamps)} parent sample(s) parsed.")
 
     parents_out_name = log_path_obj.stem + "_parents.png"
     parents_out_path = graph_dir / parents_out_name
 
     plot_parents(
         label_for_file=label_for_file,
-        parent_timestamps=parent_timestamps,
-        parent_ids=parent_ids,
+        metrics=metrics,
         out_path=parents_out_path,
     )
 
@@ -272,7 +278,7 @@ def main():
     pattern = os.path.join(DATA_DIR, "**", "*.log")
     all_candidates = glob(pattern, recursive=True)
 
-    log_files = []
+    log_files: List[str] = []
     for path_str in all_candidates:
         p = Path(path_str)
 
@@ -299,7 +305,7 @@ def main():
     for lf in log_files:
         print(f"  - {lf}")
 
-    rtt_by_file: dict[str, list[float]] = {}
+    rtt_by_file: Dict[str, List[float]] = {}
 
     for log_path in log_files:
         process_log_file(log_path, rtt_by_file)
