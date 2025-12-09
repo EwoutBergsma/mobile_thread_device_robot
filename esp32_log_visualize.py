@@ -5,7 +5,8 @@ from pathlib import Path
 import os
 from glob import glob
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import List, Dict, Optional
+from collections import defaultdict
 
 # Directories
 DATA_DIR = "data"
@@ -50,6 +51,19 @@ parent_re = re.compile(
     re.VERBOSE
 )
 
+# Regex for OT state lines like:
+# [ts] child
+# [ts] detached
+# [ts] router
+# [ts] leader
+state_re = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]              # timestamp
+    .*?\b(?P<state>disabled|detached|child|router|leader)\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
 # Helper to parse timestamps like 2025-12-04T17:52:42.396
 def parse_timestamp(ts_str: str) -> datetime:
     try:
@@ -66,6 +80,99 @@ class LogMetrics:
     parent_timestamps: List[datetime]
     parent_ids: List[str]
 
+    # State events
+    state_timestamps: List[datetime]
+    states: List[str]
+
+    # Derived "effective parent" timeline (state + parent combined)
+    eff_parent_timestamps: List[datetime]
+    eff_parents: List[str]
+
+
+def compute_effective_parent(state: Optional[str], parent: Optional[str]) -> str:
+    """
+    Implement the same logic as the other script’s effective_parent():
+
+    - If state is blank or "blank" or None -> "No Parent"
+    - If state == "detached" -> "No Parent"
+    - Else, if parent missing/none/nan/"" -> "No Parent"
+    - Else -> parent RLOC16 string
+    """
+    def is_blank_state(v: Optional[str]) -> bool:
+        if v is None:
+            return True
+        s = v.strip().lower()
+        return s == "" or s == "blank"
+
+    st = (state or "").strip().lower()
+
+    # State overrides parent: detached / blank => no parent
+    if is_blank_state(state) or st == "detached":
+        return "No Parent"
+
+    if parent is None:
+        return "No Parent"
+    p = parent.strip()
+    if not p or p.lower() in ("none", "nan"):
+        return "No Parent"
+
+    return p
+
+
+def build_parent_timeline(metrics: LogMetrics) -> None:
+    """
+    Build a time series of "effective parent" where:
+      - state + parent are forward-filled over time
+      - 'detached' or blank state => 'No Parent'
+      - missing/none/nan parent => 'No Parent'
+
+    Timeline includes all timestamps where we have RTT, loss, parent, or state info.
+    """
+
+    # Map timestamps -> parents / states
+    parents_at_ts: Dict[datetime, List[str]] = defaultdict(list)
+    for ts, pid in zip(metrics.parent_timestamps, metrics.parent_ids):
+        parents_at_ts[ts].append(pid)
+
+    states_at_ts: Dict[datetime, List[str]] = defaultdict(list)
+    for ts, st in zip(metrics.state_timestamps, metrics.states):
+        states_at_ts[ts].append(st)
+
+    # Union of all timestamps where anything happens
+    all_ts_set = set()
+    all_ts_set.update(metrics.rtt_timestamps)
+    all_ts_set.update(metrics.loss_timestamps)
+    all_ts_set.update(metrics.parent_timestamps)
+    all_ts_set.update(metrics.state_timestamps)
+
+    if not all_ts_set:
+        metrics.eff_parent_timestamps = []
+        metrics.eff_parents = []
+        return
+
+    all_ts = sorted(all_ts_set)
+
+    current_state: Optional[str] = None
+    current_parent: Optional[str] = None
+
+    eff_ts: List[datetime] = []
+    eff_parents: List[str] = []
+
+    for ts in all_ts:
+        # Update state / parent if we have new info at this timestamp
+        if ts in states_at_ts:
+            current_state = states_at_ts[ts][-1].strip().lower()
+
+        if ts in parents_at_ts:
+            current_parent = parents_at_ts[ts][-1].strip()
+
+        eff_parent = compute_effective_parent(current_state, current_parent)
+        eff_ts.append(ts)
+        eff_parents.append(eff_parent)
+
+    metrics.eff_parent_timestamps = eff_ts
+    metrics.eff_parents = eff_parents
+
 
 def parse_log_file(log_path: str) -> LogMetrics:
     """
@@ -73,6 +180,8 @@ def parse_log_file(log_path: str) -> LogMetrics:
       - RTT timestamps and averages
       - packet-loss timestamps (loss > 0)
       - parent timestamps and RLOC16 values
+      - OT state changes
+      - derived effective-parent timeline (state + parent combined)
     """
     print(f"\n[PROCESS] Starting file: {log_path}")
 
@@ -82,6 +191,10 @@ def parse_log_file(log_path: str) -> LogMetrics:
         loss_timestamps=[],
         parent_timestamps=[],
         parent_ids=[],
+        state_timestamps=[],
+        states=[],
+        eff_parent_timestamps=[],
+        eff_parents=[],
     )
 
     with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
@@ -127,6 +240,22 @@ def parse_log_file(log_path: str) -> LogMetrics:
 
                 metrics.parent_timestamps.append(ts)
                 metrics.parent_ids.append(rloc16)
+
+            # --- State detection (child/detached/router/leader/disabled) ---
+            m_state = state_re.search(line_stripped)
+            if m_state:
+                ts_str = m_state.group("ts")
+                state_str = m_state.group("state")
+                ts = parse_timestamp(ts_str)
+
+                state_norm = state_str.strip().lower()
+                print(f"  [STATE] {state_norm} at {ts_str}")
+
+                metrics.state_timestamps.append(ts)
+                metrics.states.append(state_norm)
+
+    # Build effective-parent timeline once all events are collected
+    build_parent_timeline(metrics)
 
     return metrics
 
@@ -188,8 +317,22 @@ def plot_parents(
     metrics: LogMetrics,
     out_path: Path,
 ) -> None:
-    parent_timestamps = metrics.parent_timestamps
-    parent_ids = metrics.parent_ids
+    """
+    Plot parent over time using the *effective* parent:
+      - 'detached' / blank state -> 'No Parent'
+      - parent RLOC16 otherwise
+    If the effective timeline is missing, falls back to raw parent events.
+    """
+    # Prefer the derived effective timeline
+    if metrics.eff_parent_timestamps:
+        parent_timestamps = metrics.eff_parent_timestamps
+        parent_ids = metrics.eff_parents
+    else:
+        parent_timestamps = metrics.parent_timestamps
+        parent_ids = metrics.parent_ids
+
+    if not parent_timestamps:
+        return
 
     unique_parents = sorted(set(parent_ids))
     parent_to_index = {p: i for i, p in enumerate(unique_parents)}
@@ -198,7 +341,7 @@ def plot_parents(
     plt.figure()
     plt.scatter(parent_timestamps, y_values)
     plt.xlabel("Time")
-    plt.ylabel("Parent (RLOC16)")
+    plt.ylabel("Parent (effective)")
     plt.yticks(range(len(unique_parents)), unique_parents)
     plt.title(f"Parent\n{label_for_file}")
     plt.grid(True)
