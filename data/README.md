@@ -18,3 +18,11 @@ Tried doing all routers and end devices to -13 dbm
 Mistake found, end devices did not understand the txpower command (see beginning of logs)
 __________
 
+`uart_devttyacm0_5777002735_20251209_111508.log`
+`uart_devttyacm0_5777002735_20251209_111819.log`
+`uart_devttyacm1_578e013641_20251209_111508_PPS.log`
+`uart_devttyacm1_578e013641_20251209_111832_PPS.log`
+
+These appear to be good results with every device properly set to -13 dbm txpower. Weirdly this became two separate logs, not sure why. For this reason perhaps we should try to also periodially check what the current transmit power of the device is.
+Also, this was a relatively short run.
+__________
