@@ -16,8 +16,8 @@ GRAPHS_DIR = "graphs"
 PING_REPLY_LEN = 56
 
 # Fixed y-axis ranges (set to None to auto-scale)
-RTT_YLIM = (0, 1000)       # ms
-RSS_YLIM = (-120, -40)     # dBm
+RTT_YLIM = (0, 3000)       # ms
+RSS_YLIM = (-120, 0)     # dBm
 
 # Ensure base graphs directory exists
 os.makedirs(GRAPHS_DIR, exist_ok=True)
@@ -286,9 +286,12 @@ def parse_log_file(log_path: str) -> LogMetrics:
 def plot_rtt(
     ax,
     metrics: LogMetrics,
+    rtt_mean_ms: Optional[float] = None,
+    rtt_std_ms: Optional[float] = None,
 ) -> None:
     """
     Plot RTT on the provided Axes (no packet-loss here).
+    Optionally include mean and std in the title.
     """
     timestamps_rtt = metrics.rtt_timestamps
     avg_rtts_ms = metrics.rtt_avgs_ms
@@ -299,12 +302,17 @@ def plot_rtt(
             avg_rtts_ms,
             marker=".",
             linestyle="",
-            label="RTT avg (ms)",
+            label="RTT (ms)",
         )
         ax.legend()
 
     ax.set_ylabel("RTT (ms)")
-    ax.set_title("Ping RTT")
+
+    if rtt_mean_ms is not None and rtt_std_ms is not None:
+        ax.set_title(f"Ping to Parent Round-trip Time (avg={rtt_mean_ms:.1f} ms, std={rtt_std_ms:.1f} ms)")
+    else:
+        ax.set_title("Ping to Parent Round-trip Time")
+
     ax.grid(True)
 
     if RTT_YLIM is not None:
@@ -326,7 +334,7 @@ def plot_parents(
         parent_ids = metrics.parent_ids
 
     if not parent_timestamps:
-        ax.set_title("Parent")
+        ax.set_title("Connected to Parent")
         ax.text(
             0.5,
             0.5,
@@ -344,10 +352,10 @@ def plot_parents(
     y_values = [parent_to_index[p] for p in parent_ids]
 
     ax.scatter(parent_timestamps, y_values)
-    ax.set_ylabel("Parent")
+    ax.set_ylabel("Parent (RLOC16)")
     ax.set_yticks(range(len(unique_parents)))
     ax.set_yticklabels(unique_parents)
-    ax.set_title("Parent")
+    ax.set_title("Connected to Parent")
     ax.grid(True)
 
 
@@ -405,11 +413,11 @@ def plot_rss_and_loss(
 
     ax.set_ylabel("RSS (dBm)")
 
-    # PDR now appears here in the second subtitle
+    # PDR appears here in the second subtitle
     if overall_pdr is not None:
-        ax.set_title(f"Ping RSS & Packet Loss (PDR={overall_pdr:.1f}%)")
+        ax.set_title(f"Ping to Parent RSS & Packet Loss (PDR={overall_pdr:.1f}%)")
     else:
-        ax.set_title("Ping RSS & Packet Loss")
+        ax.set_title("Ping to Parent RSS & Packet Loss")
 
     ax.grid(True)
 
@@ -461,6 +469,24 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
         overall_pdr = None
         print(f"[SUMMARY] {log_path}: No packet summary lines found for PDR.")
 
+    # RTT statistics (mean and std) over this file
+    if metrics.rtt_avgs_ms:
+        vals = metrics.rtt_avgs_ms
+        n = len(vals)
+        rtt_mean_ms = sum(vals) / n
+        if n > 1:
+            var = sum((v - rtt_mean_ms) ** 2 for v in vals) / n  # population variance
+            rtt_std_ms = var ** 0.5
+        else:
+            rtt_std_ms = 0.0
+        print(
+            f"[SUMMARY] {log_path}: RTT mean = {rtt_mean_ms:.2f} ms, "
+            f"std = {rtt_std_ms:.2f} ms"
+        )
+    else:
+        rtt_mean_ms = None
+        rtt_std_ms = None
+
     # If there's absolutely nothing to plot, skip.
     if (
         not metrics.rtt_timestamps
@@ -480,7 +506,7 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
     )
     ax_rtt, ax_rss, ax_parent = axes
 
-    plot_rtt(ax=ax_rtt, metrics=metrics)
+    plot_rtt(ax=ax_rtt, metrics=metrics, rtt_mean_ms=rtt_mean_ms, rtt_std_ms=rtt_std_ms)
     plot_rss_and_loss(ax=ax_rss, metrics=metrics, overall_pdr=overall_pdr)
     plot_parents(ax=ax_parent, metrics=metrics)
 
@@ -548,7 +574,7 @@ def main():
         showfliers=False,
     )
     plt.ylabel("RTT (ms)")
-    plt.title("Ping RTT Boxplot per File")
+    plt.title("Ping to Parent Round-trip Time per File")
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
 
