@@ -6,7 +6,6 @@ import os
 import threading
 import time
 import re
-import platform
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
@@ -144,8 +143,7 @@ class SerialLogger(threading.Thread):
         """
         Create a log filename in the current working directory.
 
-        Example (Linux):  uart_ttyacm0_20251203_142500.log
-        Example (Windows): uart_com3_20251203_142500.log
+        Example (Linux): uart_ttyacm0_20251203_142500.log
         """
         port_name = _sanitize_for_filename(self.port_info.device)
         serial_number = _sanitize_for_filename(
@@ -292,37 +290,24 @@ class SerialLogger(threading.Thread):
 
 def scan_ports() -> Dict[str, ListPortInfo]:
     """
-    Return likely USB-style serial ports on the current platform.
+    Return likely USB-style serial ports on Linux.
 
-    Linux:  /dev/ttyUSB*, /dev/ttyACM*
-    macOS:  /dev/tty.usb*, /dev/cu.usb*  # Untested!
-    Windows: COM* (all COM ports are considered candidates)
+    Linux: /dev/ttyUSB*, /dev/ttyACM*
     """
     ports: Dict[str, ListPortInfo] = {}
-
-    system = platform.system()
 
     for p in list_ports.comports():
         dev = p.device or ""
 
-        if system == "Windows":
-            # On Windows, ESP32 boards usually appear as COMx
-            if dev.upper().startswith("COM"):
-                ports[dev] = p
-        elif system == "Darwin": 
-            # Common macOS USB serial device names
-            if dev.startswith("/dev/tty.usb") or dev.startswith("/dev/cu.usb"):
-                ports[dev] = p
-        else:
-            # Linux / other POSIX: typical USB serial names
-            if dev.startswith("/dev/ttyACM") or dev.startswith("/dev/ttyUSB"):
-                ports[dev] = p
+        # Linux: typical USB serial names
+        if dev.startswith("/dev/ttyACM") or dev.startswith("/dev/ttyUSB"):
+            ports[dev] = p
 
     return ports
 
 
 def main():
-    print("ESP32 auto UART logger with OT parent ping")
+    print("ESP32 auto UART logger with OT parent ping (Linux only)")
     print(f"Baudrate: {BAUDRATE}")
     print("Log files will be saved in the current directory.")
     print("Press Ctrl+C to stop.\n")
