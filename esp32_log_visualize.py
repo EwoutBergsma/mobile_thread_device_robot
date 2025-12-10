@@ -36,12 +36,17 @@ rtt_re = re.compile(
     re.VERBOSE
 )
 
-# Regex for ANY packet-loss line (0.0%, 10.0%, 100.0%, etc.)
+# Regex for packet summary lines with packet loss (0.0%, 10.0%, 100.0%, etc.)
+# Examples:
+# [2025-12-04T17:52:34.591] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip ...
+# [2025-12-04T17:53:28.088] 1 packets transmitted, 0 packets received. Packet loss = 100.0%.
 loss_re = re.compile(
     r"""
-    \[(?P<ts>[^\]]+)\]          # timestamp in brackets
-    .*?Packet\ loss\s*=\s*
-    (?P<loss>\d+(?:\.\d+)?)%    # e.g. 0.0, 10.0, 100.0
+    \[(?P<ts>[^\]]+)\]\s+                  # timestamp in brackets
+    (?P<tx>\d+)\s+packets\s+transmitted,\s+
+    (?P<rx>\d+)\s+packets\s+received\.\s+
+    Packet\ loss\s*=\s*
+    (?P<loss>\d+(?:\.\d+)?)%              # e.g. 0.0, 10.0, 100.0
     """,
     re.VERBOSE
 )
@@ -91,18 +96,15 @@ class LogMetrics:
     loss_timestamps: List[datetime]
     parent_timestamps: List[datetime]
     parent_ids: List[str]
-
-    # RSS samples (ONLY ping replies with len == PING_REPLY_LEN)
     rss_timestamps: List[datetime]
     rss_values: List[float]
-
-    # State events
     state_timestamps: List[datetime]
     states: List[str]
-
-    # Derived "effective parent" timeline (state + parent combined)
     eff_parent_timestamps: List[datetime]
     eff_parents: List[str]
+    # Totals for PDR over the entire file
+    total_tx: int
+    total_rx: int
 
 
 def compute_effective_parent(state: Optional[str], parent: Optional[str]) -> str:
@@ -204,20 +206,29 @@ def parse_log_file(log_path: str) -> LogMetrics:
         states=[],
         eff_parent_timestamps=[],
         eff_parents=[],
+        total_tx=0,
+        total_rx=0,
     )
 
     with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
         for line_no, line in enumerate(f, start=1):
             line_stripped = line.rstrip("\n")
 
-            # --- Packet loss detection (any loss != 0.0%) ---
+            # --- Packet loss / summary detection (any percentage) ---
             m_loss = loss_re.search(line_stripped)
             if m_loss:
                 ts_loss_str = m_loss.group("ts")
-                loss_pct_str = m_loss.group("loss")
                 ts_loss = parse_timestamp(ts_loss_str)
-                loss_pct = float(loss_pct_str)
 
+                tx = int(m_loss.group("tx"))
+                rx = int(m_loss.group("rx"))
+                loss_pct = float(m_loss.group("loss"))
+
+                # Accumulate totals for overall PDR
+                metrics.total_tx += tx
+                metrics.total_rx += rx
+
+                # Keep timestamp for non-zero loss events (for vertical markers)
                 if loss_pct > 0.0:
                     print(f"  [LOSS] Packet loss {loss_pct}% at {ts_loss_str}")
                     metrics.loss_timestamps.append(ts_loss)
@@ -343,9 +354,11 @@ def plot_parents(
 def plot_rss_and_loss(
     ax,
     metrics: LogMetrics,
+    overall_pdr: Optional[float] = None,
 ) -> None:
     """
     Plot RSS over time and packet-loss vertical lines on the same Axes.
+    If overall_pdr is provided, include it in this subplot's title.
     """
     timestamps_rss = metrics.rss_timestamps
     rss_values = metrics.rss_values
@@ -360,7 +373,7 @@ def plot_rss_and_loss(
             rss_values,
             marker=".",
             linestyle="",
-            label=f"Ping RSS",
+            label="RTT RSS",
         )
         plotted_any = True
 
@@ -391,7 +404,13 @@ def plot_rss_and_loss(
         ax.legend()
 
     ax.set_ylabel("RSS (dBm)")
-    ax.set_title("Ping RSS & Packet Loss")
+
+    # PDR now appears here in the second subtitle
+    if overall_pdr is not None:
+        ax.set_title(f"Ping RSS & Packet Loss (PDR={overall_pdr:.1f}%)")
+    else:
+        ax.set_title("Ping RSS & Packet Loss")
+
     ax.grid(True)
 
     if RSS_YLIM is not None:
@@ -431,6 +450,17 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
     else:
         print(f"[SUMMARY] {log_path}: no valid parent data (RLOC16) found.")
 
+    # Overall packet delivery rate for the file
+    if metrics.total_tx > 0:
+        overall_pdr = 100.0 * metrics.total_rx / metrics.total_tx
+        print(
+            f"[SUMMARY] {log_path}: Overall packet delivery rate = "
+            f"{overall_pdr:.2f}% ({metrics.total_rx}/{metrics.total_tx})"
+        )
+    else:
+        overall_pdr = None
+        print(f"[SUMMARY] {log_path}: No packet summary lines found for PDR.")
+
     # If there's absolutely nothing to plot, skip.
     if (
         not metrics.rtt_timestamps
@@ -451,12 +481,15 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
     ax_rtt, ax_rss, ax_parent = axes
 
     plot_rtt(ax=ax_rtt, metrics=metrics)
-    plot_rss_and_loss(ax=ax_rss, metrics=metrics)
+    plot_rss_and_loss(ax=ax_rss, metrics=metrics, overall_pdr=overall_pdr)
     plot_parents(ax=ax_parent, metrics=metrics)
 
     ax_parent.set_xlabel("Time")
     fig.autofmt_xdate(rotation=45)
-    fig.suptitle(label_for_file, y=0.98)   # only place where filename appears
+
+    # Top title: only the file label; PDR is in the second subplot
+    suptitle_text = label_for_file
+    fig.suptitle(suptitle_text, y=0.98)   # only place where filename appears
     fig.tight_layout(rect=[0, 0, 1, 0.96])
 
     out_name = log_path_obj.stem + "_timeseries.png"
