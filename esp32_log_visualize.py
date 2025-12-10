@@ -144,7 +144,6 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
 
     Timeline includes all timestamps where we have RTT, loss, parent, state, or RSS info.
     """
-
     parents_at_ts: Dict[datetime, List[str]] = defaultdict(list)
     for ts, pid in zip(metrics.parent_timestamps, metrics.parent_ids):
         parents_at_ts[ts].append(pid)
@@ -291,10 +290,11 @@ def plot_rtt(
 ) -> None:
     """
     Plot RTT on the provided Axes (no packet-loss here).
-    Optionally include mean and std in the title.
+    Include number of RTT samples, and optionally mean and std in the title.
     """
     timestamps_rtt = metrics.rtt_timestamps
     avg_rtts_ms = metrics.rtt_avgs_ms
+    n_rtt = len(avg_rtts_ms)
 
     if timestamps_rtt:
         ax.plot(
@@ -308,13 +308,19 @@ def plot_rtt(
 
     ax.set_ylabel("RTT (ms)")
 
-    if rtt_mean_ms is not None and rtt_std_ms is not None:
-        ax.set_title(
-            f"Ping to Parent Round-trip Time (avg={rtt_mean_ms:.1f} ms, std={rtt_std_ms:.1f} ms)"
-        )
-    else:
-        ax.set_title("Ping to Parent Round-trip Time")
+    # Build title string
+    title = "Ping to Parent Round-trip Time"
+    suffix_parts = []
 
+    if n_rtt > 0:
+        suffix_parts.append(f"nRTT={n_rtt}")
+    if rtt_mean_ms is not None and rtt_std_ms is not None:
+        suffix_parts.append(f"avg={rtt_mean_ms:.1f} ms, std={rtt_std_ms:.1f} ms")
+
+    if suffix_parts:
+        title += " (" + ", ".join(suffix_parts) + ")"
+
+    ax.set_title(title)
     ax.grid(True)
 
     if RTT_YLIM is not None:
@@ -370,24 +376,18 @@ def plot_rss_and_loss(
     Plot RSS over time and packet-loss vertical lines on the same Axes.
 
     If overall_pdr is provided, include it in this subplot's title.
-    Also include average RSS and standard deviation of RSS when available.
+    Also include:
+      - nRSS: number of RSS samples
+      - average RSS
+      - standard deviation of RSS
+    when available.
     """
     timestamps_rss = metrics.rss_timestamps
     rss_values = metrics.rss_values
     loss_timestamps = metrics.loss_timestamps
+    n_rss = len(rss_values)
 
     plotted_any = False
-
-    # RSS scatter
-    if timestamps_rss:
-        ax.plot(
-            timestamps_rss,
-            rss_values,
-            marker=".",
-            linestyle="",
-            label="RTT RSS",
-        )
-        plotted_any = True
 
     # Packet loss vertical lines
     if loss_timestamps:
@@ -399,6 +399,17 @@ def plot_rss_and_loss(
                 alpha=0.7,
                 label="Packet loss" if i == 0 else None,
             )
+        plotted_any = True
+        
+    # RSS scatter
+    if timestamps_rss:
+        ax.plot(
+            timestamps_rss,
+            rss_values,
+            marker=".",
+            linestyle="",
+            label="RTT RSS",
+        )
         plotted_any = True
 
     if not timestamps_rss:
@@ -435,6 +446,8 @@ def plot_rss_and_loss(
     suffix_parts = []
     if overall_pdr is not None:
         suffix_parts.append(f"PDR={overall_pdr:.1f}%")
+    if n_rss > 0:
+        suffix_parts.append(f"nRSS={n_rss}")
     if rss_mean_dbm is not None and rss_std_db is not None:
         suffix_parts.append(f"avgRSS={rss_mean_dbm:.1f} dBm, stdRSS={rss_std_db:.1f} dB")
 
@@ -536,7 +549,7 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
     ax_parent.set_xlabel("Time")
     fig.autofmt_xdate(rotation=45)
 
-    # Top title: only the file label; PDR/RSS stats are in the second subplot
+    # Top title: only the file label; stats appear in subplots
     suptitle_text = label_for_file
     fig.suptitle(suptitle_text, y=0.98)   # only place where filename appears
     fig.tight_layout(rect=[0, 0, 1, 0.96])
