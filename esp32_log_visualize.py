@@ -17,7 +17,7 @@ PING_REPLY_LEN = 56
 
 # Fixed y-axis ranges (set to None to auto-scale)
 RTT_YLIM = (0, 3000)       # ms
-RSS_YLIM = (-120, 0)     # dBm
+RSS_YLIM = (-120, 0)       # dBm
 
 # Ensure base graphs directory exists
 os.makedirs(GRAPHS_DIR, exist_ok=True)
@@ -309,7 +309,9 @@ def plot_rtt(
     ax.set_ylabel("RTT (ms)")
 
     if rtt_mean_ms is not None and rtt_std_ms is not None:
-        ax.set_title(f"Ping to Parent Round-trip Time (avg={rtt_mean_ms:.1f} ms, std={rtt_std_ms:.1f} ms)")
+        ax.set_title(
+            f"Ping to Parent Round-trip Time (avg={rtt_mean_ms:.1f} ms, std={rtt_std_ms:.1f} ms)"
+        )
     else:
         ax.set_title("Ping to Parent Round-trip Time")
 
@@ -366,7 +368,9 @@ def plot_rss_and_loss(
 ) -> None:
     """
     Plot RSS over time and packet-loss vertical lines on the same Axes.
+
     If overall_pdr is provided, include it in this subplot's title.
+    Also include average RSS and standard deviation of RSS when available.
     """
     timestamps_rss = metrics.rss_timestamps
     rss_values = metrics.rss_values
@@ -413,12 +417,31 @@ def plot_rss_and_loss(
 
     ax.set_ylabel("RSS (dBm)")
 
-    # PDR appears here in the second subtitle
-    if overall_pdr is not None:
-        ax.set_title(f"Ping to Parent RSS & Packet Loss (PDR={overall_pdr:.1f}%)")
-    else:
-        ax.set_title("Ping to Parent RSS & Packet Loss")
+    # --- RSS statistics for title ---
+    rss_mean_dbm: Optional[float] = None
+    rss_std_db: Optional[float] = None
+    if rss_values:
+        n = len(rss_values)
+        rss_mean_dbm = sum(rss_values) / n
+        if n > 1:
+            var = sum((v - rss_mean_dbm) ** 2 for v in rss_values) / n  # population variance
+            rss_std_db = var ** 0.5
+        else:
+            rss_std_db = 0.0
 
+    # Build title string
+    title = "Ping to Parent RSS & Packet Loss"
+
+    suffix_parts = []
+    if overall_pdr is not None:
+        suffix_parts.append(f"PDR={overall_pdr:.1f}%")
+    if rss_mean_dbm is not None and rss_std_db is not None:
+        suffix_parts.append(f"avgRSS={rss_mean_dbm:.1f} dBm, stdRSS={rss_std_db:.1f} dB")
+
+    if suffix_parts:
+        title += " (" + ", ".join(suffix_parts) + ")"
+
+    ax.set_title(title)
     ax.grid(True)
 
     if RSS_YLIM is not None:
@@ -513,7 +536,7 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
     ax_parent.set_xlabel("Time")
     fig.autofmt_xdate(rotation=45)
 
-    # Top title: only the file label; PDR is in the second subplot
+    # Top title: only the file label; PDR/RSS stats are in the second subplot
     suptitle_text = label_for_file
     fig.suptitle(suptitle_text, y=0.98)   # only place where filename appears
     fig.tight_layout(rect=[0, 0, 1, 0.96])
