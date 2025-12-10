@@ -13,8 +13,8 @@
   "clangd.arguments": [
     "--background-index",
     "--query-driver=C:\\Users\\beeo\\.espressif\\tools\\riscv32-esp-elf\\esp-14.2.0_20241119\\riscv32-esp-elf\\bin\\riscv32-esp-elf-gcc.exe",
-    "--compile-commands-dir=c:\\Repositories\\esp32_cli_551\\ot_cli\\build"
+    "--compile-commands-dir=c:\\Repositories\\mobile_thread_device_robot\\esp32_ot_cli_551_redo\\build"
   ],
-  "idf.portWin": "COM12",
-  "idf.flashType": "UART"
+  "idf.flashType": "UART",
+  "idf.portWin": "COM16"
 }

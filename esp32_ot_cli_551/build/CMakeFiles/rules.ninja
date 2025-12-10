@@ -1497,7 +1497,7 @@ rule C_STATIC_LIBRARY_LINKER____idf_main_
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\Users\beeo\.espressif\tools\cmake\3.30.2\bin\cmake.exe --regenerate-during-build -SC:\Repositories\mobile_thread_device_robot\esp32_ot_cli_551 -BC:\Repositories\mobile_thread_device_robot\esp32_ot_cli_551\build
+  command = C:\Users\beeo\.espressif\tools\cmake\3.30.2\bin\cmake.exe --regenerate-during-build -SC:\Repositories\mobile_thread_device_robot\esp32_ot_cli_551_redo -BC:\Repositories\mobile_thread_device_robot\esp32_ot_cli_551_redo\build
   description = Re-running CMake...
   generator = 1
 

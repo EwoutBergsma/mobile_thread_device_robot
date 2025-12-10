@@ -29,3 +29,10 @@ Also, this was a relatively short run.
 Oh wait I might have disconnected and connected the USB cables between these two logs, that is probably why. Interestingly the txpower was not recent, apparently the USB connection was remembered to some extend by the Raspberry Pi.
 __________
 
+`uart_devttyacm0_5777002735_20251209_172003.log`
+`uart_devttyacm1_578e013641_20251209_172003_PPS.log`
+
+Longer run, not separation into two logs this time. But we noticed unexpected 200ms latency minimum for these, but all prior logs. It should be closer to 20ms at most.
+
+__________
+

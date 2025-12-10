@@ -39,11 +39,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/esp-idf/esp_hw_support/port/esp32c6/cmake_install.cmake")
+  include("C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/esp-idf/esp_hw_support/port/esp32c6/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/esp-idf/esp_hw_support/lowpower/cmake_install.cmake")
+  include("C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/esp-idf/esp_hw_support/lowpower/cmake_install.cmake")
 endif()
 

@@ -10,18 +10,18 @@ if(NOT EXISTS "C:/Users/beeo/esp/v5.5.1/esp-idf/components/bootloader/subproject
   file(MAKE_DIRECTORY "C:/Users/beeo/esp/v5.5.1/esp-idf/components/bootloader/subproject")
 endif()
 file(MAKE_DIRECTORY
-  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader"
-  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix"
-  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/tmp"
-  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp"
-  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src"
-  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader"
+  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix"
+  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/tmp"
+  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src"
+  "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

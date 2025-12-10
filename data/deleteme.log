@@ -1,0 +1,1808 @@
+[2025-12-10T15:14:44.333] txpower -13
+[2025-12-10T15:14:44.335] 
+[2025-12-10T15:14:44.338] Done
+[2025-12-10T15:14:44.340] > 
+[2025-12-10T15:14:44.343] > ipaddr
+[2025-12-10T15:14:44.344] 
+[2025-12-10T15:14:44.350] fd72:e9dd:7d27:e872:0:ff:fe00:70d7
+[2025-12-10T15:14:44.363] fd91:92ed:701b:1:90e4:1e8d:d8f6:d18e
+[2025-12-10T15:14:44.371] fd72:e9dd:7d27:e872:521:cca2:6737:1497
+[2025-12-10T15:14:44.378] fe80:0:0:0:984e:93d5:70d5:8c1b
+[2025-12-10T15:14:44.379] Done
+[2025-12-10T15:14:44.380] > 
+[2025-12-10T15:14:44.481] > 
+[2025-12-10T15:14:44.694] txpower -13
+[2025-12-10T15:14:44.694] 
+[2025-12-10T15:14:44.695] Done
+[2025-12-10T15:14:44.696] > 
+[2025-12-10T15:14:44.697] > state
+[2025-12-10T15:14:44.697] 
+[2025-12-10T15:14:44.698] child
+[2025-12-10T15:14:44.699] Done
+[2025-12-10T15:14:44.700] > 
+[2025-12-10T15:14:44.704] > parent
+[2025-12-10T15:14:44.705] 
+[2025-12-10T15:14:44.707] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:44.708] Rloc: 7000
+[2025-12-10T15:14:44.709] Link Quality In: 3
+[2025-12-10T15:14:44.710] Link Quality Out: 3
+[2025-12-10T15:14:44.711] Age: 8
+[2025-12-10T15:14:44.712] Version: 5
+[2025-12-10T15:14:44.712] Done
+[2025-12-10T15:14:44.713] > 
+[2025-12-10T15:14:44.813] > 
+[2025-12-10T15:14:45.731] txpower -13
+[2025-12-10T15:14:45.731] 
+[2025-12-10T15:14:45.731] Done
+[2025-12-10T15:14:45.732] > 
+[2025-12-10T15:14:45.733] > state
+[2025-12-10T15:14:45.733] 
+[2025-12-10T15:14:45.734] child
+[2025-12-10T15:14:45.735] Done
+[2025-12-10T15:14:45.735] > 
+[2025-12-10T15:14:45.741] > parent
+[2025-12-10T15:14:45.742] 
+[2025-12-10T15:14:45.744] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:45.745] Rloc: 7000
+[2025-12-10T15:14:45.746] Link Quality In: 3
+[2025-12-10T15:14:45.748] Link Quality Out: 3
+[2025-12-10T15:14:45.749] Age: 9
+[2025-12-10T15:14:45.750] Version: 5
+[2025-12-10T15:14:45.750] Done
+[2025-12-10T15:14:45.750] > 
+[2025-12-10T15:14:45.753] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:45.753] 
+[2025-12-10T15:14:45.762] I(16869044) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 14)
+[2025-12-10T15:14:45.772] D(16869044) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:45.777] D(16869054) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:45.785] D(16869054) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:45.793] D (16869064) OPENTHREAD: Microsecond timer alarm start running, t0=3983195377, dt=1909
+[2025-12-10T15:14:45.798] D(16869084) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:45.805] D (16869084) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:45.809] D(16869084) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:45.820] D(16869094) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:45.830] D(16869104) OPENTHREAD:[D] Mac-----------: | 69 98 41 FA 86 00 70 D7 | 70 0D D0 28 01 00 01 7A | i.A...p.p..(...z |
+[2025-12-10T15:14:45.841] D(16869114) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 A3 01 00 0E | 00 0E 01 01 62 E8 00 00 | w:..........b... |
+[2025-12-10T15:14:45.851] D(16869114) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 39 BD E7 5C |                         | ....9..\         |
+[2025-12-10T15:14:45.862] D(16869134) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:45.870] D(16869144) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:45.881] I(16869154) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:a301, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:45.887] I(16869164) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:45.895] I(16869164) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:45.904] D(16869174) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:45.909] D(16869184) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:45.917] D(16869184) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585628
+[2025-12-10T15:14:45.928] D(16869204) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:45.938] D(16869214) OPENTHREAD:[D] Mac-----------: | 69 98 28 FA 86 D7 70 00 | 70 0D DC 31 18 00 01 7A | i.(...p.p..1...z |
+[2025-12-10T15:14:45.949] D(16869224) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 A2 01 00 0E | 00 0E 01 01 62 E8 00 00 | w:..........b... |
+[2025-12-10T15:14:45.959] D(16869224) OPENTHREAD:[D] Mac-----------: | 00 00 61 85 E8 04 BC 0A |                         | ..a.....         |
+[2025-12-10T15:14:45.970] D(16869234) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:45.982] I(16869244) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:a201, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:14:45.987] I(16869254) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:45.996] I(16869274) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:46.004] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=14 hlim=64 time=238ms
+[2025-12-10T15:14:46.013] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 238/238.000/238 ms.
+[2025-12-10T15:14:46.013] Done
+[2025-12-10T15:14:46.018] D(16869294) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:46.019] > 
+[2025-12-10T15:14:46.119] > 
+[2025-12-10T15:14:46.656] D (16869934) OPENTHREAD: Millisecond timer alarm start running, t0=16868958, dt=211029
+[2025-12-10T15:14:46.665] I(16869934) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Backoff interval passed
+[2025-12-10T15:14:46.677] I(16869944) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Parent RSS -68
+[2025-12-10T15:14:46.690] I(16869944) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Parent RSS less than -65, searching for new parents
+[2025-12-10T15:14:46.698] I(16869954) OPENTHREAD:[I] Mle-----------: AttachState Idle -> Start
+[2025-12-10T15:14:46.707] D (16869964) OPENTHREAD: Millisecond timer alarm start running, t0=16868993, dt=1
+[2025-12-10T15:14:46.720] I(16869964) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: (Re)starting timer for backoff interval
+[2025-12-10T15:14:46.727] D (16869974) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:46.737] tD (16869994) OPENTHREAD: Millisecond timer alarm start running, t0=16869018, dt=4212
+[2025-12-10T15:14:46.746] I(16869994) OPENTHREAD:[N] Mle-----------: Attach attempt 0, BetterParent 
+[2025-12-10T15:14:46.754] I(16870004) OPENTHREAD:[I] Mle-----------: AttachState Start -> ParentReq
+[2025-12-10T15:14:46.766] I(16870004) OPENTHREAD:[I] Mle-----------: Send Parent Request to routers (ff02:0:0:0:0:0:0:2)
+[2025-12-10T15:14:46.776] D (16870014) OPENTHREAD: Millisecond timer alarm start running, t0=16869043, dt=750
+[2025-12-10T15:14:46.779] D (16870014) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:46.786] D(16870024) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:46.796] D(16870024) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:46.804] D(16870034) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:46.814] D (16870054) OPENTHREAD: Microsecond timer alarm start running, t0=3984177757, dt=629
+[2025-12-10T15:14:46.823] D(16870054) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:46.830] D (16870064) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:46.839] xD(16870064) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:46.853] D(16870074) OPENTHREAD:[D] Mac-----------: ==============================[TX len=063]==============================
+[2025-12-10T15:14:46.867] D(16870084) OPENTHREAD:[D] Mac-----------: | 41 D8 42 FA 86 FF FF 1B | 8C D5 70 D5 93 4E 9A 7F | A.B.......p..N.. |
+[2025-12-10T15:14:46.881] D(16870094) OPENTHREAD:[D] Mac-----------: | 3B 02 F0 4D 4C 4D 4C 10 | E3 00 15 4C DA 00 00 00 | ;..MLML....L.... |
+[2025-12-10T15:14:46.894] D(16870104) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 44 19 82 C1 | 03 06 E8 9B 1F C5 06 B0 | ....D........... |
+[2025-12-10T15:14:46.907] D(16870104) OPENTHREAD:[D] Mac-----------: | 1D 96 35 C2 7D 03 5C 8A | 38 0C 40 FB 12 B6 79    | ..5.}.\.8.@...y  |
+[2025-12-10T15:14:46.914] D(16870124) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:46.918] D(16870134) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:46.924] I(16870144) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 UDP msg, len:84, chksum:10e3, ecn:no, to:0xffff, sec:no, prio:net
+[2025-12-10T15:14:46.929] I(16870154) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:46.933] I(16870154) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:2]:19788
+[2025-12-10T15:14:46.937] D(16870164) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:46.937] power -13
+[2025-12-10T15:14:46.937] 
+[2025-12-10T15:14:46.938] Done
+[2025-12-10T15:14:46.938] > 
+[2025-12-10T15:14:46.939] > state
+[2025-12-10T15:14:46.939] 
+[2025-12-10T15:14:46.939] child
+[2025-12-10T15:14:46.940] Done
+[2025-12-10T15:14:46.940] > 
+[2025-12-10T15:14:46.940] > parent
+[2025-12-10T15:14:46.941] 
+[2025-12-10T15:14:46.942] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:46.943] Rloc: 7000
+[2025-12-10T15:14:46.944] Link Quality In: 3
+[2025-12-10T15:14:46.945] Link Quality Out: 3
+[2025-12-10T15:14:46.945] Age: 10
+[2025-12-10T15:14:46.946] Version: 5
+[2025-12-10T15:14:46.947] Done
+[2025-12-10T15:14:46.947] > 
+[2025-12-10T15:14:46.949] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:46.949] 
+[2025-12-10T15:14:46.953] I(16870204) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 15)
+[2025-12-10T15:14:46.957] D(16870204) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:46.961] D(16870214) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:46.965] D(16870214) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:46.969] D (16870224) OPENTHREAD: Microsecond timer alarm start running, t0=3984355759, dt=950
+[2025-12-10T15:14:46.973] D(16870234) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:46.976] D (16870244) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:46.984] I(16870244) OPENTHREAD:[I] Mac-----------: Frame tx attempt 1/16 failed, error:NoAck, len:40, seqnum:67, type:Data, src:0x70d7, dst:0x7000, sec:yes, ackreq:yes
+[2025-12-10T15:14:46.989] D(16870254) OPENTHREAD:[D] Mac-----------: ============================[TX ERR len=016]============================
+[2025-12-10T15:14:46.999] D(16870264) OPENTHREAD:[D] Mac-----------: | 69 98 43 FA 86 00 70 D7 | 70 0D D1 28 01 00 01 7A | i.C...p.p..(...z |
+[2025-12-10T15:14:47.010] D(16870284) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:47.015] D(16870294) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> DelayBeforeRetx
+[2025-12-10T15:14:47.023] D (16870304) OPENTHREAD: Microsecond timer alarm start running, t0=3984429050, dt=0
+[2025-12-10T15:14:47.028] D(16870304) OPENTHREAD:[D] SubMac--------: Delaying retx for 0 usec (be=0)
+[2025-12-10T15:14:47.040] D(16870324) OPENTHREAD:[D] SubMac--------: RadioState: DelayBeforeRetx -> CsmaBackoff
+[2025-12-10T15:14:47.048] D (16870324) OPENTHREAD: Microsecond timer alarm start running, t0=3984447694, dt=2235
+[2025-12-10T15:14:47.051] D (16870334) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:47.060] D(16870344) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:47.063] D (16870344) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:47.071] D(16870344) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:47.082] D(16870354) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:47.092] D(16870364) OPENTHREAD:[D] Mac-----------: | 69 98 43 FA 86 00 70 D7 | 70 0D D1 28 01 00 01 7A | i.C...p.p..(...z |
+[2025-12-10T15:14:47.102] D(16870374) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 9E 77 00 0F | 00 0F 01 01 67 70 00 00 | w:...w......gp.. |
+[2025-12-10T15:14:47.114] D(16870374) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 44 19 82 C1 |                         | ....D...         |
+[2025-12-10T15:14:47.128] D(16870394) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:47.136] D(16870404) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:47.143] I(16870414) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:9e77, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:47.151] I(16870424) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:47.161] I(16870424) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:47.169] D(16870434) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:47.173] D(16870444) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:47.179] D(16870444) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585629
+[2025-12-10T15:14:47.184] D(16870464) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:47.195] D(16870474) OPENTHREAD:[D] Mac-----------: | 69 98 29 FA 86 D7 70 00 | 70 0D DD 31 18 00 01 7A | i.)...p.p..1...z |
+[2025-12-10T15:14:47.207] D(16870484) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 9D 77 00 0F | 00 0F 01 01 67 70 00 00 | w:...w......gp.. |
+[2025-12-10T15:14:47.218] D(16870494) OPENTHREAD:[D] Mac-----------: | 00 00 75 7C 67 B8 BB 0A |                         | ..u|g...         |
+[2025-12-10T15:14:47.227] D(16870494) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:47.239] I(16870504) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:9d77, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:14:47.248] I(16870514) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:47.257] I(16870534) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:47.262] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=15 hlim=64 time=338ms
+[2025-12-10T15:14:47.272] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 338/338.000/338 ms.
+[2025-12-10T15:14:47.273] Done
+[2025-12-10T15:14:47.281] D(16870554) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:47.292] D(16870564) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:47.302] D(16870574) OPENTHREAD:[D] Mac-----------: | 61 DC 2A FA 86 1B 8C D5 | 70 D5 93 4E 9A 8C 29 62 | a.*.....p..N..)b |
+[2025-12-10T15:14:47.313] D(16870574) OPENTHREAD:[D] Mac-----------: | 5F 5E 55 49 46 7F 33 F0 | 4D 4C 4D 4C 92 60 00 15 | _^UIF.3.MLML.`.. |
+[2025-12-10T15:14:47.319] D(16870594) OPENTHREAD:[D] Mac-----------: | 9B 22 0C 00 00 00 00 00 | 01 A3 16 E0 2D 2A 0C 03 | ."..........-*.. |
+[2025-12-10T15:14:47.330] D(16870604) OPENTHREAD:[D] Mac-----------: | 89 F5 77 4A 7E 07 8D 44 | 67 57 56 D2 35 F4 4A 5E | ..wJ~..DgWV.5.J^ |
+[2025-12-10T15:14:47.340] D(16870614) OPENTHREAD:[D] Mac-----------: | CD 46 76 8A C7 83 75 04 | A1 D0 2E 07 D2 72 21 67 | .Fv...u......r!g |
+[2025-12-10T15:14:47.351] D(16870624) OPENTHREAD:[D] Mac-----------: | 12 D2 80 9B 1F 1C 52 14 | 73 D6 9C 1A 0F 9D 0F 0A | ......R.s....... |
+[2025-12-10T15:14:47.361] D(16870634) OPENTHREAD:[D] Mac-----------: | D0 54 72 F1 5A 95 5F 4F | 50 57 8C D3 DC 0E 18 BC | .Tr.Z._OPW...... |
+[2025-12-10T15:14:47.372] D(16870644) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:47.382] D(16870654) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:47.394] I(16870664) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:9260, ecn:no, from:4649555e5f62298c, sec:no, prio:net, rss:-68.0
+[2025-12-10T15:14:47.403] I(16870674) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4449:555e:5f62:298c]:19788
+[2025-12-10T15:14:47.413] I(16870684) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:47.416] D(16870694) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:47.429] I(16870694) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4449:555e:5f62:298c,0x7000)
+[2025-12-10T15:14:47.439] D(16870704) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:47.453] D(16870714) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:47.467] D(16870724) OPENTHREAD:[D] Mac-----------: | 61 DC D5 FA 86 1B 8C D5 | 70 D5 93 4E 9A 42 C1 96 | a.......p..N.B.. |
+[2025-12-10T15:14:47.480] D(16870734) OPENTHREAD:[D] Mac-----------: | 62 6B F7 74 4A 7F 33 F0 | 4D 4C 4D 4C 36 8B 00 15 | bk.tJ.3.MLML6... |
+[2025-12-10T15:14:47.493] D(16870744) OPENTHREAD:[D] Mac-----------: | B9 46 0C 00 00 00 00 00 | 01 78 07 5D 61 30 A9 90 | .F.......x.]a0.. |
+[2025-12-10T15:14:47.506] D(16870754) OPENTHREAD:[D] Mac-----------: | 52 EB E7 62 E1 74 5A A5 | 0C 24 3D BA C8 89 27 3B | R..b.tZ..$=...'; |
+[2025-12-10T15:14:47.520] D(16870764) OPENTHREAD:[D] Mac-----------: | 12 BB 0F 5E 1D EC 39 1D | AB 5D 0E 50 0E 7F 0A FF | ...^..9..].P.... |
+[2025-12-10T15:14:47.533] D(16870774) OPENTHREAD:[D] Mac-----------: | 62 38 EE 7C 7A C7 51 F5 | DC C7 1D DA 05 10 AA 38 | b8.|z.Q........8 |
+[2025-12-10T15:14:47.546] D(16870784) OPENTHREAD:[D] Mac-----------: | 66 BE 42 47 A7 06 61 F4 | 1C 1A 0A 87 89 FD A5 BA | f.BG..a......... |
+[2025-12-10T15:14:47.560] D(16870804) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:47.573] D(16870804) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:47.590] I(16870814) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:368b, ecn:no, from:4a74f76b6296c142, sec:no, prio:net, rss:-70.0
+[2025-12-10T15:14:47.601] I(16870824) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4874:f76b:6296:c142]:19788
+[2025-12-10T15:14:47.612] I(16870834) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:47.619] D(16870844) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:47.632] I(16870844) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4874:f76b:6296:c142,0x0c00)
+[2025-12-10T15:14:47.642] D(16870864) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:47.653] D (16870874) OPENTHREAD: Millisecond timer alarm start running, t0=16869900, dt=3330
+[2025-12-10T15:14:47.663] I(16870874) OPENTHREAD:[I] Mle-----------: Already attached to candidate parent
+[2025-12-10T15:14:47.675] I(16870884) OPENTHREAD:[I] Mle-----------: Send Parent Request to routers and REEDs (ff02:0:0:0:0:0:0:2)
+[2025-12-10T15:14:47.688] D (16870884) OPENTHREAD: Millisecond timer alarm start running, t0=16869914, dt=1250
+[2025-12-10T15:14:47.695] D (16870894) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:47.706] D(16870904) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:47.715] D(16870904) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:47.725] D(16870924) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:47.735] D (16870924) OPENTHREAD: Microsecond timer alarm start running, t0=3985048608, dt=2229
+[2025-12-10T15:14:47.744] D(16870934) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:47.750] D (16870944) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:47.759] > D(16870944) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:47.773] D(16870954) OPENTHREAD:[D] Mac-----------: ==============================[TX len=063]==============================
+[2025-12-10T15:14:47.787] D(16870964) OPENTHREAD:[D] Mac-----------: | 41 D8 44 FA 86 FF FF 1B | 8C D5 70 D5 93 4E 9A 7F | A.D.......p..N.. |
+[2025-12-10T15:14:47.800] D(16870974) OPENTHREAD:[D] Mac-----------: | 3B 02 F0 4D 4C 4D 4C A2 | B3 00 15 4D DA 00 00 00 | ;..MLML....M.... |
+[2025-12-10T15:14:47.813] D(16870984) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 AA 71 E0 17 | F7 CB 49 B0 2C 98 77 C4 | .....q....I.,.w. |
+[2025-12-10T15:14:47.827] D(16870984) OPENTHREAD:[D] Mac-----------: | FD 71 DD 21 64 64 06 3A | E5 CA 5A EC CA B6 79    | .q.!dd.:..Z...y  |
+[2025-12-10T15:14:47.840] D(16870994) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:47.850] D(16871014) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:47.864] I(16871024) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 UDP msg, len:84, chksum:a2b3, ecn:no, to:0xffff, sec:no, prio:net
+[2025-12-10T15:14:47.875] I(16871034) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:47.884] I(16871034) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:2]:19788
+[2025-12-10T15:14:47.894] D(16871044) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:47.895] 
+[2025-12-10T15:14:47.896] > txpower -13
+[2025-12-10T15:14:47.897] 
+[2025-12-10T15:14:47.898] Done
+[2025-12-10T15:14:47.898] > 
+[2025-12-10T15:14:47.899] > state
+[2025-12-10T15:14:47.900] 
+[2025-12-10T15:14:47.901] child
+[2025-12-10T15:14:47.902] Done
+[2025-12-10T15:14:47.902] > 
+[2025-12-10T15:14:47.903] > parent
+[2025-12-10T15:14:47.904] 
+[2025-12-10T15:14:47.907] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:47.909] Rloc: 7000
+[2025-12-10T15:14:47.912] Link Quality In: 3
+[2025-12-10T15:14:47.915] Link Quality Out: 3
+[2025-12-10T15:14:47.916] Age: 11
+[2025-12-10T15:14:47.917] Version: 5
+[2025-12-10T15:14:47.918] Done
+[2025-12-10T15:14:47.919] > 
+[2025-12-10T15:14:47.924] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:47.925] 
+[2025-12-10T15:14:47.933] I(16871084) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 16)
+[2025-12-10T15:14:47.944] D(16871084) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:47.954] D(16871094) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:47.959] D(16871094) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:47.964] D (16871104) OPENTHREAD: Microsecond timer alarm start running, t0=3985234437, dt=950
+[2025-12-10T15:14:47.967] D(16871104) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:47.970] D (16871114) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:47.974] D(16871124) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:47.980] D(16871134) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:47.985] D(16871144) OPENTHREAD:[D] Mac-----------: | 69 98 45 FA 86 00 70 D7 | 70 0D D2 28 01 00 01 7A | i.E...p.p..(...z |
+[2025-12-10T15:14:47.991] D(16871154) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 9B 06 00 10 | 00 10 01 01 6A DF 00 00 | w:..........j... |
+[2025-12-10T15:14:47.997] D(16871154) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 AA 71 E0 17 |                         | .....q..         |
+[2025-12-10T15:14:48.002] D(16871164) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:48.006] D(16871184) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:48.012] I(16871194) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:9b06, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:48.017] I(16871204) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:48.021] I(16871204) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:48.025] D(16871214) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:48.029] D(16871224) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:48.033] D(16871224) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585631
+[2025-12-10T15:14:48.039] D(16871234) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:48.044] D(16871254) OPENTHREAD:[D] Mac-----------: | 69 98 2C FA 86 D7 70 00 | 70 0D DF 31 18 00 01 7A | i.,...p.p..1...z |
+[2025-12-10T15:14:48.050] D(16871264) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 9A 06 00 10 | 00 10 01 01 6A DF 00 00 | w:..........j... |
+[2025-12-10T15:14:48.056] D(16871274) OPENTHREAD:[D] Mac-----------: | 00 00 E3 51 78 56 BB 0A |                         | ...QxV..         |
+[2025-12-10T15:14:48.061] D(16871274) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:48.068] I(16871284) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:9a06, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:14:48.073] I(16871294) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:48.077] I(16871304) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:48.081] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=16 hlim=64 time=239ms
+[2025-12-10T15:14:48.092] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:14:48.093] Done
+[2025-12-10T15:14:48.103] D(16871334) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:48.103] > 
+[2025-12-10T15:14:48.204] > 
+[2025-12-10T15:14:48.443] D(16871714) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:48.457] D(16871714) OPENTHREAD:[D] Mac-----------: | 61 DC 2D FA 86 1B 8C D5 | 70 D5 93 4E 9A 8C 29 62 | a.-.....p..N..)b |
+[2025-12-10T15:14:48.471] D(16871724) OPENTHREAD:[D] Mac-----------: | 5F 5E 55 49 46 7F 33 F0 | 4D 4C 4D 4C 9C 30 00 15 | _^UIF.3.MLML.0.. |
+[2025-12-10T15:14:48.484] D(16871734) OPENTHREAD:[D] Mac-----------: | 9C 22 0C 00 00 00 00 00 | 01 79 AF DD EC DB 00 E4 | .".......y...... |
+[2025-12-10T15:14:48.498] D(16871744) OPENTHREAD:[D] Mac-----------: | F1 35 31 7F AA E2 60 9F | 71 CE 30 49 BD 5A 5E 35 | .51...`.q.0I.Z^5 |
+[2025-12-10T15:14:48.512] D(16871764) OPENTHREAD:[D] Mac-----------: | 00 0F AD 6E 2B 20 44 45 | 67 7E D4 43 1A B0 BF BB | ...n+ DEg~.C.... |
+[2025-12-10T15:14:48.525] D(16871774) OPENTHREAD:[D] Mac-----------: | 48 DD 43 F9 9B F2 D9 E1 | 1E 2E 8E FA 2E 2F AE CB | H.C........../.. |
+[2025-12-10T15:14:48.540] D(16871784) OPENTHREAD:[D] Mac-----------: | A6 54 14 FA 33 9B 38 8E | 6F 25 96 AD BE 6D A1 BB | .T..3.8.o%...m.. |
+[2025-12-10T15:14:48.554] D(16871784) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:48.568] D(16871794) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:48.585] I(16871804) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:9c30, ecn:no, from:4649555e5f62298c, sec:no, prio:net, rss:-69.0
+[2025-12-10T15:14:48.595] I(16871814) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4449:555e:5f62:298c]:19788
+[2025-12-10T15:14:48.605] I(16871834) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:48.613] D(16871844) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:48.625] I(16871844) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4449:555e:5f62:298c,0x7000)
+[2025-12-10T15:14:48.635] D(16871854) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:48.648] D(16871854) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:48.661] D(16871864) OPENTHREAD:[D] Mac-----------: | 61 DC DB FA 86 1B 8C D5 | 70 D5 93 4E 9A 42 C1 96 | a.......p..N.B.. |
+[2025-12-10T15:14:48.674] D(16871874) OPENTHREAD:[D] Mac-----------: | 62 6B F7 74 4A 7F 33 F0 | 4D 4C 4D 4C 51 6B 00 15 | bk.tJ.3.MLMLQk.. |
+[2025-12-10T15:14:48.690] D(16871894) OPENTHREAD:[D] Mac-----------: | BA 46 0C 00 00 00 00 00 | 01 28 48 C3 25 93 5F D8 | .F.......(H.%._. |
+[2025-12-10T15:14:48.704] D(16871904) OPENTHREAD:[D] Mac-----------: | 68 05 CE 25 35 C8 D2 31 | A4 BF B5 A9 5C 53 EF A7 | h..%5..1....\S.. |
+[2025-12-10T15:14:48.718] D(16871914) OPENTHREAD:[D] Mac-----------: | 0A 51 13 F3 AA A5 53 14 | A7 3D EB 85 9B AF 8D 08 | .Q....S..=...... |
+[2025-12-10T15:14:48.731] D(16871924) OPENTHREAD:[D] Mac-----------: | 1D 62 E2 E1 07 76 99 22 | D0 BF 3A B4 D2 06 AB 65 | .b...v."..:....e |
+[2025-12-10T15:14:48.744] D(16871924) OPENTHREAD:[D] Mac-----------: | CB EA F5 5D 7C C0 D1 15 | 9C 29 D0 21 74 8A 1E BA | ...]|....).!t... |
+[2025-12-10T15:14:48.758] D(16871934) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:48.772] D(16871944) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:48.787] I(16871964) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:516b, ecn:no, from:4a74f76b6296c142, sec:no, prio:net, rss:-70.0
+[2025-12-10T15:14:48.798] I(16871974) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4874:f76b:6296:c142]:19788
+[2025-12-10T15:14:48.808] I(16871984) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:48.815] D(16871994) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:48.828] I(16871994) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4874:f76b:6296:c142,0x0c00)
+[2025-12-10T15:14:48.837] D(16872004) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:48.850] D(16872004) OPENTHREAD:[D] Mac-----------: ==============================[RX len=071]==============================
+[2025-12-10T15:14:48.864] D(16872024) OPENTHREAD:[D] Mac-----------: | 41 D8 BC FA 86 FF FF 84 | 23 A6 3A A3 A7 0C 2A 7F | A.......#.:...*. |
+[2025-12-10T15:14:48.877] D(16872034) OPENTHREAD:[D] Mac-----------: | 3B 01 F0 4D 4C 4D 4C 63 | 93 00 15 B0 06 05 00 00 | ;..MLMLc........ |
+[2025-12-10T15:14:48.890] D(16872044) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 E1 FC F1 5E | EC 9A C4 07 DA F9 5B B5 | .......^......[. |
+[2025-12-10T15:14:48.903] D(16872054) OPENTHREAD:[D] Mac-----------: | 26 C6 28 5A 9B C6 A8 E5 | 22 9E 26 62 53 EF E6 11 | &.(Z....".&bS... |
+[2025-12-10T15:14:48.916] D(16872064) OPENTHREAD:[D] Mac-----------: | 6F 7D A9 25 F6 A6 0A    |                         | o}.%...          |
+[2025-12-10T15:14:48.922] D(16872074) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:48.929] I(16872074) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:92, chksum:6393, ecn:no, from:2a0ca7a33aa62384, sec:no, prio:net, rss:-90.0
+[2025-12-10T15:14:48.933] I(16872104) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:280c:a7a3:3aa6:2384]:19788
+[2025-12-10T15:14:48.937] I(16872104) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:1]:19788
+[2025-12-10T15:14:48.940] D(16872114) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:48.945] I(16872114) OPENTHREAD:[I] Mle-----------: Receive Advertisement (fe80:0:0:0:280c:a7a3:3aa6:2384,0x2000)
+[2025-12-10T15:14:48.949] D(16872124) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:48.953] D (16872134) OPENTHREAD: Millisecond timer alarm start running, t0=16871166, dt=2064
+[2025-12-10T15:14:48.957] I(16872134) OPENTHREAD:[I] Mle-----------: Already attached to candidate parent
+[2025-12-10T15:14:48.961] I(16872144) OPENTHREAD:[I] Mle-----------: AttachState ParentReq -> Idle
+[2025-12-10T15:14:48.964] D (16872144) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:48.964] txpower -13
+[2025-12-10T15:14:48.965] 
+[2025-12-10T15:14:48.965] Done
+[2025-12-10T15:14:48.965] > 
+[2025-12-10T15:14:48.966] > state
+[2025-12-10T15:14:48.966] 
+[2025-12-10T15:14:48.966] child
+[2025-12-10T15:14:48.967] Done
+[2025-12-10T15:14:48.967] > 
+[2025-12-10T15:14:48.967] > parent
+[2025-12-10T15:14:48.968] 
+[2025-12-10T15:14:48.969] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:48.970] Rloc: 7000
+[2025-12-10T15:14:48.971] Link Quality In: 3
+[2025-12-10T15:14:48.972] Link Quality Out: 3
+[2025-12-10T15:14:48.973] Age: 12
+[2025-12-10T15:14:48.973] Version: 5
+[2025-12-10T15:14:48.974] Done
+[2025-12-10T15:14:48.974] > 
+[2025-12-10T15:14:48.976] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:48.976] 
+[2025-12-10T15:14:48.980] I(16872184) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 17)
+[2025-12-10T15:14:48.984] D(16872194) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:48.988] D(16872204) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:48.992] D(16872204) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:48.996] D (16872214) OPENTHREAD: Microsecond timer alarm start running, t0=3986340431, dt=0
+[2025-12-10T15:14:49.000] D(16872214) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:49.003] D (16872224) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:49.007] D(16872224) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:49.012] D(16872234) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:49.018] D(16872254) OPENTHREAD:[D] Mac-----------: | 69 98 46 FA 86 00 70 D7 | 70 0D D3 28 01 00 01 7A | i.F...p.p..(...z |
+[2025-12-10T15:14:49.024] D(16872264) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 96 B2 00 11 | 00 11 01 01 6F 31 00 00 | w:..........o1.. |
+[2025-12-10T15:14:49.029] D(16872264) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 AA 71 E0 17 |                         | .....q..         |
+[2025-12-10T15:14:49.035] D(16872274) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:49.039] D(16872284) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:49.045] I(16872294) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:96b2, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:49.049] I(16872304) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:49.054] I(16872314) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:49.058] D(16872324) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:49.062] D(16872334) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:49.066] D(16872334) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585632
+[2025-12-10T15:14:49.078] D(16872344) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:49.093] D(16872354) OPENTHREAD:[D] Mac-----------: | 69 98 2F FA 86 D7 70 00 | 70 0D E0 31 18 00 01 7A | i./...p.p..1...z |
+[2025-12-10T15:14:49.101] D(16872364) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 95 B2 00 11 | 00 11 01 01 6F 31 00 00 | w:..........o1.. |
+[2025-12-10T15:14:49.109] D(16872364) OPENTHREAD:[D] Mac-----------: | 00 00 E6 B1 66 1F BB 0A |                         | ....f...         |
+[2025-12-10T15:14:49.122] D(16872384) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:49.132] I(16872394) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:95b2, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:14:49.137] I(16872404) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:49.141] I(16872414) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:49.149] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=17 hlim=64 time=239ms
+[2025-12-10T15:14:49.157] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:14:49.158] Done
+[2025-12-10T15:14:49.162] D(16872434) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:49.163] > 
+[2025-12-10T15:14:49.261] > D(16872524) OPENTHREAD:[D] Mac-----------: ==============================[RX len=071]==============================
+[2025-12-10T15:14:49.289] D(16872524) OPENTHREAD:[D] Mac-----------: | 41 D8 DD FA 86 FF FF 42 | C1 96 62 6B F7 74 4A 7F | A......B..bk.tJ. |
+[2025-12-10T15:14:49.302] D(16872534) OPENTHREAD:[D] Mac-----------: | 3B 01 F0 4D 4C 4D 4C B1 | 04 00 15 BB 46 0C 00 00 | ;..MLML.....F... |
+[2025-12-10T15:14:49.315] D(16872554) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 E6 2B 29 60 | E5 15 E7 67 60 89 84 90 | .....+)`...g`... |
+[2025-12-10T15:14:49.328] D(16872564) OPENTHREAD:[D] Mac-----------: | 78 52 8D FE D8 11 FC 7D | 73 F8 F7 97 B5 CA 34 AB | xR.....}s.....4. |
+[2025-12-10T15:14:49.340] D(16872574) OPENTHREAD:[D] Mac-----------: | 51 22 F6 5C 16 BA 0A    |                         | Q".\...          |
+[2025-12-10T15:14:49.352] D(16872584) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:49.369] I(16872594) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:92, chksum:b104, ecn:no, from:4a74f76b6296c142, sec:no, prio:net, rss:-70.0
+[2025-12-10T15:14:49.379] I(16872604) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4874:f76b:6296:c142]:19788
+[2025-12-10T15:14:49.388] I(16872604) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:1]:19788
+[2025-12-10T15:14:49.396] D(16872624) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:49.407] I(16872624) OPENTHREAD:[I] Mle-----------: Receive Advertisement (fe80:0:0:0:4874:f76b:6296:c142,0x0c00)
+[2025-12-10T15:14:49.417] D(16872634) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:49.733] txpower -13
+[2025-12-10T15:14:49.734] 
+[2025-12-10T15:14:49.735] Done
+[2025-12-10T15:14:49.735] > 
+[2025-12-10T15:14:49.736] > state
+[2025-12-10T15:14:49.737] 
+[2025-12-10T15:14:49.738] child
+[2025-12-10T15:14:49.739] Done
+[2025-12-10T15:14:49.740] > 
+[2025-12-10T15:14:49.743] > parent
+[2025-12-10T15:14:49.744] 
+[2025-12-10T15:14:49.747] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:49.748] Rloc: 7000
+[2025-12-10T15:14:49.751] Link Quality In: 3
+[2025-12-10T15:14:49.754] Link Quality Out: 3
+[2025-12-10T15:14:49.755] Age: 13
+[2025-12-10T15:14:49.756] Version: 5
+[2025-12-10T15:14:49.757] Done
+[2025-12-10T15:14:49.758] > 
+[2025-12-10T15:14:49.763] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:49.763] 
+[2025-12-10T15:14:49.767] I(16873044) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 18)
+[2025-12-10T15:14:49.773] D(16873044) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:49.777] D(16873054) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:49.786] D(16873054) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:49.795] D (16873074) OPENTHREAD: Microsecond timer alarm start running, t0=3987197148, dt=0
+[2025-12-10T15:14:49.800] D(16873074) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:49.807] D (16873084) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:49.811] D(16873084) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:49.821] D(16873094) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:49.832] D(16873104) OPENTHREAD:[D] Mac-----------: | 69 98 47 FA 86 00 70 D7 | 70 0D D4 28 01 00 01 7A | i.G...p.p..(...z |
+[2025-12-10T15:14:49.842] D(16873114) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 93 58 00 12 | 00 12 01 01 72 89 00 00 | w:...X......r... |
+[2025-12-10T15:14:49.853] D(16873124) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 AA 71 E0 17 |                         | .....q..         |
+[2025-12-10T15:14:49.863] D(16873134) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:49.872] D(16873144) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:49.883] I(16873154) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:9358, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:49.888] I(16873164) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:49.897] I(16873164) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:49.906] D(16873174) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:49.911] D(16873184) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:49.919] D(16873194) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585633
+[2025-12-10T15:14:49.929] D(16873204) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:49.940] D(16873214) OPENTHREAD:[D] Mac-----------: | 69 98 30 FA 86 D7 70 00 | 70 0D E1 31 18 00 01 7A | i.0...p.p..1...z |
+[2025-12-10T15:14:49.950] D(16873224) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 92 58 00 12 | 00 12 01 01 72 89 00 00 | w:...X......r... |
+[2025-12-10T15:14:49.961] D(16873224) OPENTHREAD:[D] Mac-----------: | 00 00 A2 E4 11 0F BC 0A |                         | ........         |
+[2025-12-10T15:14:49.971] D(16873234) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:49.983] I(16873244) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:9258, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:14:49.989] I(16873264) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:49.997] I(16873274) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:50.006] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=18 hlim=64 time=239ms
+[2025-12-10T15:14:50.014] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:14:50.014] Done
+[2025-12-10T15:14:50.019] D(16873294) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:50.019] > 
+[2025-12-10T15:14:50.120] > 
+[2025-12-10T15:14:50.737] txpower -13
+[2025-12-10T15:14:50.737] 
+[2025-12-10T15:14:50.738] Done
+[2025-12-10T15:14:50.739] > 
+[2025-12-10T15:14:50.740] > state
+[2025-12-10T15:14:50.740] 
+[2025-12-10T15:14:50.741] child
+[2025-12-10T15:14:50.742] Done
+[2025-12-10T15:14:50.743] > 
+[2025-12-10T15:14:50.747] > parent
+[2025-12-10T15:14:50.747] 
+[2025-12-10T15:14:50.749] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:50.750] Rloc: 7000
+[2025-12-10T15:14:50.751] Link Quality In: 3
+[2025-12-10T15:14:50.753] Link Quality Out: 3
+[2025-12-10T15:14:50.753] Age: 14
+[2025-12-10T15:14:50.754] Version: 5
+[2025-12-10T15:14:50.754] Done
+[2025-12-10T15:14:50.755] > 
+[2025-12-10T15:14:50.757] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:50.757] 
+[2025-12-10T15:14:50.768] I(16874044) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 19)
+[2025-12-10T15:14:50.777] D(16874054) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:50.783] D(16874064) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:50.790] D(16874064) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:50.799] D (16874074) OPENTHREAD: Microsecond timer alarm start running, t0=3988201003, dt=1590
+[2025-12-10T15:14:50.803] D(16874084) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:50.811] D (16874094) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:50.815] D(16874094) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:50.826] D(16874094) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:50.836] D(16874104) OPENTHREAD:[D] Mac-----------: | 69 98 48 FA 86 00 70 D7 | 70 0D D5 28 01 00 01 7A | i.H...p.p..(...z |
+[2025-12-10T15:14:50.846] D(16874114) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 8F 6A 00 13 | 00 13 01 01 76 75 00 00 | w:...j......vu.. |
+[2025-12-10T15:14:50.857] D(16874124) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 AA 71 E0 17 |                         | .....q..         |
+[2025-12-10T15:14:50.867] D(16874144) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:50.876] D(16874154) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:50.887] I(16874154) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:8f6a, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:50.892] I(16874164) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:50.901] I(16874174) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:50.910] D(16874184) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:50.915] D(16874184) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:50.923] D(16874194) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585634
+[2025-12-10T15:14:50.933] D(16874204) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:50.944] D(16874214) OPENTHREAD:[D] Mac-----------: | 69 98 31 FA 86 D7 70 00 | 70 0D E2 31 18 00 01 7A | i.1...p.p..1...z |
+[2025-12-10T15:14:50.957] D(16874224) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 8E 6A 00 13 | 00 13 01 01 76 75 00 00 | w:...j......vu.. |
+[2025-12-10T15:14:50.971] D(16874234) OPENTHREAD:[D] Mac-----------: | 00 00 CC EF D6 AD BC 0A |                         | ........         |
+[2025-12-10T15:14:50.984] D(16874244) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:51.000] I(16874254) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:8e6a, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:14:51.010] I(16874264) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:51.021] I(16874274) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:51.040] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=19 hlim=64 time=234ms
+[2025-12-10T15:14:51.085] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 234/234.000/234 ms.
+[2025-12-10T15:14:51.088] Done
+[2025-12-10T15:14:51.107] D(16874304) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:51.125] D(16874304) OPENTHREAD:[D] Mac-----------: ==============================[RX len=071]==============================
+[2025-12-10T15:14:51.139] D(16874314) OPENTHREAD:[D] Mac-----------: | 41 D8 32 FA 86 FF FF 8C | 29 62 5F 5E 55 49 46 7F | A.2.....)b_^UIF. |
+[2025-12-10T15:14:51.146] D(16874324) OPENTHREAD:[D] Mac-----------: | 3B 01 F0 4D 4C 4D 4C C6 | FA 00 15 9E 22 0C 00 00 | ;..MLML....."... |
+[2025-12-10T15:14:51.152] D(16874344) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 9C C7 B6 87 | 91 3C 6C 93 82 01 A1 A6 | .........<l..... |
+[2025-12-10T15:14:51.158] D(16874354) OPENTHREAD:[D] Mac-----------: | 16 69 EC 86 08 C1 7C 52 | 9A EC 59 EE F1 C9 58 CE | .i....|R..Y...X. |
+[2025-12-10T15:14:51.163] D(16874364) OPENTHREAD:[D] Mac-----------: | 08 EB 33 A9 28 BC 0A    |                         | ..3.(..          |
+[2025-12-10T15:14:51.169] D(16874364) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:51.176] I(16874374) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:92, chksum:c6fa, ecn:no, from:4649555e5f62298c, sec:no, prio:net, rss:-68.0
+[2025-12-10T15:14:51.181] I(16874384) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4449:555e:5f62:298c]:19788
+[2025-12-10T15:14:51.184] I(16874394) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:1]:19788
+[2025-12-10T15:14:51.188] D(16874414) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:51.193] I(16874414) OPENTHREAD:[I] Mle-----------: Receive Advertisement (fe80:0:0:0:4449:555e:5f62:298c,0x7000)
+[2025-12-10T15:14:51.197] D(16874424) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:51.201] D (16874424) OPENTHREAD: Millisecond timer alarm start running, t0=16873453, dt=206534
+[2025-12-10T15:14:51.205] I(16874434) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Backoff interval passed
+[2025-12-10T15:14:51.209] I(16874444) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Parent RSS -68
+[2025-12-10T15:14:51.215] I(16874444) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Parent RSS less than -65, searching for new parents
+[2025-12-10T15:14:51.218] I(16874454) OPENTHREAD:[I] Mle-----------: AttachState Idle -> Start
+[2025-12-10T15:14:51.223] D (16874464) OPENTHREAD: Millisecond timer alarm start running, t0=16873498, dt=1
+[2025-12-10T15:14:51.228] I(16874474) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: (Re)starting timer for backoff interval
+[2025-12-10T15:14:51.230] D (16874484) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:51.231] > 
+[2025-12-10T15:14:51.235] > D (16874504) OPENTHREAD: Millisecond timer alarm start running, t0=16873528, dt=6749
+[2025-12-10T15:14:51.239] I(16874504) OPENTHREAD:[N] Mle-----------: Attach attempt 0, BetterParent 
+[2025-12-10T15:14:51.242] I(16874514) OPENTHREAD:[I] Mle-----------: AttachState Start -> ParentReq
+[2025-12-10T15:14:51.247] I(16874514) OPENTHREAD:[I] Mle-----------: Send Parent Request to routers (ff02:0:0:0:0:0:0:2)
+[2025-12-10T15:14:51.251] D (16874524) OPENTHREAD: Millisecond timer alarm start running, t0=16873553, dt=750
+[2025-12-10T15:14:51.254] D (16874524) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:51.261] D(16874534) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:51.270] D(16874544) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:51.275] D(16874544) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:51.284] D (16874564) OPENTHREAD: Microsecond timer alarm start running, t0=3988687544, dt=949
+[2025-12-10T15:14:51.289] D(16874564) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:51.300] D (16874574) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:51.310] D(16874574) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:51.323] D(16874584) OPENTHREAD:[D] Mac-----------: ==============================[TX len=063]==============================
+[2025-12-10T15:14:51.335] D(16874594) OPENTHREAD:[D] Mac-----------: | 41 D8 49 FA 86 FF FF 1B | 8C D5 70 D5 93 4E 9A 7F | A.I.......p..N.. |
+[2025-12-10T15:14:51.348] D(16874594) OPENTHREAD:[D] Mac-----------: | 3B 02 F0 4D 4C 4D 4C 2E | 7E 00 15 4E DA 00 00 00 | ;..MLML.~..N.... |
+[2025-12-10T15:14:51.361] D(16874614) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 ED 03 A3 3D | C5 CF 4B D5 C5 4A 94 ED | .......=..K..J.. |
+[2025-12-10T15:14:51.374] D(16874624) OPENTHREAD:[D] Mac-----------: | 7B 41 4E E4 C0 81 41 0F | 6F A1 F7 47 C7 B6 79    | {AN...A.o..G..y  |
+[2025-12-10T15:14:51.387] D(16874634) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:51.397] D(16874644) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:51.412] I(16874654) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 UDP msg, len:84, chksum:2e7e, ecn:no, to:0xffff, sec:no, prio:net
+[2025-12-10T15:14:51.422] I(16874654) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:51.431] I(16874664) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:2]:19788
+[2025-12-10T15:14:51.442] D(16874684) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:51.455] D(16874694) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:51.468] D(16874694) OPENTHREAD:[D] Mac-----------: | 61 DC 33 FA 86 1B 8C D5 | 70 D5 93 4E 9A 8C 29 62 | a.3.....p..N..)b |
+[2025-12-10T15:14:51.481] D(16874704) OPENTHREAD:[D] Mac-----------: | 5F 5E 55 49 46 7F 33 F0 | 4D 4C 4D 4C DD 43 00 15 | _^UIF.3.MLML.C.. |
+[2025-12-10T15:14:51.494] D(16874724) OPENTHREAD:[D] Mac-----------: | 9F 22 0C 00 00 00 00 00 | 01 1B BB 77 88 1F F1 A8 | .".........w.... |
+[2025-12-10T15:14:51.508] D(16874734) OPENTHREAD:[D] Mac-----------: | 62 CE 04 F3 29 71 44 0A | 28 F6 EB 36 71 7A 5D B4 | b...)qD.(..6qz]. |
+[2025-12-10T15:14:51.522] D(16874744) OPENTHREAD:[D] Mac-----------: | A6 7F 6D 3A A5 BE 40 38 | 7E 77 39 A0 36 3C C4 65 | ..m:..@8~w9.6<.e |
+[2025-12-10T15:14:51.536] D(16874754) OPENTHREAD:[D] Mac-----------: | 24 D0 72 D7 2D 8A 99 AB | C3 D8 EF 9A DF 76 5F 3F | $.r.-........v_? |
+[2025-12-10T15:14:51.550] D(16874764) OPENTHREAD:[D] Mac-----------: | A6 E8 F6 40 0E EB BF 09 | 3B C3 00 C9 E2 6A 1D BB | ...@....;....j.. |
+[2025-12-10T15:14:51.563] D(16874764) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:51.577] D(16874774) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:51.595] I(16874794) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:dd43, ecn:no, from:4649555e5f62298c, sec:no, prio:net, rss:-69.0
+[2025-12-10T15:14:51.605] I(16874804) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4449:555e:5f62:298c]:19788
+[2025-12-10T15:14:51.616] I(16874814) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:51.623] D(16874824) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:51.636] I(16874824) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4449:555e:5f62:298c,0x7000)
+[2025-12-10T15:14:51.645] D(16874834) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:51.658] D(16874884) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:51.672] D(16874884) OPENTHREAD:[D] Mac-----------: | 61 DC E3 FA 86 1B 8C D5 | 70 D5 93 4E 9A 42 C1 96 | a.......p..N.B.. |
+[2025-12-10T15:14:51.688] D(16874904) OPENTHREAD:[D] Mac-----------: | 62 6B F7 74 4A 7F 33 F0 | 4D 4C 4D 4C EC 49 00 15 | bk.tJ.3.MLML.I.. |
+[2025-12-10T15:14:51.701] D(16874914) OPENTHREAD:[D] Mac-----------: | BC 46 0C 00 00 00 00 00 | 01 00 76 C0 C3 95 20 E5 | .F........v... . |
+[2025-12-10T15:14:51.715] D(16874924) OPENTHREAD:[D] Mac-----------: | 4F 7E 70 09 EC C2 C6 4F | 8E 41 AC B2 8A 87 30 5F | O~p....O.A....0_ |
+[2025-12-10T15:14:51.730] D(16874934) OPENTHREAD:[D] Mac-----------: | E0 86 2B 55 23 3B C2 BB | D1 7A FF B8 BD 16 41 A6 | ..+U#;...z....A. |
+[2025-12-10T15:14:51.744] D(16874944) OPENTHREAD:[D] Mac-----------: | E7 5D 13 18 32 F8 72 69 | CA 8A 38 28 4C C3 BF 31 | .]..2.ri..8(L..1 |
+[2025-12-10T15:14:51.758] D(16874954) OPENTHREAD:[D] Mac-----------: | 3E EF 57 09 96 D4 8B E1 | 47 C0 07 A7 F5 22 F4 BB | >.W.....G....".. |
+[2025-12-10T15:14:51.771] D(16874954) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:51.785] D(16874974) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:51.801] I(16874984) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:ec49, ecn:no, from:4a74f76b6296c142, sec:no, prio:net, rss:-69.0
+[2025-12-10T15:14:51.812] I(16874994) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4874:f76b:6296:c142]:19788
+[2025-12-10T15:14:51.822] I(16875004) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:51.825] D(16875014) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:51.831] I(16875014) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4874:f76b:6296:c142,0x0c00)
+[2025-12-10T15:14:51.835] D(16875024) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:51.836] txpower -13
+[2025-12-10T15:14:51.836] 
+[2025-12-10T15:14:51.836] Done
+[2025-12-10T15:14:51.836] > 
+[2025-12-10T15:14:51.837] > state
+[2025-12-10T15:14:51.837] 
+[2025-12-10T15:14:51.837] child
+[2025-12-10T15:14:51.838] Done
+[2025-12-10T15:14:51.838] > 
+[2025-12-10T15:14:51.839] > parent
+[2025-12-10T15:14:51.839] 
+[2025-12-10T15:14:51.840] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:51.841] Rloc: 7000
+[2025-12-10T15:14:51.842] Link Quality In: 3
+[2025-12-10T15:14:51.843] Link Quality Out: 3
+[2025-12-10T15:14:51.844] Age: 0
+[2025-12-10T15:14:51.844] Version: 5
+[2025-12-10T15:14:51.845] Done
+[2025-12-10T15:14:51.845] > 
+[2025-12-10T15:14:51.847] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:51.847] 
+[2025-12-10T15:14:51.851] I(16875064) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 20)
+[2025-12-10T15:14:51.855] D(16875064) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:51.859] D(16875074) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:51.863] D(16875074) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:51.867] D (16875084) OPENTHREAD: Microsecond timer alarm start running, t0=3989215771, dt=0
+[2025-12-10T15:14:51.871] D(16875094) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:51.874] D (16875104) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:51.878] D(16875104) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:51.883] D(16875114) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:51.889] D(16875124) OPENTHREAD:[D] Mac-----------: | 69 98 4A FA 86 00 70 D7 | 70 0D D6 28 01 00 01 7A | i.J...p.p..(...z |
+[2025-12-10T15:14:51.895] D(16875134) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 8B 71 00 14 | 00 14 01 01 7A 6C 00 00 | w:...q......zl.. |
+[2025-12-10T15:14:51.900] D(16875134) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 ED 03 A3 3D |                         | .......=         |
+[2025-12-10T15:14:51.906] D(16875154) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:51.910] D(16875164) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:51.916] I(16875174) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:8b71, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:51.920] I(16875184) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:51.925] I(16875184) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:51.929] D(16875194) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:51.933] D(16875204) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:51.937] D(16875204) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585635
+[2025-12-10T15:14:51.948] D(16875224) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:51.959] D(16875234) OPENTHREAD:[D] Mac-----------: | 69 98 34 FA 86 D7 70 00 | 70 0D E3 31 18 00 01 7A | i.4...p.p..1...z |
+[2025-12-10T15:14:51.969] D(16875244) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 8A 71 00 14 | 00 14 01 01 7A 6C 00 00 | w:...q......zl.. |
+[2025-12-10T15:14:51.979] D(16875244) OPENTHREAD:[D] Mac-----------: | 00 00 16 79 9D 06 BC 0A |                         | ...y....         |
+[2025-12-10T15:14:51.990] D(16875254) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:52.002] I(16875264) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:8a71, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:14:52.007] I(16875274) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:52.016] I(16875294) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:52.024] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=20 hlim=64 time=239ms
+[2025-12-10T15:14:52.034] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:14:52.035] Done
+[2025-12-10T15:14:52.046] D(16875314) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:52.057] D (16875324) OPENTHREAD: Millisecond timer alarm start running, t0=16874355, dt=5922
+[2025-12-10T15:14:52.066] I(16875324) OPENTHREAD:[I] Mle-----------: Already attached to candidate parent
+[2025-12-10T15:14:52.071] I(16875334) OPENTHREAD:[I] Mle-----------: Send Parent Request to routers and REEDs (ff02:0:0:0:0:0:0:2)
+[2025-12-10T15:14:52.076] D (16875354) OPENTHREAD: Millisecond timer alarm start running, t0=16874379, dt=1250
+[2025-12-10T15:14:52.079] D (16875354) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:52.083] D(16875364) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:52.092] D(16875364) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:52.097] D(16875374) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:52.108] D (16875374) OPENTHREAD: Microsecond timer alarm start running, t0=3989503142, dt=1269
+[2025-12-10T15:14:52.118] D(16875384) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:52.129] D (16875394) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:52.142] > D(16875404) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:52.156] D(16875404) OPENTHREAD:[D] Mac-----------: ==============================[TX len=063]==============================
+[2025-12-10T15:14:52.169] D(16875414) OPENTHREAD:[D] Mac-----------: | 41 D8 4B FA 86 FF FF 1B | 8C D5 70 D5 93 4E 9A 7F | A.K.......p..N.. |
+[2025-12-10T15:14:52.183] D(16875434) OPENTHREAD:[D] Mac-----------: | 3B 02 F0 4D 4C 4D 4C 54 | D5 00 15 4F DA 00 00 00 | ;..MLMLT...O.... |
+[2025-12-10T15:14:52.195] D(16875444) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 BD 23 0D A9 | F5 1A 82 F3 BC 17 40 81 | .....#........@. |
+[2025-12-10T15:14:52.208] D(16875444) OPENTHREAD:[D] Mac-----------: | 43 14 50 DC 6C BD 2C 33 | 7C 43 47 FF 6E B6 79    | C.P.l.,3|CG.n.y  |
+[2025-12-10T15:14:52.222] D(16875454) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:52.232] D(16875464) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:52.246] I(16875474) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 UDP msg, len:84, chksum:54d5, ecn:no, to:0xffff, sec:no, prio:net
+[2025-12-10T15:14:52.254] I(16875484) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:52.259] I(16875484) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:2]:19788
+[2025-12-10T15:14:52.263] D(16875504) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:52.263] 
+[2025-12-10T15:14:52.363] > 
+[2025-12-10T15:14:52.526] D(16875794) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:52.544] D(16875794) OPENTHREAD:[D] Mac-----------: | 61 DC 35 FA 86 1B 8C D5 | 70 D5 93 4E 9A 8C 29 62 | a.5.....p..N..)b |
+[2025-12-10T15:14:52.561] D(16875804) OPENTHREAD:[D] Mac-----------: | 5F 5E 55 49 46 7F 33 F0 | 4D 4C 4D 4C 52 C6 00 15 | _^UIF.3.MLMLR... |
+[2025-12-10T15:14:52.578] D(16875814) OPENTHREAD:[D] Mac-----------: | A0 22 0C 00 00 00 00 00 | 01 0B AC 3C EC 1A A6 00 | .".........<.... |
+[2025-12-10T15:14:52.599] D(16875824) OPENTHREAD:[D] Mac-----------: | 8D AA C3 89 15 89 C2 66 | C9 F6 67 40 C2 2C 8A 23 | .......f..g@.,.# |
+[2025-12-10T15:14:52.625] D(16875844) OPENTHREAD:[D] Mac-----------: | EE 98 EC DF 73 D5 33 D0 | 8F 87 E0 82 E0 75 E1 18 | ....s.3......u.. |
+[2025-12-10T15:14:52.648] D(16875854) OPENTHREAD:[D] Mac-----------: | 7F BB F0 6F 70 4D 6C 6F | 3C BF C5 9E 63 4B E4 CD | ...opMlo<...cK.. |
+[2025-12-10T15:14:52.668] D(16875864) OPENTHREAD:[D] Mac-----------: | CC A9 15 0B 94 E0 47 75 | B2 CF 5F 4A B2 AD 68 BB | ......Gu.._J..h. |
+[2025-12-10T15:14:52.691] D(16875864) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:52.709] D(16875874) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:52.727] I(16875884) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:52c6, ecn:no, from:4649555e5f62298c, sec:no, prio:net, rss:-69.0
+[2025-12-10T15:14:52.738] I(16875904) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4449:555e:5f62:298c]:19788
+[2025-12-10T15:14:52.748] I(16875914) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:52.756] D(16875924) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:52.769] I(16875924) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4449:555e:5f62:298c,0x7000)
+[2025-12-10T15:14:52.779] D(16875934) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:52.780] txpower -13
+[2025-12-10T15:14:52.780] 
+[2025-12-10T15:14:52.781] Done
+[2025-12-10T15:14:52.782] > 
+[2025-12-10T15:14:52.783] > state
+[2025-12-10T15:14:52.783] 
+[2025-12-10T15:14:52.784] child
+[2025-12-10T15:14:52.785] Done
+[2025-12-10T15:14:52.786] > 
+[2025-12-10T15:14:52.787] > parent
+[2025-12-10T15:14:52.788] 
+[2025-12-10T15:14:52.791] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:52.793] Rloc: 7000
+[2025-12-10T15:14:52.795] Link Quality In: 3
+[2025-12-10T15:14:52.796] Link Quality Out: 3
+[2025-12-10T15:14:52.797] Age: 1
+[2025-12-10T15:14:52.798] Version: 5
+[2025-12-10T15:14:52.798] Done
+[2025-12-10T15:14:52.798] > 
+[2025-12-10T15:14:52.800] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:52.800] 
+[2025-12-10T15:14:52.804] I(16875994) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 21)
+[2025-12-10T15:14:52.808] D(16875994) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:52.812] D(16876004) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:52.816] D(16876014) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:52.820] D (16876024) OPENTHREAD: Microsecond timer alarm start running, t0=3990148098, dt=2230
+[2025-12-10T15:14:52.824] D(16876044) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:52.827] D (16876044) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:52.830] D(16876044) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:52.836] D(16876054) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:52.841] D(16876064) OPENTHREAD:[D] Mac-----------: | 69 98 4C FA 86 00 70 D7 | 70 0D D7 28 01 00 01 7A | i.L...p.p..(...z |
+[2025-12-10T15:14:52.847] D(16876074) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 87 CB 00 15 | 00 15 01 01 7E 10 00 00 | w:..........~... |
+[2025-12-10T15:14:52.852] D(16876074) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 BD 23 0D A9 |                         | .....#..         |
+[2025-12-10T15:14:52.858] D(16876094) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:52.862] D(16876104) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:52.868] I(16876114) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:87cb, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:52.872] I(16876124) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:52.876] I(16876124) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:52.880] D(16876134) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:52.884] D(16876144) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:52.888] D(16876144) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585636
+[2025-12-10T15:14:52.893] D(16876164) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:52.899] D(16876174) OPENTHREAD:[D] Mac-----------: | 69 98 36 FA 86 D7 70 00 | 70 0D E4 31 18 00 01 7A | i.6...p.p..1...z |
+[2025-12-10T15:14:52.905] D(16876184) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 86 CB 00 15 | 00 15 01 01 7E 10 00 00 | w:..........~... |
+[2025-12-10T15:14:52.916] D(16876184) OPENTHREAD:[D] Mac-----------: | 00 00 7D B4 86 DC BB 0A |                         | ..}.....         |
+[2025-12-10T15:14:52.927] D(16876194) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:52.939] I(16876204) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:86cb, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:14:52.948] I(16876214) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:52.956] I(16876234) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:52.961] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=21 hlim=64 time=246ms
+[2025-12-10T15:14:52.971] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 246/246.000/246 ms.
+[2025-12-10T15:14:52.972] Done
+[2025-12-10T15:14:52.980] D(16876254) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:52.991] D(16876264) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:53.001] D(16876274) OPENTHREAD:[D] Mac-----------: | 61 DC E6 FA 86 1B 8C D5 | 70 D5 93 4E 9A 42 C1 96 | a.......p..N.B.. |
+[2025-12-10T15:14:53.012] D(16876274) OPENTHREAD:[D] Mac-----------: | 62 6B F7 74 4A 7F 33 F0 | 4D 4C 4D 4C 14 BA 00 15 | bk.tJ.3.MLML.... |
+[2025-12-10T15:14:53.022] D(16876294) OPENTHREAD:[D] Mac-----------: | BD 46 0C 00 00 00 00 00 | 01 08 42 01 46 FE 1D 49 | .F........B.F..I |
+[2025-12-10T15:14:53.033] D(16876304) OPENTHREAD:[D] Mac-----------: | F7 40 38 F9 89 C1 7F 3C | 25 39 40 85 61 BE B3 38 | .@8....<%9@.a..8 |
+[2025-12-10T15:14:53.043] D(16876314) OPENTHREAD:[D] Mac-----------: | 05 61 4B 42 26 A6 89 03 | 06 EC C1 13 3A 49 D5 C5 | .aKB&.......:I.. |
+[2025-12-10T15:14:53.050] D(16876324) OPENTHREAD:[D] Mac-----------: | 09 06 09 2A 60 4E 66 36 | B6 37 44 ED 9D 26 D2 55 | ...*`Nf6.7D..&.U |
+[2025-12-10T15:14:53.068] D(16876334) OPENTHREAD:[D] Mac-----------: | D2 64 FE BA 85 AE 90 14 | 20 6B 6C F3 CC 8B 45 BB | .d...... kl...E. |
+[2025-12-10T15:14:53.082] D(16876344) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:53.088] D(16876344) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:53.104] I(16876364) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:14ba, ecn:no, from:4a74f76b6296c142, sec:no, prio:net, rss:-69.0
+[2025-12-10T15:14:53.113] I(16876374) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4874:f76b:6296:c142]:19788
+[2025-12-10T15:14:53.118] I(16876384) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:53.121] D(16876394) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:53.127] I(16876394) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4874:f76b:6296:c142,0x0c00)
+[2025-12-10T15:14:53.131] D(16876404) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:53.131] > 
+[2025-12-10T15:14:53.231] > 
+[2025-12-10T15:14:53.335] D (16876614) OPENTHREAD: Millisecond timer alarm start running, t0=16875638, dt=4639
+[2025-12-10T15:14:53.339] I(16876614) OPENTHREAD:[I] Mle-----------: Already attached to candidate parent
+[2025-12-10T15:14:53.343] I(16876624) OPENTHREAD:[I] Mle-----------: AttachState ParentReq -> Idle
+[2025-12-10T15:14:53.346] D (16876624) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:53.762] txpower -13
+[2025-12-10T15:14:53.763] 
+[2025-12-10T15:14:53.763] Done
+[2025-12-10T15:14:53.764] > 
+[2025-12-10T15:14:53.765] > state
+[2025-12-10T15:14:53.766] 
+[2025-12-10T15:14:53.767] child
+[2025-12-10T15:14:53.768] Done
+[2025-12-10T15:14:53.769] > 
+[2025-12-10T15:14:53.772] > parent
+[2025-12-10T15:14:53.773] 
+[2025-12-10T15:14:53.774] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:53.775] Rloc: 7000
+[2025-12-10T15:14:53.776] Link Quality In: 3
+[2025-12-10T15:14:53.778] Link Quality Out: 3
+[2025-12-10T15:14:53.778] Age: 2
+[2025-12-10T15:14:53.779] Version: 5
+[2025-12-10T15:14:53.779] Done
+[2025-12-10T15:14:53.780] > 
+[2025-12-10T15:14:53.782] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:53.782] 
+[2025-12-10T15:14:53.793] I(16877074) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 22)
+[2025-12-10T15:14:53.802] D (16877074) OPENTHREAD: Millisecond timer alarm start running, t0=16876104, dt=3000
+[2025-12-10T15:14:53.809] D(16877084) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:53.816] D(16877084) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:53.824] D(16877094) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:53.828] D (16877104) OPENTHREAD: Microsecond timer alarm start running, t0=3991226876, dt=1909
+[2025-12-10T15:14:53.837] D(16877114) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:53.841] D (16877124) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:53.849] D(16877124) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:53.859] D(16877124) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:53.869] D(16877134) OPENTHREAD:[D] Mac-----------: | 69 98 4D FA 86 00 70 D7 | 70 0D D8 28 01 00 01 7A | i.M...p.p..(...z |
+[2025-12-10T15:14:53.880] D(16877144) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 83 93 00 16 | 00 16 01 01 82 46 00 00 | w:...........F.. |
+[2025-12-10T15:14:53.891] D(16877164) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 BD 23 0D A9 |                         | .....#..         |
+[2025-12-10T15:14:53.901] D(16877174) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:53.906] D(16877184) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:53.917] I(16877184) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:8393, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:53.926] I(16877194) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:53.935] I(16877204) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:53.940] D(16877214) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:53.948] D(16877214) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:53.957] D(16877234) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585637
+[2025-12-10T15:14:53.967] D(16877244) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:53.974] D(16877244) OPENTHREAD:[D] Mac-----------: | 69 98 37 FA 86 D7 70 00 | 70 0D E5 31 18 00 01 7A | i.7...p.p..1...z |
+[2025-12-10T15:14:53.984] D(16877254) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 82 93 00 16 | 00 16 01 01 82 46 00 00 | w:...........F.. |
+[2025-12-10T15:14:53.995] D(16877264) OPENTHREAD:[D] Mac-----------: | 00 00 DA A7 E7 04 BB 0A |                         | ........         |
+[2025-12-10T15:14:54.005] D(16877274) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:54.018] I(16877284) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:8293, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:14:54.026] I(16877304) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:54.037] I(16877314) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:54.048] D (16877314) OPENTHREAD: Millisecond timer alarm start running, t0=16876342, dt=3935
+[2025-12-10T15:14:54.058] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=22 hlim=64 time=240ms
+[2025-12-10T15:14:54.064] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 240/240.000/240 ms.
+[2025-12-10T15:14:54.064] Done
+[2025-12-10T15:14:54.068] D(16877334) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:54.068] > 
+[2025-12-10T15:14:54.169] > 
+[2025-12-10T15:14:54.685] txpower -13
+[2025-12-10T15:14:54.686] 
+[2025-12-10T15:14:54.687] Done
+[2025-12-10T15:14:54.687] > 
+[2025-12-10T15:14:54.688] > state
+[2025-12-10T15:14:54.689] 
+[2025-12-10T15:14:54.690] child
+[2025-12-10T15:14:54.691] Done
+[2025-12-10T15:14:54.691] > 
+[2025-12-10T15:14:54.696] > parent
+[2025-12-10T15:14:54.696] 
+[2025-12-10T15:14:54.698] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:54.699] Rloc: 7000
+[2025-12-10T15:14:54.701] Link Quality In: 3
+[2025-12-10T15:14:54.703] Link Quality Out: 3
+[2025-12-10T15:14:54.703] Age: 3
+[2025-12-10T15:14:54.704] Version: 5
+[2025-12-10T15:14:54.705] Done
+[2025-12-10T15:14:54.705] > 
+[2025-12-10T15:14:54.708] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:54.708] 
+[2025-12-10T15:14:54.716] I(16877994) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 23)
+[2025-12-10T15:14:54.725] D (16877994) OPENTHREAD: Millisecond timer alarm start running, t0=16877027, dt=3000
+[2025-12-10T15:14:54.730] D(16878014) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:54.738] D(16878014) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:54.747] D(16878024) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:54.752] D (16878024) OPENTHREAD: Microsecond timer alarm start running, t0=3992150410, dt=951
+[2025-12-10T15:14:54.760] D(16878034) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:54.764] D (16878044) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:54.771] D(16878044) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:54.786] D(16878044) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:54.794] D(16878064) OPENTHREAD:[D] Mac-----------: | 69 98 4E FA 86 00 70 D7 | 70 0D D9 28 01 00 01 7A | i.N...p.p..(...z |
+[2025-12-10T15:14:54.803] D(16878074) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 7F F5 00 17 | 00 17 01 01 85 E2 00 00 | w:.............. |
+[2025-12-10T15:14:54.814] D(16878084) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 BD 23 0D A9 |                         | .....#..         |
+[2025-12-10T15:14:54.825] D(16878094) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:54.829] D(16878104) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:54.841] I(16878104) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:7ff5, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:54.849] I(16878114) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:54.858] I(16878134) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:54.863] D(16878144) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:54.872] D(16878144) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:54.880] D(16878154) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585638
+[2025-12-10T15:14:54.891] D(16878164) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:54.898] D(16878164) OPENTHREAD:[D] Mac-----------: | 69 98 38 FA 86 D7 70 00 | 70 0D E6 31 18 00 01 7A | i.8...p.p..1...z |
+[2025-12-10T15:14:54.908] D(16878174) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 7E F5 00 17 | 00 17 01 01 85 E2 00 00 | w:..~........... |
+[2025-12-10T15:14:54.918] D(16878184) OPENTHREAD:[D] Mac-----------: | 00 00 AE 23 B9 83 BC 0A |                         | ...#....         |
+[2025-12-10T15:14:54.929] D(16878204) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:54.941] I(16878214) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:7ef5, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:14:54.950] I(16878224) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:54.958] I(16878234) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:54.964] D (16878234) OPENTHREAD: Millisecond timer alarm start running, t0=16877265, dt=3012
+[2025-12-10T15:14:54.972] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=23 hlim=64 time=239ms
+[2025-12-10T15:14:54.982] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:14:54.982] Done
+[2025-12-10T15:14:54.987] D(16878264) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:54.987] > 
+[2025-12-10T15:14:55.088] > 
+[2025-12-10T15:14:55.705] txpower -13
+[2025-12-10T15:14:55.705] 
+[2025-12-10T15:14:55.706] Done
+[2025-12-10T15:14:55.707] > 
+[2025-12-10T15:14:55.708] > state
+[2025-12-10T15:14:55.708] 
+[2025-12-10T15:14:55.709] child
+[2025-12-10T15:14:55.710] Done
+[2025-12-10T15:14:55.710] > 
+[2025-12-10T15:14:55.715] > parent
+[2025-12-10T15:14:55.715] 
+[2025-12-10T15:14:55.717] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:55.718] Rloc: 7000
+[2025-12-10T15:14:55.719] Link Quality In: 3
+[2025-12-10T15:14:55.720] Link Quality Out: 3
+[2025-12-10T15:14:55.721] Age: 4
+[2025-12-10T15:14:55.722] Version: 5
+[2025-12-10T15:14:55.722] Done
+[2025-12-10T15:14:55.723] > 
+[2025-12-10T15:14:55.725] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:55.725] 
+[2025-12-10T15:14:55.735] I(16879014) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 24)
+[2025-12-10T15:14:55.745] D(16879014) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:55.751] D(16879024) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:55.758] D(16879034) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:55.764] D (16879044) OPENTHREAD: Microsecond timer alarm start running, t0=3993168882, dt=2230
+[2025-12-10T15:14:55.782] D(16879064) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:55.787] D (16879064) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:55.791] D(16879064) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:55.800] D(16879074) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:55.811] D(16879084) OPENTHREAD:[D] Mac-----------: | 69 98 4F FA 86 00 70 D7 | 70 0D DA 28 01 00 01 7A | i.O...p.p..(...z |
+[2025-12-10T15:14:55.822] D(16879094) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 7B F8 00 18 | 00 18 01 01 89 DD 00 00 | w:..{........... |
+[2025-12-10T15:14:55.832] D(16879094) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 BD 23 0D A9 |                         | .....#..         |
+[2025-12-10T15:14:55.843] D(16879114) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:55.848] D(16879124) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:55.859] I(16879134) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:7bf8, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:55.867] I(16879144) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:55.876] I(16879144) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:55.881] D(16879154) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:55.890] D(16879164) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:55.898] D(16879164) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585639
+[2025-12-10T15:14:55.909] D(16879184) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:55.919] D(16879194) OPENTHREAD:[D] Mac-----------: | 69 98 39 FA 86 D7 70 00 | 70 0D E7 31 18 00 01 7A | i.9...p.p..1...z |
+[2025-12-10T15:14:55.926] D(16879204) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 7A F8 00 18 | 00 18 01 01 89 DD 00 00 | w:..z........... |
+[2025-12-10T15:14:55.936] D(16879204) OPENTHREAD:[D] Mac-----------: | 00 00 4F 28 82 3F BC 0A |                         | ..O(.?..         |
+[2025-12-10T15:14:55.947] D(16879214) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:55.959] I(16879224) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:7af8, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:14:55.967] I(16879234) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:55.976] I(16879254) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:55.982] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=24 hlim=64 time=245ms
+[2025-12-10T15:14:55.991] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 245/245.000/245 ms.
+[2025-12-10T15:14:55.992] Done
+[2025-12-10T15:14:55.996] D(16879274) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:55.997] > 
+[2025-12-10T15:14:56.097] > 
+[2025-12-10T15:14:56.713] txpower -13
+[2025-12-10T15:14:56.713] 
+[2025-12-10T15:14:56.714] Done
+[2025-12-10T15:14:56.715] > 
+[2025-12-10T15:14:56.716] > state
+[2025-12-10T15:14:56.716] 
+[2025-12-10T15:14:56.717] child
+[2025-12-10T15:14:56.718] Done
+[2025-12-10T15:14:56.719] > 
+[2025-12-10T15:14:56.724] > parent
+[2025-12-10T15:14:56.725] 
+[2025-12-10T15:14:56.727] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:56.728] Rloc: 7000
+[2025-12-10T15:14:56.729] Link Quality In: 3
+[2025-12-10T15:14:56.731] Link Quality Out: 3
+[2025-12-10T15:14:56.731] Age: 5
+[2025-12-10T15:14:56.732] Version: 5
+[2025-12-10T15:14:56.732] Done
+[2025-12-10T15:14:56.733] > 
+[2025-12-10T15:14:56.736] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:56.736] 
+[2025-12-10T15:14:56.744] I(16880024) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 25)
+[2025-12-10T15:14:56.754] D(16880024) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:56.760] D(16880034) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:56.768] D(16880044) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:56.776] D (16880054) OPENTHREAD: Microsecond timer alarm start running, t0=3994178109, dt=1589
+[2025-12-10T15:14:56.780] D(16880064) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:56.788] D (16880064) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:56.792] D(16880074) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:56.804] D(16880074) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:56.812] D(16880084) OPENTHREAD:[D] Mac-----------: | 69 98 50 FA 86 00 70 D7 | 70 0D DB 28 01 00 01 7A | i.P...p.p..(...z |
+[2025-12-10T15:14:56.823] D(16880094) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 78 04 00 19 | 00 19 01 01 8D CF 00 00 | w:..x........... |
+[2025-12-10T15:14:56.833] D(16880104) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 BD 23 0D A9 |                         | .....#..         |
+[2025-12-10T15:14:56.844] D(16880114) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:56.853] D(16880134) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:56.864] I(16880134) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:7804, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:56.868] I(16880144) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:56.882] I(16880154) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:56.888] D(16880164) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:56.892] D(16880164) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:56.899] D(16880174) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585640
+[2025-12-10T15:14:56.910] D(16880174) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:56.921] D(16880194) OPENTHREAD:[D] Mac-----------: | 69 98 3A FA 86 D7 70 00 | 70 0D E8 31 18 00 01 7A | i.:...p.p..1...z |
+[2025-12-10T15:14:56.931] D(16880204) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 77 04 00 19 | 00 19 01 01 8D CF 00 00 | w:..w........... |
+[2025-12-10T15:14:56.942] D(16880214) OPENTHREAD:[D] Mac-----------: | 00 00 18 C4 55 90 BC 0A |                         | ....U...         |
+[2025-12-10T15:14:56.952] D(16880224) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:56.964] I(16880234) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:7704, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:14:56.970] I(16880244) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:56.978] I(16880244) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:56.987] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=25 hlim=64 time=234ms
+[2025-12-10T15:14:56.996] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 234/234.000/234 ms.
+[2025-12-10T15:14:56.996] Done
+[2025-12-10T15:14:57.001] D(16880274) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:57.001] > 
+[2025-12-10T15:14:57.102] > 
+[2025-12-10T15:14:57.718] txpower -13
+[2025-12-10T15:14:57.718] 
+[2025-12-10T15:14:57.719] Done
+[2025-12-10T15:14:57.719] > 
+[2025-12-10T15:14:57.720] > state
+[2025-12-10T15:14:57.721] 
+[2025-12-10T15:14:57.722] child
+[2025-12-10T15:14:57.723] Done
+[2025-12-10T15:14:57.723] > 
+[2025-12-10T15:14:57.729] > parent
+[2025-12-10T15:14:57.729] 
+[2025-12-10T15:14:57.733] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:57.735] Rloc: 7000
+[2025-12-10T15:14:57.737] Link Quality In: 3
+[2025-12-10T15:14:57.740] Link Quality Out: 3
+[2025-12-10T15:14:57.741] Age: 6
+[2025-12-10T15:14:57.743] Version: 5
+[2025-12-10T15:14:57.743] Done
+[2025-12-10T15:14:57.744] > 
+[2025-12-10T15:14:57.749] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:57.749] 
+[2025-12-10T15:14:57.758] I(16881034) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 26)
+[2025-12-10T15:14:57.769] D(16881034) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:57.779] D(16881044) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:57.789] D(16881044) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:57.799] D (16881054) OPENTHREAD: Microsecond timer alarm start running, t0=3995182579, dt=951
+[2025-12-10T15:14:57.808] D(16881054) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:57.815] D (16881064) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:57.823] D(16881074) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:57.837] D(16881084) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:57.851] D(16881094) OPENTHREAD:[D] Mac-----------: | 69 98 51 FA 86 00 70 D7 | 70 0D DC 28 01 00 01 7A | i.Q...p.p..(...z |
+[2025-12-10T15:14:57.864] D(16881104) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 74 16 00 1A | 00 1A 01 01 91 BB 00 00 | w:..t........... |
+[2025-12-10T15:14:57.878] D(16881104) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 BD 23 0D A9 |                         | .....#..         |
+[2025-12-10T15:14:57.891] D(16881114) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:57.901] D(16881124) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:57.916] I(16881144) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:7416, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:57.927] I(16881154) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:57.937] I(16881154) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:57.948] D(16881164) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:57.958] D(16881174) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:57.968] D(16881174) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585641
+[2025-12-10T15:14:57.982] D(16881184) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:57.990] D(16881194) OPENTHREAD:[D] Mac-----------: | 69 98 3B FA 86 D7 70 00 | 70 0D E9 31 18 00 01 7A | i.;...p.p..1...z |
+[2025-12-10T15:14:57.995] D(16881214) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 73 16 00 1A | 00 1A 01 01 91 BB 00 00 | w:..s........... |
+[2025-12-10T15:14:58.001] D(16881214) OPENTHREAD:[D] Mac-----------: | 00 00 53 2A 07 7A BB 0A |                         | ..S*.z..         |
+[2025-12-10T15:14:58.006] D(16881224) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:58.013] I(16881234) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:7316, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:14:58.017] I(16881244) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:58.021] I(16881254) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:58.026] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=26 hlim=64 time=239ms
+[2025-12-10T15:14:58.031] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:14:58.031] Done
+[2025-12-10T15:14:58.035] D(16881284) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:58.042] D (16881294) OPENTHREAD: Millisecond timer alarm start running, t0=16880322, dt=199665
+[2025-12-10T15:14:58.052] I(16881294) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Backoff interval passed
+[2025-12-10T15:14:58.061] I(16881304) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Parent RSS -68
+[2025-12-10T15:14:58.069] I(16881314) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Parent RSS less than -65, searching for new parents
+[2025-12-10T15:14:58.073] I(16881314) OPENTHREAD:[I] Mle-----------: AttachState Idle -> Start
+[2025-12-10T15:14:58.077] D (16881324) OPENTHREAD: Millisecond timer alarm start running, t0=16880357, dt=1
+[2025-12-10T15:14:58.082] I(16881334) OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: (Re)starting timer for backoff interval
+[2025-12-10T15:14:58.086] D (16881344) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:58.086] > 
+[2025-12-10T15:14:58.096] > D (16881364) OPENTHREAD: Millisecond timer alarm start running, t0=16880388, dt=14269
+[2025-12-10T15:14:58.105] I(16881364) OPENTHREAD:[N] Mle-----------: Attach attempt 0, BetterParent 
+[2025-12-10T15:14:58.110] I(16881374) OPENTHREAD:[I] Mle-----------: AttachState Start -> ParentReq
+[2025-12-10T15:14:58.115] I(16881374) OPENTHREAD:[I] Mle-----------: Send Parent Request to routers (ff02:0:0:0:0:0:0:2)
+[2025-12-10T15:14:58.119] D (16881384) OPENTHREAD: Millisecond timer alarm start running, t0=16880413, dt=750
+[2025-12-10T15:14:58.122] D (16881384) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:58.126] D(16881394) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:58.130] D(16881404) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:58.134] D(16881404) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:58.143] D (16881424) OPENTHREAD: Microsecond timer alarm start running, t0=3995547567, dt=309
+[2025-12-10T15:14:58.152] D(16881424) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:58.160] D (16881434) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:58.171] D(16881434) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:58.184] D(16881444) OPENTHREAD:[D] Mac-----------: ==============================[TX len=063]==============================
+[2025-12-10T15:14:58.197] D(16881454) OPENTHREAD:[D] Mac-----------: | 41 D8 52 FA 86 FF FF 1B | 8C D5 70 D5 93 4E 9A 7F | A.R.......p..N.. |
+[2025-12-10T15:14:58.211] D(16881454) OPENTHREAD:[D] Mac-----------: | 3B 02 F0 4D 4C 4D 4C 8D | 78 00 15 50 DA 00 00 00 | ;..MLML.x..P.... |
+[2025-12-10T15:14:58.225] D(16881474) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 7A 70 A6 43 | A0 AA 43 EC 6A A2 47 A3 | ....zp.C..C.j.G. |
+[2025-12-10T15:14:58.239] D(16881484) OPENTHREAD:[D] Mac-----------: | FE 6C 7B 1F 53 6D 54 F5 | 20 CC EA 12 17 B6 79    | .l{.SmT. .....y  |
+[2025-12-10T15:14:58.252] D(16881494) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:58.261] D(16881504) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:58.274] I(16881514) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 UDP msg, len:84, chksum:8d78, ecn:no, to:0xffff, sec:no, prio:net
+[2025-12-10T15:14:58.281] I(16881514) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:58.285] I(16881524) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:2]:19788
+[2025-12-10T15:14:58.289] D(16881544) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:58.294] D(16881544) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:58.300] D(16881554) OPENTHREAD:[D] Mac-----------: | 61 DC F3 FA 86 1B 8C D5 | 70 D5 93 4E 9A 42 C1 96 | a.......p..N.B.. |
+[2025-12-10T15:14:58.305] D(16881564) OPENTHREAD:[D] Mac-----------: | 62 6B F7 74 4A 7F 33 F0 | 4D 4C 4D 4C 44 31 00 15 | bk.tJ.3.MLMLD1.. |
+[2025-12-10T15:14:58.311] D(16881574) OPENTHREAD:[D] Mac-----------: | BE 46 0C 00 00 00 00 00 | 01 2A E8 56 6B 16 F5 2A | .F.......*.Vk..* |
+[2025-12-10T15:14:58.316] D(16881584) OPENTHREAD:[D] Mac-----------: | D7 08 29 79 2E A1 84 EE | 3F B9 D7 33 D5 D3 DA 15 | ..)y....?..3.... |
+[2025-12-10T15:14:58.322] D(16881594) OPENTHREAD:[D] Mac-----------: | E6 86 F0 3D 03 0B 7C F9 | 71 BC ED 4F BB 82 0C 87 | ...=..|.q..O.... |
+[2025-12-10T15:14:58.333] D(16881614) OPENTHREAD:[D] Mac-----------: | 94 51 42 7F 2C 55 91 30 | BD 33 1B DB 5E 79 15 A1 | .QB.,U.0.3..^y.. |
+[2025-12-10T15:14:58.344] D(16881614) OPENTHREAD:[D] Mac-----------: | B6 0E B9 77 E5 93 C1 0F | 02 33 17 82 F4 5C 84 BA | ...w.....3...\.. |
+[2025-12-10T15:14:58.355] D(16881624) OPENTHREAD:[D] Mac-----------: | 09                      |                         | .                |
+[2025-12-10T15:14:58.365] D(16881634) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:58.377] I(16881644) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:4431, ecn:no, from:4a74f76b6296c142, sec:no, prio:net, rss:-70.0
+[2025-12-10T15:14:58.386] I(16881654) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4874:f76b:6296:c142]:19788
+[2025-12-10T15:14:58.391] I(16881664) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:58.399] D(16881664) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:58.409] I(16881684) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4874:f76b:6296:c142,0x0c00)
+[2025-12-10T15:14:58.420] D(16881694) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:58.481] D(16881754) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:58.495] D(16881754) OPENTHREAD:[D] Mac-----------: | 61 DC 3C FA 86 1B 8C D5 | 70 D5 93 4E 9A 8C 29 62 | a.<.....p..N..)b |
+[2025-12-10T15:14:58.509] D(16881764) OPENTHREAD:[D] Mac-----------: | 5F 5E 55 49 46 7F 33 F0 | 4D 4C 4D 4C 43 C9 00 15 | _^UIF.3.MLMLC... |
+[2025-12-10T15:14:58.523] D(16881774) OPENTHREAD:[D] Mac-----------: | A1 22 0C 00 00 00 00 00 | 01 E6 6C B6 95 18 5A FF | ."........l...Z. |
+[2025-12-10T15:14:58.536] D(16881784) OPENTHREAD:[D] Mac-----------: | 1A 45 67 52 5A 60 51 DC | BD 62 3A CE 72 65 39 63 | .EgRZ`Q..b:.re9c |
+[2025-12-10T15:14:58.549] D(16881794) OPENTHREAD:[D] Mac-----------: | 6D 3B AC 1E B3 B8 7E 48 | 53 49 E3 21 20 FD 9D 4F | m;....~HSI.! ..O |
+[2025-12-10T15:14:58.563] D(16881814) OPENTHREAD:[D] Mac-----------: | 65 2D E8 5A 8E 3E A8 2B | 4F 73 6F 93 44 A5 72 9B | e-.Z.>.+Oso.D.r. |
+[2025-12-10T15:14:58.576] D(16881824) OPENTHREAD:[D] Mac-----------: | D6 F8 2D B9 1A 6C 22 CC | E6 64 81 A3 2B 33 EB BB | ..-..l"..d..+3.. |
+[2025-12-10T15:14:58.589] D(16881824) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:58.602] D(16881834) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:58.618] I(16881844) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:43c9, ecn:no, from:4649555e5f62298c, sec:no, prio:net, rss:-69.0
+[2025-12-10T15:14:58.630] I(16881854) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4449:555e:5f62:298c]:19788
+[2025-12-10T15:14:58.641] I(16881874) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:58.648] D(16881884) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:58.660] I(16881884) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4449:555e:5f62:298c,0x7000)
+[2025-12-10T15:14:58.670] D(16881894) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:58.686] txpower -13
+[2025-12-10T15:14:58.686] 
+[2025-12-10T15:14:58.687] Done
+[2025-12-10T15:14:58.687] > 
+[2025-12-10T15:14:58.688] > state
+[2025-12-10T15:14:58.689] 
+[2025-12-10T15:14:58.690] child
+[2025-12-10T15:14:58.691] Done
+[2025-12-10T15:14:58.691] > 
+[2025-12-10T15:14:58.696] > parent
+[2025-12-10T15:14:58.697] 
+[2025-12-10T15:14:58.700] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:58.702] Rloc: 7000
+[2025-12-10T15:14:58.704] Link Quality In: 3
+[2025-12-10T15:14:58.707] Link Quality Out: 3
+[2025-12-10T15:14:58.708] Age: 7
+[2025-12-10T15:14:58.710] Version: 5
+[2025-12-10T15:14:58.710] Done
+[2025-12-10T15:14:58.711] > 
+[2025-12-10T15:14:58.716] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:58.716] 
+[2025-12-10T15:14:58.725] I(16881994) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 27)
+[2025-12-10T15:14:58.736] D(16881994) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:58.746] D(16882014) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:58.753] D(16882014) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:58.758] D (16882024) OPENTHREAD: Microsecond timer alarm start running, t0=3996149949, dt=1909
+[2025-12-10T15:14:58.761] D(16882034) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:58.764] D (16882034) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:58.768] D(16882044) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:58.773] D(16882044) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:58.785] D(16882054) OPENTHREAD:[D] Mac-----------: | 69 98 53 FA 86 00 70 D7 | 70 0D DD 28 01 00 01 7A | i.S...p.p..(...z |
+[2025-12-10T15:14:58.796] D(16882064) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 70 4D 00 1B | 00 1B 01 01 95 82 00 00 | w:..pM.......... |
+[2025-12-10T15:14:58.806] D(16882074) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 7A 70 A6 43 |                         | ....zp.C         |
+[2025-12-10T15:14:58.816] D(16882084) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:58.825] D(16882104) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:58.836] I(16882104) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:704d, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:58.841] I(16882114) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:58.850] I(16882124) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:58.859] D(16882134) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:58.864] D(16882134) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:58.872] D(16882144) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585642
+[2025-12-10T15:14:58.882] D(16882154) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:58.893] D(16882164) OPENTHREAD:[D] Mac-----------: | 69 98 3D FA 86 D7 70 00 | 70 0D EA 31 18 00 01 7A | i.=...p.p..1...z |
+[2025-12-10T15:14:58.904] D(16882174) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 6F 4D 00 1B | 00 1B 01 01 95 82 00 00 | w:..oM.......... |
+[2025-12-10T15:14:58.914] D(16882184) OPENTHREAD:[D] Mac-----------: | 00 00 B3 C9 31 6D BB 0A |                         | ....1m..         |
+[2025-12-10T15:14:58.924] D(16882194) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:58.936] I(16882204) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:6f4d, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:14:58.941] I(16882214) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:58.949] I(16882224) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:58.958] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=27 hlim=64 time=233ms
+[2025-12-10T15:14:58.969] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 233/233.000/233 ms.
+[2025-12-10T15:14:58.970] Done
+[2025-12-10T15:14:58.979] D(16882254) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:58.983] D (16882254) OPENTHREAD: Millisecond timer alarm start running, t0=16881283, dt=13374
+[2025-12-10T15:14:58.987] I(16882264) OPENTHREAD:[I] Mle-----------: Already attached to candidate parent
+[2025-12-10T15:14:58.998] I(16882274) OPENTHREAD:[I] Mle-----------: Send Parent Request to routers and REEDs (ff02:0:0:0:0:0:0:2)
+[2025-12-10T15:14:59.007] D (16882274) OPENTHREAD: Millisecond timer alarm start running, t0=16881307, dt=1250
+[2025-12-10T15:14:59.011] D (16882284) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:14:59.019] D(16882294) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:59.031] D(16882304) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:59.041] D(16882314) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:59.059] D (16882314) OPENTHREAD: Microsecond timer alarm start running, t0=3996441082, dt=628
+[2025-12-10T15:14:59.079] D(16882324) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:59.091] D (16882324) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:59.105] D(16882334) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:59.119] D(16882334) OPENTHREAD:[D] Mac-----------: ==============================[TX len=063]==============================
+[2025-12-10T15:14:59.132] D(16882344) OPENTHREAD:[D] Mac-----------: | 41 D8 54 FA 86 FF FF 1B | 8C D5 70 D5 93 4E 9A 7F | A.T.......p..N.. |
+[2025-12-10T15:14:59.146] D(16882364) OPENTHREAD:[D] Mac-----------: | 3B 02 F0 4D 4C 4D 4C 2B | 13 00 15 51 DA 00 00 00 | ;..MLML+...Q.... |
+[2025-12-10T15:14:59.160] D(16882374) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC | 3F C1 57 BD 31 5D 60 2E | ........?.W.1]`. |
+[2025-12-10T15:14:59.173] D(16882384) OPENTHREAD:[D] Mac-----------: | E5 60 68 DC F7 6C FC D0 | 2E 64 1F 4F B2 B6 79    | .`h..l...d.O..y  |
+[2025-12-10T15:14:59.187] D(16882394) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:59.196] D(16882404) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:59.210] I(16882404) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 UDP msg, len:84, chksum:2b13, ecn:no, to:0xffff, sec:no, prio:net
+[2025-12-10T15:14:59.221] I(16882414) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:59.230] I(16882434) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:2]:19788
+[2025-12-10T15:14:59.240] D(16882434) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:59.249] D(16882444) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 933092
+[2025-12-10T15:14:59.268] I(16882454) OPENTHREAD:[I] Mac-----------: Frame rx failed, error:Security, len:72, seqnum:192, type:Data, src:2a0ca7a33aa62384, dst:0xffff, sec:yes, ackreq:no
+[2025-12-10T15:14:59.278] D(16882464) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 933094
+[2025-12-10T15:14:59.297] I(16882464) OPENTHREAD:[I] Mac-----------: Frame rx failed, error:Security, len:96, seqnum:194, type:Data, src:2a0ca7a33aa62384, dst:0xffff, sec:yes, ackreq:no
+[2025-12-10T15:14:59.305] D(16882484) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 933095
+[2025-12-10T15:14:59.313] I(16882484) OPENTHREAD:[I] Mac-----------: Frame rx failed, error:Security, len:74, seqnum:195, type:Data, src:2a0ca7a33aa62384, dst:0xffff, sec:yes, ackreq:no
+[2025-12-10T15:14:59.317] D(16882504) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 933096
+[2025-12-10T15:14:59.325] I(16882514) OPENTHREAD:[I] Mac-----------: Frame rx failed, error:Security, len:82, seqnum:196, type:Data, src:2a0ca7a33aa62384, dst:0xffff, sec:yes, ackreq:no
+[2025-12-10T15:14:59.325] > 
+[2025-12-10T15:14:59.331] > D(16882564) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:59.336] D(16882564) OPENTHREAD:[D] Mac-----------: | 61 DC F6 FA 86 1B 8C D5 | 70 D5 93 4E 9A 42 C1 96 | a.......p..N.B.. |
+[2025-12-10T15:14:59.342] D(16882584) OPENTHREAD:[D] Mac-----------: | 62 6B F7 74 4A 7F 33 F0 | 4D 4C 4D 4C 2F 52 00 15 | bk.tJ.3.MLML/R.. |
+[2025-12-10T15:14:59.348] D(16882594) OPENTHREAD:[D] Mac-----------: | BF 46 0C 00 00 00 00 00 | 01 B9 E8 32 BA 32 76 FE | .F.........2.2v. |
+[2025-12-10T15:14:59.353] D(16882604) OPENTHREAD:[D] Mac-----------: | 91 09 0A AB C1 C5 76 24 | E0 EE 2C 4A 8C 9B E9 B0 | ......v$..,J.... |
+[2025-12-10T15:14:59.359] D(16882614) OPENTHREAD:[D] Mac-----------: | C5 23 9E 1A 78 AE 0E 8E | 4B 3F 07 45 30 47 72 4D | .#..x...K?.E0GrM |
+[2025-12-10T15:14:59.365] D(16882624) OPENTHREAD:[D] Mac-----------: | 8A 95 9B 16 2B 4A 3D 41 | 0B 67 BF BC 77 27 CB 1B | ....+J=A.g..w'.. |
+[2025-12-10T15:14:59.418] D(16882634) OPENTHREAD:[D] Mac-----------: | EA A6 D4 21 39 30 EC CB | 64 A6 42 88 CE BD 98 BB | ...!90..d.B..... |
+[2025-12-10T15:14:59.429] D(16882634) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:59.441] D(16882654) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:59.458] I(16882664) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:2f52, ecn:no, from:4a74f76b6296c142, sec:no, prio:net, rss:-69.0
+[2025-12-10T15:14:59.468] I(16882674) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4874:f76b:6296:c142]:19788
+[2025-12-10T15:14:59.479] I(16882684) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:59.485] D(16882694) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:59.498] I(16882694) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4874:f76b:6296:c142,0x0c00)
+[2025-12-10T15:14:59.508] D(16882714) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:59.522] D(16882744) OPENTHREAD:[D] Mac-----------: ==============================[RX len=113]==============================
+[2025-12-10T15:14:59.536] D(16882744) OPENTHREAD:[D] Mac-----------: | 61 DC 3E FA 86 1B 8C D5 | 70 D5 93 4E 9A 8C 29 62 | a.>.....p..N..)b |
+[2025-12-10T15:14:59.549] D(16882754) OPENTHREAD:[D] Mac-----------: | 5F 5E 55 49 46 7F 33 F0 | 4D 4C 4D 4C 32 A6 00 15 | _^UIF.3.MLML2... |
+[2025-12-10T15:14:59.563] D(16882764) OPENTHREAD:[D] Mac-----------: | A2 22 0C 00 00 00 00 00 | 01 0A 04 CF 47 38 84 91 | ."..........G8.. |
+[2025-12-10T15:14:59.577] D(16882784) OPENTHREAD:[D] Mac-----------: | C1 8A 31 67 CB A3 A2 F1 | 1F BE 2C 5D 60 FF 8E F7 | ..1g......,]`... |
+[2025-12-10T15:14:59.591] D(16882794) OPENTHREAD:[D] Mac-----------: | 17 5A 86 65 AF 65 86 5E | 9A 1E C6 4F 75 F1 C5 35 | .Z.e.e.^...Ou..5 |
+[2025-12-10T15:14:59.604] D(16882804) OPENTHREAD:[D] Mac-----------: | 0A 3A C5 71 5D 10 E8 9A | D4 FF 61 0E E6 12 41 69 | .:.q].....a...Ai |
+[2025-12-10T15:14:59.618] D(16882814) OPENTHREAD:[D] Mac-----------: | D9 DF D4 1F EA DA 33 4F | ED 73 B4 25 69 1E 13 BC | ......3O.s.%i... |
+[2025-12-10T15:14:59.632] D(16882814) OPENTHREAD:[D] Mac-----------: | 0A                      |                         | .                |
+[2025-12-10T15:14:59.646] D(16882824) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:59.662] I(16882834) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:129, chksum:32a6, ecn:no, from:4649555e5f62298c, sec:no, prio:net, rss:-68.0
+[2025-12-10T15:14:59.672] I(16882854) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4449:555e:5f62:298c]:19788
+[2025-12-10T15:14:59.686] I(16882864) OPENTHREAD:[I] MeshForwarder-:     dst:[fe80:0:0:0:984e:93d5:70d5:8c1b]:19788
+[2025-12-10T15:14:59.693] D(16882874) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:14:59.705] I(16882874) OPENTHREAD:[I] Mle-----------: Receive Parent Response (fe80:0:0:0:4449:555e:5f62:298c,0x7000)
+[2025-12-10T15:14:59.715] D(16882884) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:59.716] txpower -13
+[2025-12-10T15:14:59.717] 
+[2025-12-10T15:14:59.718] Done
+[2025-12-10T15:14:59.718] > 
+[2025-12-10T15:14:59.719] > state
+[2025-12-10T15:14:59.720] 
+[2025-12-10T15:14:59.721] child
+[2025-12-10T15:14:59.722] Done
+[2025-12-10T15:14:59.722] > 
+[2025-12-10T15:14:59.723] > parent
+[2025-12-10T15:14:59.724] 
+[2025-12-10T15:14:59.727] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:14:59.729] Rloc: 7000
+[2025-12-10T15:14:59.732] Link Quality In: 3
+[2025-12-10T15:14:59.734] Link Quality Out: 3
+[2025-12-10T15:14:59.736] Age: 8
+[2025-12-10T15:14:59.737] Version: 5
+[2025-12-10T15:14:59.738] Done
+[2025-12-10T15:14:59.739] > 
+[2025-12-10T15:14:59.744] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:14:59.744] 
+[2025-12-10T15:14:59.753] I(16883004) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 28)
+[2025-12-10T15:14:59.763] D(16883004) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:14:59.772] D(16883014) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:14:59.781] D(16883014) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:14:59.791] D (16883024) OPENTHREAD: Microsecond timer alarm start running, t0=3997152495, dt=630
+[2025-12-10T15:14:59.800] D(16883024) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:14:59.806] D (16883034) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:14:59.815] D(16883044) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:14:59.823] D(16883054) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:14:59.829] D(16883064) OPENTHREAD:[D] Mac-----------: | 69 98 55 FA 86 00 70 D7 | 70 0D DE 28 01 00 01 7A | i.U...p.p..(...z |
+[2025-12-10T15:14:59.835] D(16883074) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 6C 60 00 1C | 00 1C 01 01 99 6D 00 00 | w:..l`.......m.. |
+[2025-12-10T15:14:59.841] D(16883074) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC |                         | ........         |
+[2025-12-10T15:14:59.847] D(16883084) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:59.851] D(16883094) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:14:59.857] I(16883114) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:6c60, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:14:59.861] I(16883124) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:59.865] I(16883124) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:59.870] D(16883134) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:59.874] D(16883144) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:14:59.878] D(16883144) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585643
+[2025-12-10T15:14:59.884] D(16883154) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:14:59.895] D(16883164) OPENTHREAD:[D] Mac-----------: | 69 98 3F FA 86 D7 70 00 | 70 0D EB 31 18 00 01 7A | i.?...p.p..1...z |
+[2025-12-10T15:14:59.906] D(16883184) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 6B 60 00 1C | 00 1C 01 01 99 6D 00 00 | w:..k`.......m.. |
+[2025-12-10T15:14:59.916] D(16883184) OPENTHREAD:[D] Mac-----------: | 00 00 1A D8 4D F9 BC 0A |                         | ....M...         |
+[2025-12-10T15:14:59.927] D(16883194) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:14:59.939] I(16883204) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:6b60, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:14:59.944] I(16883214) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:14:59.953] I(16883224) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:14:59.961] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=28 hlim=64 time=238ms
+[2025-12-10T15:14:59.970] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 238/238.000/238 ms.
+[2025-12-10T15:14:59.970] Done
+[2025-12-10T15:14:59.975] D(16883254) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:14:59.976] > 
+[2025-12-10T15:15:00.076] > 
+[2025-12-10T15:15:00.241] D(16883514) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 933097
+[2025-12-10T15:15:00.259] I(16883514) OPENTHREAD:[I] Mac-----------: Frame rx failed, error:Security, len:124, seqnum:197, type:Data, src:2a0ca7a33aa62384, dst:0xffff, sec:yes, ackreq:no
+[2025-12-10T15:15:00.268] D(16883524) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 933098
+[2025-12-10T15:15:00.287] I(16883534) OPENTHREAD:[I] Mac-----------: Frame rx failed, error:Security, len:77, seqnum:198, type:Data, src:2a0ca7a33aa62384, dst:0xffff, sec:yes, ackreq:no
+[2025-12-10T15:15:00.291] D (16883544) OPENTHREAD: Millisecond timer alarm start running, t0=16882575, dt=12082
+[2025-12-10T15:15:00.295] I(16883554) OPENTHREAD:[I] Mle-----------: Already attached to candidate parent
+[2025-12-10T15:15:00.299] I(16883554) OPENTHREAD:[I] Mle-----------: AttachState ParentReq -> Idle
+[2025-12-10T15:15:00.302] D (16883564) OPENTHREAD: Millisecond timer alarm fired
+[2025-12-10T15:15:00.704] D(16883974) OPENTHREAD:[D] Mac-----------: ==============================[RX len=071]==============================
+[2025-12-10T15:15:00.720] D(16883974) OPENTHREAD:[D] Mac-----------: | 41 D8 40 FA 86 FF FF 8C | 29 62 5F 5E 55 49 46 7F | A.@.....)b_^UIF. |
+[2025-12-10T15:15:00.734] D(16883984) OPENTHREAD:[D] Mac-----------: | 3B 01 F0 4D 4C 4D 4C B5 | 43 00 15 A3 22 0C 00 00 | ;..MLML.C..."... |
+[2025-12-10T15:15:00.747] D(16883994) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 85 E4 6D 40 | EE BF 4F 75 41 F1 F1 96 | ......m@..OuA... |
+[2025-12-10T15:15:00.760] D(16884004) OPENTHREAD:[D] Mac-----------: | AD 61 3C 13 9C EE AE EB | 8A B6 4F 81 BB 0F 9D EA | .a<.......O..... |
+[2025-12-10T15:15:00.773] D(16884024) OPENTHREAD:[D] Mac-----------: | 04 B8 6A C3 1B BC 0A    |                         | ..j....          |
+[2025-12-10T15:15:00.787] D(16884034) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:00.803] I(16884044) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:92, chksum:b543, ecn:no, from:4649555e5f62298c, sec:no, prio:net, rss:-68.0
+[2025-12-10T15:15:00.813] I(16884054) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4449:555e:5f62:298c]:19788
+[2025-12-10T15:15:00.822] I(16884054) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:1]:19788
+[2025-12-10T15:15:00.829] D(16884064) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:15:00.841] I(16884064) OPENTHREAD:[I] Mle-----------: Receive Advertisement (fe80:0:0:0:4449:555e:5f62:298c,0x7000)
+[2025-12-10T15:15:00.851] D(16884084) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:00.853] txpower -13
+[2025-12-10T15:15:00.853] 
+[2025-12-10T15:15:00.854] Done
+[2025-12-10T15:15:00.854] > 
+[2025-12-10T15:15:00.855] > state
+[2025-12-10T15:15:00.856] 
+[2025-12-10T15:15:00.857] child
+[2025-12-10T15:15:00.858] Done
+[2025-12-10T15:15:00.858] > 
+[2025-12-10T15:15:00.860] > parent
+[2025-12-10T15:15:00.860] 
+[2025-12-10T15:15:00.863] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:15:00.865] Rloc: 7000
+[2025-12-10T15:15:00.868] Link Quality In: 3
+[2025-12-10T15:15:00.870] Link Quality Out: 3
+[2025-12-10T15:15:00.872] Age: 0
+[2025-12-10T15:15:00.873] Version: 5
+[2025-12-10T15:15:00.874] Done
+[2025-12-10T15:15:00.874] > 
+[2025-12-10T15:15:00.879] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:15:00.879] 
+[2025-12-10T15:15:00.883] I(16884114) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 29)
+[2025-12-10T15:15:00.887] D (16884114) OPENTHREAD: Millisecond timer alarm start running, t0=16883147, dt=3000
+[2025-12-10T15:15:00.892] D(16884134) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:15:00.896] D(16884134) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:15:00.900] D(16884144) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:15:00.904] D (16884144) OPENTHREAD: Microsecond timer alarm start running, t0=3998270312, dt=0
+[2025-12-10T15:15:00.908] D(16884154) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:00.911] D (16884164) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:00.914] D(16884164) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:15:00.920] D(16884164) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:15:00.926] D(16884184) OPENTHREAD:[D] Mac-----------: | 69 98 56 FA 86 00 70 D7 | 70 0D DF 28 01 00 01 7A | i.V...p.p..(...z |
+[2025-12-10T15:15:00.931] D(16884194) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 68 01 00 1D | 00 1D 01 01 9D CA 00 00 | w:..h........... |
+[2025-12-10T15:15:00.937] D(16884204) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC |                         | ........         |
+[2025-12-10T15:15:00.944] D(16884214) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:00.948] D(16884224) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:15:00.960] I(16884224) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:6801, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:15:00.970] I(16884234) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:00.978] I(16884254) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:00.984] D(16884264) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:00.992] D(16884264) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:15:01.000] D(16884274) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585644
+[2025-12-10T15:15:01.010] D(16884284) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:15:01.018] D(16884284) OPENTHREAD:[D] Mac-----------: | 69 98 41 FA 86 D7 70 00 | 70 0D EC 31 18 00 01 7A | i.A...p.p..1...z |
+[2025-12-10T15:15:01.026] D(16884294) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 67 01 00 1D | 00 1D 01 01 9D CA 00 00 | w:..g........... |
+[2025-12-10T15:15:01.037] D(16884304) OPENTHREAD:[D] Mac-----------: | 00 00 90 04 D6 A5 BB 0A |                         | ........         |
+[2025-12-10T15:15:01.048] D(16884324) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:01.060] I(16884334) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:6701, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:15:01.074] I(16884344) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:01.081] I(16884354) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:01.085] D (16884354) OPENTHREAD: Millisecond timer alarm start running, t0=16883386, dt=11271
+[2025-12-10T15:15:01.096] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=29 hlim=64 time=240ms
+[2025-12-10T15:15:01.110] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 240/240.000/240 ms.
+[2025-12-10T15:15:01.111] Done
+[2025-12-10T15:15:01.117] D(16884384) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:01.118] > 
+[2025-12-10T15:15:01.218] > 
+[2025-12-10T15:15:01.734] txpower -13
+[2025-12-10T15:15:01.734] 
+[2025-12-10T15:15:01.735] Done
+[2025-12-10T15:15:01.735] > 
+[2025-12-10T15:15:01.736] > state
+[2025-12-10T15:15:01.736] 
+[2025-12-10T15:15:01.737] child
+[2025-12-10T15:15:01.738] Done
+[2025-12-10T15:15:01.738] > 
+[2025-12-10T15:15:01.745] > parent
+[2025-12-10T15:15:01.745] 
+[2025-12-10T15:15:01.747] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:15:01.749] Rloc: 7000
+[2025-12-10T15:15:01.750] Link Quality In: 3
+[2025-12-10T15:15:01.752] Link Quality Out: 3
+[2025-12-10T15:15:01.753] Age: 0
+[2025-12-10T15:15:01.754] Version: 5
+[2025-12-10T15:15:01.754] Done
+[2025-12-10T15:15:01.755] > 
+[2025-12-10T15:15:01.758] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:15:01.758] 
+[2025-12-10T15:15:01.765] I(16885044) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 30)
+[2025-12-10T15:15:01.774] D (16885044) OPENTHREAD: Millisecond timer alarm start running, t0=16884076, dt=3000
+[2025-12-10T15:15:01.781] D(16885054) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:15:01.788] D(16885064) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:15:01.797] D(16885074) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:15:01.802] D (16885074) OPENTHREAD: Microsecond timer alarm start running, t0=3999199585, dt=0
+[2025-12-10T15:15:01.810] D(16885084) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:01.813] D (16885094) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:01.821] D(16885094) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:15:01.832] D(16885094) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:15:01.842] D(16885114) OPENTHREAD:[D] Mac-----------: | 69 98 57 FA 86 00 70 D7 | 70 0D E0 28 01 00 01 7A | i.W...p.p..(...z |
+[2025-12-10T15:15:01.853] D(16885124) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 64 5E 00 1E | 00 1E 01 01 A1 6B 00 00 | w:..d^.......k.. |
+[2025-12-10T15:15:01.863] D(16885134) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC |                         | ........         |
+[2025-12-10T15:15:01.874] D(16885144) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:01.879] D(16885154) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:15:01.890] I(16885154) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:645e, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:15:01.898] I(16885164) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:01.907] I(16885174) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:01.912] D(16885194) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:01.921] D(16885194) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:15:01.929] D(16885204) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585645
+[2025-12-10T15:15:01.940] D(16885214) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:15:01.947] D(16885214) OPENTHREAD:[D] Mac-----------: | 69 98 42 FA 86 D7 70 00 | 70 0D ED 31 18 00 01 7A | i.B...p.p..1...z |
+[2025-12-10T15:15:01.957] D(16885224) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 63 5E 00 1E | 00 1E 01 01 A1 6B 00 00 | w:..c^.......k.. |
+[2025-12-10T15:15:01.967] D(16885234) OPENTHREAD:[D] Mac-----------: | 00 00 BE 83 9D D2 BB 0B |                         | ........         |
+[2025-12-10T15:15:01.978] D(16885254) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:01.990] I(16885264) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:635e, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:15:01.999] I(16885274) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:02.008] I(16885284) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:02.013] D (16885284) OPENTHREAD: Millisecond timer alarm start running, t0=16884315, dt=10342
+[2025-12-10T15:15:02.021] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=30 hlim=64 time=240ms
+[2025-12-10T15:15:02.031] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 240/240.000/240 ms.
+[2025-12-10T15:15:02.032] Done
+[2025-12-10T15:15:02.037] D(16885304) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:02.037] > 
+[2025-12-10T15:15:02.137] > 
+[2025-12-10T15:15:02.492] D(16885764) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 933099
+[2025-12-10T15:15:02.511] I(16885764) OPENTHREAD:[I] Mac-----------: Frame rx failed, error:Security, len:124, seqnum:199, type:Data, src:2a0ca7a33aa62384, dst:0xffff, sec:yes, ackreq:no
+[2025-12-10T15:15:02.520] D(16885774) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 933100
+[2025-12-10T15:15:02.538] I(16885784) OPENTHREAD:[I] Mac-----------: Frame rx failed, error:Security, len:77, seqnum:200, type:Data, src:2a0ca7a33aa62384, dst:0xffff, sec:yes, ackreq:no
+[2025-12-10T15:15:02.754] txpower -13
+[2025-12-10T15:15:02.754] 
+[2025-12-10T15:15:02.754] Done
+[2025-12-10T15:15:02.755] > 
+[2025-12-10T15:15:02.755] > state
+[2025-12-10T15:15:02.755] 
+[2025-12-10T15:15:02.756] child
+[2025-12-10T15:15:02.756] Done
+[2025-12-10T15:15:02.757] > 
+[2025-12-10T15:15:02.765] > parent
+[2025-12-10T15:15:02.765] 
+[2025-12-10T15:15:02.768] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:15:02.769] Rloc: 7000
+[2025-12-10T15:15:02.772] Link Quality In: 3
+[2025-12-10T15:15:02.774] Link Quality Out: 3
+[2025-12-10T15:15:02.776] Age: 1
+[2025-12-10T15:15:02.777] Version: 5
+[2025-12-10T15:15:02.778] Done
+[2025-12-10T15:15:02.779] > 
+[2025-12-10T15:15:02.783] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:15:02.784] 
+[2025-12-10T15:15:02.792] I(16886064) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 31)
+[2025-12-10T15:15:02.799] D (16886064) OPENTHREAD: Millisecond timer alarm start running, t0=16885096, dt=3000
+[2025-12-10T15:15:02.803] D(16886074) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:15:02.807] D(16886084) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:15:02.816] D(16886094) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:15:02.820] D (16886094) OPENTHREAD: Microsecond timer alarm start running, t0=4000219368, dt=631
+[2025-12-10T15:15:02.830] D(16886104) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:02.834] D (16886114) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:02.841] D(16886114) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:15:02.851] D(16886114) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:15:02.862] D(16886134) OPENTHREAD:[D] Mac-----------: | 69 98 58 FA 86 00 70 D7 | 70 0D E1 28 01 00 01 7A | i.X...p.p..(...z |
+[2025-12-10T15:15:02.873] D(16886144) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 60 60 00 1F | 00 1F 01 01 A5 67 00 00 | w:..``.......g.. |
+[2025-12-10T15:15:02.883] D(16886154) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC |                         | ........         |
+[2025-12-10T15:15:02.894] D(16886164) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:02.899] D(16886174) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:15:02.910] I(16886174) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:6060, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:15:02.918] I(16886184) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:02.927] I(16886194) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:02.932] D(16886214) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:02.941] D(16886214) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:15:02.949] D(16886224) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585646
+[2025-12-10T15:15:02.960] D(16886234) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:15:02.967] D(16886234) OPENTHREAD:[D] Mac-----------: | 69 98 43 FA 86 D7 70 00 | 70 0D EE 31 18 00 01 7A | i.C...p.p..1...z |
+[2025-12-10T15:15:02.977] D(16886244) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 5F 60 00 1F | 00 1F 01 01 A5 67 00 00 | w:.._`.......g.. |
+[2025-12-10T15:15:02.987] D(16886254) OPENTHREAD:[D] Mac-----------: | 00 00 2E B0 65 4C BB 0A |                         | ....eL..         |
+[2025-12-10T15:15:02.998] D(16886274) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:03.010] I(16886284) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:5f60, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:15:03.019] I(16886294) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:03.027] I(16886304) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:03.033] D (16886304) OPENTHREAD: Millisecond timer alarm start running, t0=16885334, dt=9323
+[2025-12-10T15:15:03.044] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=31 hlim=64 time=239ms
+[2025-12-10T15:15:03.059] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:15:03.060] Done
+[2025-12-10T15:15:03.070] D(16886324) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:03.070] > 
+[2025-12-10T15:15:03.150] > D(16886424) OPENTHREAD:[D] Mac-----------: ==============================[RX len=071]==============================
+[2025-12-10T15:15:03.166] D(16886424) OPENTHREAD:[D] Mac-----------: | 41 D8 FF FA 86 FF FF 42 | C1 96 62 6B F7 74 4A 7F | A......B..bk.tJ. |
+[2025-12-10T15:15:03.185] D(16886434) OPENTHREAD:[D] Mac-----------: | 3B 01 F0 4D 4C 4D 4C BA | 99 00 15 C0 46 0C 00 00 | ;..MLML.....F... |
+[2025-12-10T15:15:03.210] D(16886444) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 5E 34 3E 3F | 56 ED 21 0A 2A E3 F6 BC | ....^4>?V.!.*... |
+[2025-12-10T15:15:03.232] D(16886454) OPENTHREAD:[D] Mac-----------: | EA 31 09 F0 14 81 A9 46 | 75 F1 A0 A8 12 1F 70 4D | .1.....Fu.....pM |
+[2025-12-10T15:15:03.253] D(16886464) OPENTHREAD:[D] Mac-----------: | D2 A0 D5 DE 91 BA 09    |                         | .......          |
+[2025-12-10T15:15:03.268] D(16886484) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:03.285] I(16886494) OPENTHREAD:[I] MeshForwarder-: Received IPv6 UDP msg, len:92, chksum:ba99, ecn:no, from:4a74f76b6296c142, sec:no, prio:net, rss:-70.0
+[2025-12-10T15:15:03.295] I(16886504) OPENTHREAD:[I] MeshForwarder-:     src:[fe80:0:0:0:4874:f76b:6296:c142]:19788
+[2025-12-10T15:15:03.305] I(16886504) OPENTHREAD:[I] MeshForwarder-:     dst:[ff02:0:0:0:0:0:0:1]:19788
+[2025-12-10T15:15:03.312] D(16886514) OPENTHREAD:[D] Mle-----------: Receive MLE message
+[2025-12-10T15:15:03.325] I(16886514) OPENTHREAD:[I] Mle-----------: Receive Advertisement (fe80:0:0:0:4874:f76b:6296:c142,0x0c00)
+[2025-12-10T15:15:03.335] D(16886524) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:03.751] txpower -13
+[2025-12-10T15:15:03.752] 
+[2025-12-10T15:15:03.753] Done
+[2025-12-10T15:15:03.753] > 
+[2025-12-10T15:15:03.755] > state
+[2025-12-10T15:15:03.755] 
+[2025-12-10T15:15:03.756] child
+[2025-12-10T15:15:03.758] Done
+[2025-12-10T15:15:03.758] > 
+[2025-12-10T15:15:03.761] > parent
+[2025-12-10T15:15:03.762] 
+[2025-12-10T15:15:03.765] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:15:03.767] Rloc: 7000
+[2025-12-10T15:15:03.769] Link Quality In: 3
+[2025-12-10T15:15:03.772] Link Quality Out: 3
+[2025-12-10T15:15:03.773] Age: 2
+[2025-12-10T15:15:03.775] Version: 5
+[2025-12-10T15:15:03.776] Done
+[2025-12-10T15:15:03.776] > 
+[2025-12-10T15:15:03.781] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:15:03.782] 
+[2025-12-10T15:15:03.790] I(16887064) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 32)
+[2025-12-10T15:15:03.800] D (16887064) OPENTHREAD: Millisecond timer alarm start running, t0=16886093, dt=3000
+[2025-12-10T15:15:03.810] D(16887074) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:15:03.820] D(16887074) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:15:03.830] D(16887084) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:15:03.840] D (16887084) OPENTHREAD: Microsecond timer alarm start running, t0=4001216117, dt=1589
+[2025-12-10T15:15:03.850] D(16887104) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:03.856] D (16887114) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:03.865] D(16887114) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:15:03.879] D(16887114) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:15:03.893] D(16887124) OPENTHREAD:[D] Mac-----------: | 69 98 59 FA 86 00 70 D7 | 70 0D E2 28 01 00 01 7A | i.Y...p.p..(...z |
+[2025-12-10T15:15:03.902] D(16887134) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 5C 79 00 20 | 00 20 01 01 A9 4C 00 00 | w:..\y. . ...L.. |
+[2025-12-10T15:15:03.908] D(16887144) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC |                         | ........         |
+[2025-12-10T15:15:03.913] D(16887164) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:03.917] D(16887174) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:15:03.923] I(16887174) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:5c79, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:15:03.928] I(16887184) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:03.932] I(16887194) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:03.936] D(16887204) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:03.940] D(16887204) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:15:03.946] D(16887214) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585647
+[2025-12-10T15:15:03.956] D(16887234) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:15:03.962] D(16887234) OPENTHREAD:[D] Mac-----------: | 69 98 44 FA 86 D7 70 00 | 70 0D EF 31 18 00 01 7A | i.D...p.p..1...z |
+[2025-12-10T15:15:03.974] D(16887244) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 5B 79 00 20 | 00 20 01 01 A9 4C 00 00 | w:..[y. . ...L.. |
+[2025-12-10T15:15:03.984] D(16887254) OPENTHREAD:[D] Mac-----------: | 00 00 C2 B8 BB EA BC 0A |                         | ........         |
+[2025-12-10T15:15:03.994] D(16887264) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:04.007] I(16887274) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:5b79, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:15:04.016] I(16887294) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:04.026] I(16887304) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:04.037] D (16887304) OPENTHREAD: Millisecond timer alarm start running, t0=16886331, dt=8326
+[2025-12-10T15:15:04.046] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=32 hlim=64 time=239ms
+[2025-12-10T15:15:04.053] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:15:04.053] Done
+[2025-12-10T15:15:04.062] D(16887324) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:04.062] > 
+[2025-12-10T15:15:04.163] > 
+[2025-12-10T15:15:04.680] txpower -13
+[2025-12-10T15:15:04.680] 
+[2025-12-10T15:15:04.681] Done
+[2025-12-10T15:15:04.682] > 
+[2025-12-10T15:15:04.683] > state
+[2025-12-10T15:15:04.683] 
+[2025-12-10T15:15:04.684] child
+[2025-12-10T15:15:04.685] Done
+[2025-12-10T15:15:04.686] > 
+[2025-12-10T15:15:04.690] > parent
+[2025-12-10T15:15:04.690] 
+[2025-12-10T15:15:04.694] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:15:04.696] Rloc: 7000
+[2025-12-10T15:15:04.698] Link Quality In: 3
+[2025-12-10T15:15:04.701] Link Quality Out: 3
+[2025-12-10T15:15:04.702] Age: 3
+[2025-12-10T15:15:04.704] Version: 5
+[2025-12-10T15:15:04.705] Done
+[2025-12-10T15:15:04.705] > 
+[2025-12-10T15:15:04.711] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:15:04.711] 
+[2025-12-10T15:15:04.720] I(16887994) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 33)
+[2025-12-10T15:15:04.730] D (16887994) OPENTHREAD: Millisecond timer alarm start running, t0=16887021, dt=3000
+[2025-12-10T15:15:04.736] D(16888004) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:15:04.741] D(16888004) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:15:04.744] D(16888014) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:15:04.749] D (16888014) OPENTHREAD: Microsecond timer alarm start running, t0=4002144626, dt=309
+[2025-12-10T15:15:04.754] D(16888024) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:04.757] D (16888044) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:04.775] I(16888044) OPENTHREAD:[I] Mac-----------: Frame tx attempt 1/16 failed, error:NoAck, len:40, seqnum:90, type:Data, src:0x70d7, dst:0x7000, sec:yes, ackreq:yes
+[2025-12-10T15:15:04.785] D(16888054) OPENTHREAD:[D] Mac-----------: ============================[TX ERR len=016]============================
+[2025-12-10T15:15:04.796] D(16888064) OPENTHREAD:[D] Mac-----------: | 69 98 5A FA 86 00 70 D7 | 70 0D E3 28 01 00 01 7A | i.Z...p.p..(...z |
+[2025-12-10T15:15:04.803] D(16888074) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:04.811] D(16888094) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> DelayBeforeRetx
+[2025-12-10T15:15:04.820] D (16888094) OPENTHREAD: Microsecond timer alarm start running, t0=4002217994, dt=0
+[2025-12-10T15:15:04.825] D(16888104) OPENTHREAD:[D] SubMac--------: Delaying retx for 0 usec (be=0)
+[2025-12-10T15:15:04.833] D(16888114) OPENTHREAD:[D] SubMac--------: RadioState: DelayBeforeRetx -> CsmaBackoff
+[2025-12-10T15:15:04.842] D (16888114) OPENTHREAD: Microsecond timer alarm start running, t0=4002237671, dt=0
+[2025-12-10T15:15:04.845] D (16888124) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:04.853] D(16888134) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:04.857] D (16888134) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:04.870] I(16888144) OPENTHREAD:[I] Mac-----------: Frame tx attempt 2/16 failed, error:NoAck, len:40, seqnum:90, type:Data, src:0x70d7, dst:0x7000, sec:yes, ackreq:yes
+[2025-12-10T15:15:04.880] D(16888154) OPENTHREAD:[D] Mac-----------: ============================[TX ERR len=016]============================
+[2025-12-10T15:15:04.891] D(16888164) OPENTHREAD:[D] Mac-----------: | 69 98 5A FA 86 00 70 D7 | 70 0D E3 28 01 00 01 7A | i.Z...p.p..(...z |
+[2025-12-10T15:15:04.901] D(16888174) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:04.910] D(16888184) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> DelayBeforeRetx
+[2025-12-10T15:15:04.918] D (16888184) OPENTHREAD: Microsecond timer alarm start running, t0=4002315362, dt=310
+[2025-12-10T15:15:04.923] D(16888194) OPENTHREAD:[D] SubMac--------: Delaying retx for 320 usec (be=1)
+[2025-12-10T15:15:04.931] D(16888204) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:15:04.936] D(16888214) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585648
+[2025-12-10T15:15:04.947] D(16888224) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:15:04.957] D(16888234) OPENTHREAD:[D] Mac-----------: | 69 98 45 FA 86 D7 70 00 | 70 0D F0 31 18 00 01 7A | i.E...p.p..1...z |
+[2025-12-10T15:15:04.968] D(16888234) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 57 D7 00 21 | 00 21 01 01 AC EC 00 00 | w:..W..!.!...... |
+[2025-12-10T15:15:04.978] D(16888244) OPENTHREAD:[D] Mac-----------: | 00 00 E2 A3 AF D6 BB 0A |                         | ........         |
+[2025-12-10T15:15:04.988] D(16888254) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:05.000] I(16888274) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:57d7, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:15:05.009] I(16888284) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:05.018] I(16888294) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:05.023] D (16888294) OPENTHREAD: Millisecond timer alarm start running, t0=16887323, dt=7334
+[2025-12-10T15:15:05.032] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=33 hlim=64 time=303ms
+[2025-12-10T15:15:05.042] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 303/303.000/303 ms.
+[2025-12-10T15:15:05.042] Done
+[2025-12-10T15:15:05.048] > D(16888324) OPENTHREAD:[D] SubMac--------: RadioState: DelayBeforeRetx -> CsmaBackoff
+[2025-12-10T15:15:05.056] D (16888334) OPENTHREAD: Microsecond timer alarm start running, t0=4002456809, dt=624
+[2025-12-10T15:15:05.059] D (16888344) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:05.060] 
+[2025-12-10T15:15:05.069] > D(16888354) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:05.076] D (16888354) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:05.080] D(16888354) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:15:05.096] D(16888364) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:15:05.110] D(16888374) OPENTHREAD:[D] Mac-----------: | 69 98 5A FA 86 00 70 D7 | 70 0D E3 28 01 00 01 7A | i.Z...p.p..(...z |
+[2025-12-10T15:15:05.118] D(16888384) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 58 D7 00 21 | 00 21 01 01 AC EC 00 00 | w:..X..!.!...... |
+[2025-12-10T15:15:05.123] D(16888384) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC |                         | ........         |
+[2025-12-10T15:15:05.132] D(16888404) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:05.142] D(16888414) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:15:05.157] I(16888424) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:58d7, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:15:05.161] I(16888434) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:05.166] I(16888434) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:05.170] D(16888444) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:05.686] txpower -13
+[2025-12-10T15:15:05.687] 
+[2025-12-10T15:15:05.688] Done
+[2025-12-10T15:15:05.688] > 
+[2025-12-10T15:15:05.689] > state
+[2025-12-10T15:15:05.690] 
+[2025-12-10T15:15:05.691] child
+[2025-12-10T15:15:05.691] Done
+[2025-12-10T15:15:05.692] > 
+[2025-12-10T15:15:05.697] > parent
+[2025-12-10T15:15:05.697] 
+[2025-12-10T15:15:05.700] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:15:05.700] Rloc: 7000
+[2025-12-10T15:15:05.702] Link Quality In: 3
+[2025-12-10T15:15:05.703] Link Quality Out: 3
+[2025-12-10T15:15:05.704] Age: 4
+[2025-12-10T15:15:05.705] Version: 5
+[2025-12-10T15:15:05.705] Done
+[2025-12-10T15:15:05.705] > 
+[2025-12-10T15:15:05.708] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:15:05.708] 
+[2025-12-10T15:15:05.717] I(16888994) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 34)
+[2025-12-10T15:15:05.727] D (16889004) OPENTHREAD: Millisecond timer alarm start running, t0=16888028, dt=3000
+[2025-12-10T15:15:05.733] D(16889014) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:15:05.741] D(16889014) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:15:05.748] D(16889024) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:15:05.753] D (16889024) OPENTHREAD: Microsecond timer alarm start running, t0=4003151415, dt=1909
+[2025-12-10T15:15:05.762] D(16889034) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:05.765] D (16889044) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:05.773] D(16889044) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:15:05.784] D(16889054) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:15:05.794] D(16889064) OPENTHREAD:[D] Mac-----------: | 69 98 5B FA 86 00 70 D7 | 70 0D E4 28 01 00 01 7A | i.[...p.p..(...z |
+[2025-12-10T15:15:05.805] D(16889074) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 54 E6 00 22 | 00 22 01 01 B0 DB 00 00 | w:..T.."."...... |
+[2025-12-10T15:15:05.815] D(16889084) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC |                         | ........         |
+[2025-12-10T15:15:05.826] D(16889094) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:05.831] D(16889104) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:15:05.842] I(16889104) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:54e6, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:15:05.850] I(16889124) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:05.859] I(16889134) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:05.864] D(16889144) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:05.873] D(16889144) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:15:05.881] D(16889154) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585649
+[2025-12-10T15:15:05.892] D(16889164) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:15:05.899] D(16889164) OPENTHREAD:[D] Mac-----------: | 69 98 47 FA 86 D7 70 00 | 70 0D F1 31 18 00 01 7A | i.G...p.p..1...z |
+[2025-12-10T15:15:05.909] D(16889174) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 53 E6 00 22 | 00 22 01 01 B0 DB 00 00 | w:..S.."."...... |
+[2025-12-10T15:15:05.919] D(16889194) OPENTHREAD:[D] Mac-----------: | 00 00 36 A9 C4 12 BC 0B |                         | ..6.....         |
+[2025-12-10T15:15:05.930] D(16889204) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:05.942] I(16889214) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:53e6, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-68.0
+[2025-12-10T15:15:05.951] I(16889224) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:05.960] I(16889234) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:05.965] D (16889234) OPENTHREAD: Millisecond timer alarm start running, t0=16888266, dt=6391
+[2025-12-10T15:15:05.973] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=34 hlim=64 time=239ms
+[2025-12-10T15:15:05.983] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:15:05.984] Done
+[2025-12-10T15:15:05.989] D(16889264) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:05.989] > 
+[2025-12-10T15:15:06.089] > 
+[2025-12-10T15:15:06.707] txpower -13
+[2025-12-10T15:15:06.707] 
+[2025-12-10T15:15:06.708] Done
+[2025-12-10T15:15:06.709] > 
+[2025-12-10T15:15:06.710] > state
+[2025-12-10T15:15:06.710] 
+[2025-12-10T15:15:06.711] child
+[2025-12-10T15:15:06.712] Done
+[2025-12-10T15:15:06.712] > 
+[2025-12-10T15:15:06.717] > parent
+[2025-12-10T15:15:06.717] 
+[2025-12-10T15:15:06.719] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:15:06.719] Rloc: 7000
+[2025-12-10T15:15:06.721] Link Quality In: 3
+[2025-12-10T15:15:06.722] Link Quality Out: 3
+[2025-12-10T15:15:06.723] Age: 5
+[2025-12-10T15:15:06.723] Version: 5
+[2025-12-10T15:15:06.724] Done
+[2025-12-10T15:15:06.724] > 
+[2025-12-10T15:15:06.727] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:15:06.727] 
+[2025-12-10T15:15:06.737] I(16890014) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 35)
+[2025-12-10T15:15:06.747] D (16890014) OPENTHREAD: Millisecond timer alarm start running, t0=16889048, dt=3000
+[2025-12-10T15:15:06.753] D(16890034) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:15:06.760] D(16890034) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:15:06.768] D(16890044) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:15:06.773] D (16890044) OPENTHREAD: Microsecond timer alarm start running, t0=4004171326, dt=2232
+[2025-12-10T15:15:06.782] D(16890054) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:06.785] D (16890064) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:06.802] I(16890074) OPENTHREAD:[I] Mac-----------: Frame tx attempt 1/16 failed, error:NoAck, len:40, seqnum:92, type:Data, src:0x70d7, dst:0x7000, sec:yes, ackreq:yes
+[2025-12-10T15:15:06.812] D(16890084) OPENTHREAD:[D] Mac-----------: ============================[TX ERR len=016]============================
+[2025-12-10T15:15:06.823] D(16890094) OPENTHREAD:[D] Mac-----------: | 69 98 5C FA 86 00 70 D7 | 70 0D E5 28 01 00 01 7A | i.\...p.p..(...z |
+[2025-12-10T15:15:06.830] D(16890104) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:06.838] D(16890114) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> DelayBeforeRetx
+[2025-12-10T15:15:06.847] D (16890114) OPENTHREAD: Microsecond timer alarm start running, t0=4004244723, dt=0
+[2025-12-10T15:15:06.851] D(16890124) OPENTHREAD:[D] SubMac--------: Delaying retx for 0 usec (be=0)
+[2025-12-10T15:15:06.860] D(16890134) OPENTHREAD:[D] SubMac--------: RadioState: DelayBeforeRetx -> CsmaBackoff
+[2025-12-10T15:15:06.869] D (16890144) OPENTHREAD: Microsecond timer alarm start running, t0=4004267875, dt=955
+[2025-12-10T15:15:06.872] D (16890154) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:06.880] D(16890164) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:06.883] D (16890164) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:06.892] D(16890164) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:15:06.902] D(16890174) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:15:06.912] D(16890184) OPENTHREAD:[D] Mac-----------: | 69 98 5C FA 86 00 70 D7 | 70 0D E5 28 01 00 01 7A | i.\...p.p..(...z |
+[2025-12-10T15:15:06.923] D(16890194) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 50 E8 00 23 | 00 23 01 01 B4 D7 00 00 | w:..P..#.#...... |
+[2025-12-10T15:15:06.933] D(16890194) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC |                         | ........         |
+[2025-12-10T15:15:06.940] D(16890214) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:06.949] D(16890224) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:15:06.960] I(16890234) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:50e8, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:15:06.969] I(16890244) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:06.974] I(16890244) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:06.982] D(16890254) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:06.991] D(16890264) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:15:06.996] D(16890264) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585650
+[2025-12-10T15:15:07.006] D(16890284) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:15:07.017] D(16890294) OPENTHREAD:[D] Mac-----------: | 69 98 48 FA 86 D7 70 00 | 70 0D F2 31 18 00 01 7A | i.H...p.p..1...z |
+[2025-12-10T15:15:07.027] D(16890304) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 4F E8 00 23 | 00 23 01 01 B4 D7 00 00 | w:..O..#.#...... |
+[2025-12-10T15:15:07.038] D(16890314) OPENTHREAD:[D] Mac-----------: | 00 00 81 1E 73 1C BB 0A |                         | ....s...         |
+[2025-12-10T15:15:07.048] D(16890314) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:07.064] I(16890324) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:4fe8, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:15:07.077] I(16890334) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:07.088] I(16890354) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:07.093] D (16890364) OPENTHREAD: Millisecond timer alarm start running, t0=16889390, dt=5267
+[2025-12-10T15:15:07.102] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=35 hlim=64 time=343ms
+[2025-12-10T15:15:07.114] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 343/343.000/343 ms.
+[2025-12-10T15:15:07.115] Done
+[2025-12-10T15:15:07.120] D(16890384) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:07.120] > 
+[2025-12-10T15:15:07.221] > 
+[2025-12-10T15:15:07.738] txpower -13
+[2025-12-10T15:15:07.738] 
+[2025-12-10T15:15:07.739] Done
+[2025-12-10T15:15:07.740] > 
+[2025-12-10T15:15:07.741] > state
+[2025-12-10T15:15:07.741] 
+[2025-12-10T15:15:07.742] child
+[2025-12-10T15:15:07.743] Done
+[2025-12-10T15:15:07.743] > 
+[2025-12-10T15:15:07.748] > parent
+[2025-12-10T15:15:07.748] 
+[2025-12-10T15:15:07.750] Ext Addr: 4649555e5f62298c
+[2025-12-10T15:15:07.751] Rloc: 7000
+[2025-12-10T15:15:07.753] Link Quality In: 3
+[2025-12-10T15:15:07.754] Link Quality Out: 3
+[2025-12-10T15:15:07.755] Age: 6
+[2025-12-10T15:15:07.755] Version: 5
+[2025-12-10T15:15:07.756] Done
+[2025-12-10T15:15:07.756] > 
+[2025-12-10T15:15:07.759] > ping fd72:e9dd:7d27:e872:0:ff:fe00:7000
+[2025-12-10T15:15:07.759] 
+[2025-12-10T15:15:07.768] I(16891054) OPENTHREAD:[I] Icmp6---------: Sent echo request: (seq = 36)
+[2025-12-10T15:15:07.778] D (16891054) OPENTHREAD: Millisecond timer alarm start running, t0=16890079, dt=3000
+[2025-12-10T15:15:07.784] D(16891064) OPENTHREAD:[D] Mac-----------: Request to start operation "TransmitDataDirect"
+[2025-12-10T15:15:07.792] D(16891064) OPENTHREAD:[D] Mac-----------: Starting operation "TransmitDataDirect"
+[2025-12-10T15:15:07.799] D(16891074) OPENTHREAD:[D] SubMac--------: RadioState: Receive -> CsmaBackoff
+[2025-12-10T15:15:07.804] D (16891074) OPENTHREAD: Microsecond timer alarm start running, t0=4005202349, dt=1589
+[2025-12-10T15:15:07.813] D(16891084) OPENTHREAD:[D] SubMac--------: RadioState: CsmaBackoff -> Transmit
+[2025-12-10T15:15:07.816] D (16891094) OPENTHREAD: Microsecond timer alarm fired
+[2025-12-10T15:15:07.824] D(16891104) OPENTHREAD:[D] SubMac--------: RadioState: Transmit -> Receive
+[2025-12-10T15:15:07.835] D(16891104) OPENTHREAD:[D] Mac-----------: ==============================[TX len=040]==============================
+[2025-12-10T15:15:07.845] D(16891114) OPENTHREAD:[D] Mac-----------: | 69 98 5D FA 86 00 70 D7 | 70 0D E6 28 01 00 01 7A | i.]...p.p..(...z |
+[2025-12-10T15:15:07.856] D(16891124) OPENTHREAD:[D] Mac-----------: | 77 3A 80 00 4C DF 00 24 | 00 24 01 01 B8 DE 00 00 | w:..L..$.$...... |
+[2025-12-10T15:15:07.866] D(16891134) OPENTHREAD:[D] Mac-----------: | 00 00 00 01 FC C9 F8 BC |                         | ........         |
+[2025-12-10T15:15:07.877] D(16891144) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:07.882] D(16891154) OPENTHREAD:[D] Mac-----------: Finishing operation "TransmitDataDirect"
+[2025-12-10T15:15:07.893] I(16891164) OPENTHREAD:[I] MeshForwarder-: Sent IPv6 ICMP6 msg, len:56, chksum:4cdf, ecn:no, to:0x7000, sec:yes, prio:normal
+[2025-12-10T15:15:07.901] I(16891174) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:07.910] I(16891184) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:07.915] D(16891194) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:07.924] D(16891194) OPENTHREAD:[D] Mac-----------: Received frame from short address 0x7000
+[2025-12-10T15:15:07.932] D(16891204) OPENTHREAD:[D] Mac-----------: Rx security - frame counter 1585651
+[2025-12-10T15:15:07.943] D(16891214) OPENTHREAD:[D] Mac-----------: ==============================[RX len=040]==============================
+[2025-12-10T15:15:07.950] D(16891214) OPENTHREAD:[D] Mac-----------: | 69 98 49 FA 86 D7 70 00 | 70 0D F3 31 18 00 01 7A | i.I...p.p..1...z |
+[2025-12-10T15:15:07.960] D(16891234) OPENTHREAD:[D] Mac-----------: | 77 3A 81 00 4B DF 00 24 | 00 24 01 01 B8 DE 00 00 | w:..K..$.$...... |
+[2025-12-10T15:15:07.970] D(16891244) OPENTHREAD:[D] Mac-----------: | 00 00 F6 39 59 B9 BB 0A |                         | ...9Y...         |
+[2025-12-10T15:15:07.981] D(16891254) OPENTHREAD:[D] Mac-----------: ------------------------------------------------------------------------
+[2025-12-10T15:15:07.993] I(16891264) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:4bdf, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-69.0
+[2025-12-10T15:15:08.002] I(16891274) OPENTHREAD:[I] MeshForwarder-:     src:[fd72:e9dd:7d27:e872:0:ff:fe00:7000]
+[2025-12-10T15:15:08.011] I(16891284) OPENTHREAD:[I] MeshForwarder-:     dst:[fd72:e9dd:7d27:e872:0:ff:fe00:70d7]
+[2025-12-10T15:15:08.016] D (16891284) OPENTHREAD: Millisecond timer alarm start running, t0=16890317, dt=4340
+[2025-12-10T15:15:08.024] 16 bytes from fd72:e9dd:7d27:e872:0:ff:fe00:7000: icmp_seq=36 hlim=64 time=239ms
+[2025-12-10T15:15:08.036] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
+[2025-12-10T15:15:08.037] Done
+[2025-12-10T15:15:08.050] D(16891314) OPENTHREAD:[D] Mac-----------: Idle mode: Radio receiving on channel 15
+[2025-12-10T15:15:08.050] > 
+[2025-12-10T15:15:08.151] > 
