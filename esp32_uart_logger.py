@@ -6,6 +6,7 @@ import os
 import threading
 import time
 import re
+import platform
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
@@ -22,6 +23,7 @@ TXPOWER_ATTEMPTS = 3  # sometimes the first command is corrupted
 TXPOWER_RETRY_DELAY = 0.1  # seconds between repeated sends
 
 # --- OpenThread parent / RLOC parsing helpers (adapted from pyserial_esp.py) ---
+
 
 @dataclass
 class TelemetryState:
@@ -48,7 +50,7 @@ PARENT_RLOC_RE = re.compile(
 )
 
 STATES = {"child", "router", "leader", "detached", "disabled"}
-ANSI_ESCAPE_RE = re.compile(r'\x1B\[[0-9;?]*[ -/]*[@-~]')
+ANSI_ESCAPE_RE = re.compile(r"\x1B\[[0-9;?]*[ -/]*[@-~]")
 
 
 def build_parent_rloc_ipv6(prefix_ps_style: str, rloc16: str) -> str:
@@ -78,8 +80,8 @@ def process_ot_line(ts_iso: str, line: str, tstate: TelemetryState) -> None:
         if m_addr:
             my_rloc = m_addr.group(1).lower()
             prefix = re.sub(
-                r'([0-9a-f:]+:0:ff:fe00:)[0-9a-f]{1,4}$',
-                r'\1',
+                r"([0-9a-f:]+:0:ff:fe00:)[0-9a-f]{1,4}$",
+                r"\1",
                 my_rloc,
             )
             if prefix and prefix != my_rloc:
@@ -116,16 +118,21 @@ def process_ot_line(ts_iso: str, line: str, tstate: TelemetryState) -> None:
 
 def _sanitize_for_filename(text: str) -> str:
     """Make a safe-ish filename fragment from arbitrary text."""
-    import re
+    import re as _re
 
     text = text.strip().lower().replace(" ", "_")
     # Keep only a-z, 0-9, underscore, dash
-    text = re.sub(r"[^a-z0-9_\-]+", "", text)
+    text = _re.sub(r"[^a-z0-9_\-]+", "", text)
     return text or "device"
 
 
 class SerialLogger(threading.Thread):
-    def __init__(self, port_info: ListPortInfo, baudrate: int = BAUDRATE, phase_offset: float = 0.0):
+    def __init__(
+        self,
+        port_info: ListPortInfo,
+        baudrate: int = BAUDRATE,
+        phase_offset: float = 0.0,
+    ):
         super().__init__(daemon=True)
         self.port_info = port_info
         self.baudrate = baudrate
@@ -137,7 +144,8 @@ class SerialLogger(threading.Thread):
         """
         Create a log filename in the current working directory.
 
-        Example: uart_ttyacm0_20251203_142500.log
+        Example (Linux):  uart_ttyacm0_20251203_142500.log
+        Example (Windows): uart_com3_20251203_142500.log
         """
         port_name = _sanitize_for_filename(self.port_info.device)
         serial_number = _sanitize_for_filename(
@@ -176,7 +184,9 @@ class SerialLogger(threading.Thread):
             and last_parent_ts is not None
         ):
             now = datetime.datetime.now()
-            if (now - last_parent_ts).total_seconds() <= max(3 * PING_INTERVAL, 3.0):
+            if (now - last_parent_ts).total_seconds() <= max(
+                3 * PING_INTERVAL, 3.0
+            ):
                 parent_ip = build_parent_rloc_ipv6(mesh_prefix, parent_rloc16)
                 cmds.append(f"ping {parent_ip}\r\n".encode("ascii"))
 
@@ -201,7 +211,9 @@ class SerialLogger(threading.Thread):
             return
 
         print(f"[{port_name}] Logging UART to {log_path}")
-        print(f"[{port_name}] Will ping OT parent every {PING_INTERVAL:.1f}s when known.")
+        print(
+            f"[{port_name}] Will ping OT parent every {PING_INTERVAL:.1f}s when known."
+        )
         print(f"[{port_name}] Ping phase offset: {self.phase_offset:.3f}s")
 
         try:
@@ -223,7 +235,9 @@ class SerialLogger(threading.Thread):
                 try:
                     ser.write(b"ipaddr\r\n")
                 except serial.SerialException as exc:
-                    print(f"[{port_name}] WARNING: could not request ipaddr: {exc}")
+                    print(
+                        f"[{port_name}] WARNING: could not request ipaddr: {exc}"
+                    )
 
                 # Start pings at a per-device offset so multiple devices are de-synchronized.
                 next_ping_at = time.time() + self.phase_offset
@@ -256,7 +270,9 @@ class SerialLogger(threading.Thread):
                     )
 
                     try:
-                        text = data.decode("utf-8", errors="replace").rstrip("\r\n")
+                        text = data.decode("utf-8", errors="replace").rstrip(
+                            "\r\n"
+                        )
                         text = ANSI_ESCAPE_RE.sub("", text)
                     except Exception:
                         text = repr(data)
@@ -276,16 +292,31 @@ class SerialLogger(threading.Thread):
 
 def scan_ports() -> Dict[str, ListPortInfo]:
     """
-    Return all USB-style serial ports (/dev/ttyUSB* and /dev/ttyACM* on Linux).
-    This will catch your ESP32 boards on the Raspberry Pi.
+    Return likely USB-style serial ports on the current platform.
+
+    Linux:  /dev/ttyUSB*, /dev/ttyACM*
+    macOS:  /dev/tty.usb*, /dev/cu.usb*  # Untested!
+    Windows: COM* (all COM ports are considered candidates)
     """
     ports: Dict[str, ListPortInfo] = {}
 
+    system = platform.system()
+
     for p in list_ports.comports():
         dev = p.device or ""
-        # On Raspberry Pi, ESP32s usually show up as ttyUSB* or ttyACM*.
-        if dev.startswith("/dev/ttyACM") or dev.startswith("/dev/ttyUSB"):
-            ports[dev] = p
+
+        if system == "Windows":
+            # On Windows, ESP32 boards usually appear as COMx
+            if dev.upper().startswith("COM"):
+                ports[dev] = p
+        elif system == "Darwin": 
+            # Common macOS USB serial device names
+            if dev.startswith("/dev/tty.usb") or dev.startswith("/dev/cu.usb"):
+                ports[dev] = p
+        else:
+            # Linux / other POSIX: typical USB serial names
+            if dev.startswith("/dev/ttyACM") or dev.startswith("/dev/ttyUSB"):
+                ports[dev] = p
 
     return ports
 
@@ -315,7 +346,9 @@ def main():
             for dev_name, info in current_ports.items():
                 if dev_name not in active_loggers:
                     phase_offset = phase_map.get(dev_name, 0.0)
-                    print(f"[{dev_name}] Starting logger with phase offset {phase_offset:.3f}s")
+                    print(
+                        f"[{dev_name}] Starting logger with phase offset {phase_offset:.3f}s"
+                    )
                     logger = SerialLogger(info, BAUDRATE, phase_offset=phase_offset)
                     active_loggers[dev_name] = logger
                     logger.start()
@@ -324,7 +357,9 @@ def main():
             for dev_name in list(active_loggers.keys()):
                 if dev_name not in current_ports:
                     logger = active_loggers.pop(dev_name)
-                    print(f"[{dev_name}] Device removed, stopping logger...")
+                    print(
+                        f"[{dev_name}] Device removed, stopping logger..."
+                    )
                     logger.stop()
 
             time.sleep(SCAN_INTERVAL)
