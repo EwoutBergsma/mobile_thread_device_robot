@@ -14,12 +14,34 @@ from serial.tools import list_ports
 from serial.tools.list_ports_common import ListPortInfo
 
 
-BAUDRATE = 115200
+BAUDRATE = 2000000
 SCAN_INTERVAL = 2.0  # seconds between rescans for new/removed devices
 PING_INTERVAL = 1.0  # seconds between OT CLI pings to parent
 
-TXPOWER_ATTEMPTS = 3  # sometimes the first command is corrupted
-TXPOWER_RETRY_DELAY = 0.1  # seconds between repeated sends
+# Number of times to send the initial startup command set (txpower/ipaddr)
+STARTUP_CMD_ATTEMPTS = 5
+STARTUP_CMD_RETRY_DELAY = 0.1  # seconds between repeated sends of the startup set
+
+# ---------------------------------------------------------------------------
+# Startup / periodic command sets
+# ---------------------------------------------------------------------------
+
+# Commands sent several times immediately after the serial port is opened.
+# If you set this to an empty list, no startup commands will be sent.
+STARTUP_COMMANDS = [
+    b"txpower -13\r\n",  # set TX power on OpenThread CLI
+    b"ipaddr\r\n",       # request IP addresses to learn mesh-local prefix
+    b"log level 3\r\n"
+]
+
+# Base commands sent on every periodic tick (before optional ping).
+# If you set this to an empty list, only the dynamic ping (when available)
+# will be sent. If it is empty and there is no ping target, nothing is sent.
+PERIODIC_BASE_COMMANDS = [
+    b"txpower\r\n",  # query current txpower
+    b"state\r\n",    # OT node state
+    b"parent\r\n",   # parent info
+]
 
 # --- OpenThread parent / RLOC parsing helpers (adapted from pyserial_esp.py) ---
 
@@ -93,10 +115,9 @@ def process_ot_line(ts_iso: str, line: str, tstate: TelemetryState) -> None:
     if st_lower in STATES:
         with tstate.lock:
             tstate.last_state = stripped
-            if st_lower in ("detached", "disabled"):
-                # no valid parent when detached/disabled
-                tstate.parent_rloc16 = None
-                tstate.last_parent_ts = None
+            # NOTE: we *do not* clear parent_rloc16 or last_parent_ts here anymore.
+            # We keep the last-known parent so we can continue pinging even when
+            # detached/disabled, per updated requirements.
         print(f"[parse] {ts_iso} state -> {stripped}")
         return
 
@@ -159,8 +180,8 @@ class SerialLogger(threading.Thread):
 
     def _send_periodic_commands(self, ser: serial.Serial) -> None:
         """
-        Every PING_INTERVAL seconds, refresh basic OT telemetry and ping the parent
-        (if we know its RLOC address).
+        Every PING_INTERVAL seconds, refresh basic OT telemetry and ping the
+        parent RLOC address whenever it is known (regardless of current state).
         """
         with self.tstate.lock:
             mesh_prefix = self.tstate.mesh_local_prefix
@@ -168,25 +189,20 @@ class SerialLogger(threading.Thread):
             last_state = self.tstate.last_state
             last_parent_ts = self.tstate.last_parent_ts
 
-        # Query current txpower, then state, then parent
-        cmds = [b"txpower\r\n", b"state\r\n", b"parent\r\n"]
+        # Start with the configured periodic base commands.
+        cmds = list(PERIODIC_BASE_COMMANDS)
 
         parent_ip = None
-        st_lower = (last_state or "").lower()
 
-        # Only ping when we are attached (child/router/leader) and parent info is fresh.
-        if (
-            mesh_prefix
-            and parent_rloc16
-            and st_lower in ("child", "router", "leader")
-            and last_parent_ts is not None
-        ):
-            now = datetime.datetime.now()
-            if (now - last_parent_ts).total_seconds() <= max(
-                3 * PING_INTERVAL, 3.0
-            ):
-                parent_ip = build_parent_rloc_ipv6(mesh_prefix, parent_rloc16)
-                cmds.append(f"ping {parent_ip}\r\n".encode("ascii"))
+        # As soon as we know mesh-local prefix and parent RLOC16, keep pinging
+        # that parent, independent of whether we are currently attached.
+        if mesh_prefix and parent_rloc16:
+            parent_ip = build_parent_rloc_ipv6(mesh_prefix, parent_rloc16)
+            cmds.append(f"ping {parent_ip}\r\n".encode("ascii"))
+
+        # If there is nothing to send (no base commands and no ping), exit early.
+        if not cmds:
+            return
 
         try:
             for cmd in cmds:
@@ -210,31 +226,32 @@ class SerialLogger(threading.Thread):
 
         print(f"[{port_name}] Logging UART to {log_path}")
         print(
-            f"[{port_name}] Will ping OT parent every {PING_INTERVAL:.1f}s when known."
+            f"[{port_name}] Will ping OT parent every {PING_INTERVAL:.1f}s when parent RLOC is known."
         )
         print(f"[{port_name}] Ping phase offset: {self.phase_offset:.3f}s")
 
         try:
             with ser, open(log_path, "a", encoding="utf-8") as log_file:
-                # Set txpower multiple times at startup
-                try:
+                # Send startup commands multiple times at connection for robustness.
+                if STARTUP_COMMANDS:
+                    try:
+                        print(
+                            f"[{port_name}] Sending startup OT CLI commands "
+                            f"(x{STARTUP_CMD_ATTEMPTS})"
+                        )
+                        for attempt in range(1, STARTUP_CMD_ATTEMPTS + 1):
+                            for cmd in STARTUP_COMMANDS:
+                                ser.write(cmd)
+                                ser.flush()
+                            time.sleep(STARTUP_CMD_RETRY_DELAY)
+                    except serial.SerialException as exc:
+                        print(
+                            f"[{port_name}] WARNING: could not send startup commands: {exc}"
+                        )
+                else:
                     print(
-                        f"[{port_name}] Setting txpower -13 dBm on OpenThread CLI "
-                        f"(x{TXPOWER_ATTEMPTS})"
-                    )
-                    for attempt in range(1, TXPOWER_ATTEMPTS + 1):
-                        ser.write(b"txpower -13\r\n")
-                        ser.flush()
-                        time.sleep(TXPOWER_RETRY_DELAY)
-                except serial.SerialException as exc:
-                    print(f"[{port_name}] WARNING: could not set txpower: {exc}")
-
-                # Ask once for ipaddr so we can learn the mesh-local prefix.
-                try:
-                    ser.write(b"ipaddr\r\n")
-                except serial.SerialException as exc:
-                    print(
-                        f"[{port_name}] WARNING: could not request ipaddr: {exc}"
+                        f"[{port_name}] No startup commands configured; "
+                        "skipping initial send."
                     )
 
                 # Start pings at a per-device offset so multiple devices are de-synchronized.
