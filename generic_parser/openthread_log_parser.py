@@ -127,6 +127,43 @@ def normalize_rloc16(rloc: str) -> str:
     return f"{value:04x}"
 
 
+# RLOC16 interpretation:
+# - 0xfffe indicates no/invalid RLOC16 (treat as "No Parent")
+# - Parent router RLOC16 can be derived by clearing the Child ID bits (low 10 bits).
+INVALID_RLOC16 = 0xFFFE
+PARENT_ROUTER_MASK = 0xFC00
+
+
+def _rloc16_to_int(rloc: str) -> Optional[int]:
+    s = rloc.strip().lower()
+    if s.startswith("0x"):
+        s = s[2:]
+    try:
+        return int(s, 16)
+    except ValueError:
+        return None
+
+
+def derive_parent_router_from_rloc16(node_rloc16: Optional[str]) -> Optional[str]:
+    """
+    Derive the parent router's RLOC16 from the node's RLOC16.
+
+    If node RLOC16 is fffe, this indicates no parent.
+    """
+    if node_rloc16 is None:
+        return None
+
+    v = _rloc16_to_int(node_rloc16)
+    if v is None:
+        return None
+
+    if v == INVALID_RLOC16:
+        return "No Parent"
+
+    parent_router = v & PARENT_ROUTER_MASK
+    return f"{parent_router:04x}"
+
+
 @dataclass
 class LogMetrics:
     # Ping RTT (round-trip time) statistics from ping summary lines.
@@ -152,99 +189,66 @@ class LogMetrics:
     rloc16_from_transition_timestamps: List[datetime]
     rloc16_from_transition_values: List[str]
 
+    # Parent router RLOC16 over time.
+    # This is derived from the node's own RLOC16 transitions by extracting the parent router portion.
+    parent_router_from_rloc16_transition_timestamps: List[datetime]
+    parent_router_from_rloc16_transition_values: List[str]
+
     # Parent RLOC16 values obtained through the CLI "parent" command (no "->" transitions).
     parent_rloc16_from_query_timestamps: List[datetime] # From "Rloc: XXXX" CLI responses.
     parent_rloc16_from_query_values: List[str]         # Normalized parent RLOC16 value at each query timestamp.
-
-    # Effective parent RLOC16 over time.
-    # This is computed (not read directly from a single log line) based on role_state_* and parent_rloc16_*,
-    # i.e., it is indirectly influenced by the "Role ... -> ..." transitions.
-    effective_parent_timestamps: List[datetime]
-    effective_parent_rloc16_values: List[str]
 
     # Aggregate ping counters over the entire log, used to compute overall PDR.
     total_ping_tx_packets: int               # From ping summary lines (packets transmitted).
     total_ping_rx_packets: int               # From ping summary lines (packets received).
 
 
-def compute_effective_parent(
-    state: Optional[str],
-    parent: Optional[str],
-) -> Optional[str]:
+def build_parent_router_timeline(metrics: LogMetrics) -> None:
     """
-    Determine effective parent for the *current* state/parent pair.
+    Build a time series of the parent router RLOC16.
+
+    Primary source:
+      - Node RLOC16 transitions ("RLOC16 old -> new"), because the parent router portion
+        is encoded within the node's RLOC16.
+
+    Fallback (if no node RLOC16 transitions exist):
+      - Parent RLOC16 values obtained via periodic CLI "parent" queries ("Rloc: XXXX").
     """
+    if metrics.rloc16_from_transition_timestamps:
+        out_ts: List[datetime] = []
+        out_vals: List[str] = []
+        for ts, node_rloc in zip(
+            metrics.rloc16_from_transition_timestamps,
+            metrics.rloc16_from_transition_values,
+        ):
+            parent_router = derive_parent_router_from_rloc16(node_rloc)
+            if parent_router is None:
+                continue
+            out_ts.append(ts)
+            out_vals.append(parent_router)
 
-    def norm_state(s: Optional[str]) -> Optional[str]:
-        if s is None:
-            return None
-        return s.strip().lower()
-
-    st = norm_state(state)
-
-    # Explicit "no parent" states.
-    if st in ("detached", "disabled", "blank"):
-        return "No Parent"
-
-    # No explicit parent information.
-    if parent is None:
-        return None
-
-    p = parent.strip()
-    if not p or p.lower() in ("none", "nan", "no parent"):
-        return "No Parent"
-
-    # Default: a valid parent, normalize RLOC16.
-    return normalize_rloc16(p)
-
-
-def build_parent_timeline(metrics: LogMetrics) -> None:
-    """
-    Build a time series of "effective parent" with forward-filled state/parent.
-    """
-    parents_at_ts: Dict[datetime, List[str]] = defaultdict(list)
-    for ts, pid in zip(metrics.parent_rloc16_from_query_timestamps, metrics.parent_rloc16_from_query_values):
-        parents_at_ts[ts].append(pid)
-
-    states_at_ts: Dict[datetime, List[str]] = defaultdict(list)
-    for ts, st in zip(metrics.role_from_transition_timestamps, metrics.role_from_transition_values):
-        states_at_ts[ts].append(st)
-
-    all_ts_set = set()
-    all_ts_set.update(metrics.ping_rtt_timestamps)
-    all_ts_set.update(metrics.ping_packet_loss_timestamps)
-    all_ts_set.update(metrics.parent_rloc16_from_query_timestamps)
-    all_ts_set.update(metrics.role_from_transition_timestamps)
-    all_ts_set.update(metrics.ping_rss_timestamps)
-
-    if not all_ts_set:
-        metrics.effective_parent_timestamps = []
-        metrics.effective_parent_rloc16_values = []
+        metrics.parent_router_from_rloc16_transition_timestamps = out_ts
+        metrics.parent_router_from_rloc16_transition_values = out_vals
         return
 
-    all_ts = sorted(all_ts_set)
+    # Fallback: use CLI "parent" queries if present.
+    if metrics.parent_rloc16_from_query_timestamps:
+        out_ts = list(metrics.parent_rloc16_from_query_timestamps)
+        out_vals: List[str] = []
+        for p in metrics.parent_rloc16_from_query_values:
+            p_norm = normalize_rloc16(p)
+            p_int = _rloc16_to_int(p_norm)
+            if p_int == INVALID_RLOC16:
+                out_vals.append("No Parent")
+            else:
+                out_vals.append(p_norm)
 
-    current_state: Optional[str] = None
-    current_parent: Optional[str] = None
+        metrics.parent_router_from_rloc16_transition_timestamps = out_ts
+        metrics.parent_router_from_rloc16_transition_values = out_vals
+        return
 
-    eff_ts: List[datetime] = []
-    eff_parents: List[str] = []
-
-    for ts in all_ts:
-        if ts in states_at_ts:
-            current_state = states_at_ts[ts][-1].strip().lower()
-        if ts in parents_at_ts:
-            current_parent = parents_at_ts[ts][-1].strip()
-
-        eff_parent = compute_effective_parent(current_state, current_parent)
-        if eff_parent is None:
-            continue
-
-        eff_ts.append(ts)
-        eff_parents.append(eff_parent)
-
-    metrics.effective_parent_timestamps = eff_ts
-    metrics.effective_parent_rloc16_values = eff_parents
+    metrics.parent_router_from_rloc16_transition_timestamps = []
+    metrics.parent_router_from_rloc16_transition_values = []
 
 
 def parse_log_file(log_path: str) -> LogMetrics:
@@ -265,16 +269,16 @@ def parse_log_file(log_path: str) -> LogMetrics:
         ping_rtt_timestamps=[],
         ping_rtt_avg_ms=[],
         ping_packet_loss_timestamps=[],
-        parent_rloc16_from_query_timestamps=[],
-        parent_rloc16_from_query_values=[],
         ping_rss_timestamps=[],
         ping_rss_dbm_values=[],
         role_from_transition_timestamps=[],
         role_from_transition_values=[],
-        effective_parent_timestamps=[],
-        effective_parent_rloc16_values=[],
         rloc16_from_transition_timestamps=[],
         rloc16_from_transition_values=[],
+        parent_rloc16_from_query_timestamps=[],
+        parent_rloc16_from_query_values=[],
+        parent_router_from_rloc16_transition_timestamps=[],
+        parent_router_from_rloc16_transition_values=[],
         total_ping_tx_packets=0,
         total_ping_rx_packets=0,
     )
@@ -421,7 +425,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
             metrics.rloc16_from_transition_timestamps.append(last_log_ts)
             metrics.rloc16_from_transition_values.append(last_node_val)
 
-    build_parent_timeline(metrics)
+    build_parent_router_timeline(metrics)
     return metrics
 
 
@@ -655,22 +659,23 @@ def main() -> None:
         rel_label = str(Path(log_path).relative_to(data_dir_path))
 
         print("\n[SUMMARY]")
-        print(f"  File:                 {rel_label}")
-        print(f"  RTT samples:          {len(metrics.ping_rtt_timestamps)}")
-        print(f"  RSS samples:          {len(metrics.ping_rss_timestamps)}")
-        print(f"  Role state points:    {len(metrics.role_from_transition_timestamps)}")
-        print(f"  Parent RLOC16 points: {len(metrics.parent_rloc16_from_query_timestamps)}")
-        print(f"  Effective parents:    {len(metrics.effective_parent_timestamps)}")
-        print(f"  Node RLOC points:     {len(metrics.rloc16_from_transition_timestamps)}")
-        print(f"  Loss events:          {len(metrics.ping_packet_loss_timestamps)}")
+        print(f"  File:                        {rel_label}")
+        print(f"  RTT samples:                 {len(metrics.ping_rtt_timestamps)}")
+        print(f"  RSS samples:                 {len(metrics.ping_rss_timestamps)}")
+        print(f"  Role-from-transition points: {len(metrics.role_from_transition_timestamps)}")
+        print(f"  Node RLOC16 points:          {len(metrics.rloc16_from_transition_timestamps)}")
+        print(f"  Parent RLOC16 queries:       {len(metrics.parent_rloc16_from_query_timestamps)}")
+        print(f"  Parent router points:        {len(metrics.parent_router_from_rloc16_transition_timestamps)}")
+        print(f"  Loss events:                 {len(metrics.ping_packet_loss_timestamps)}")
 
         if metrics.total_ping_tx_packets > 0:
             pdr = 100.0 * metrics.total_ping_rx_packets / metrics.total_ping_tx_packets
-            print(f"  Total TX:             {metrics.total_ping_tx_packets}")
-            print(f"  Total RX:             {metrics.total_ping_rx_packets}")
-            print(f"  Overall PDR:          {pdr:.2f}%")
+            print(f"  Total TX:                    {metrics.total_ping_tx_packets}")
+            print(f"  Total RX:                    {metrics.total_ping_rx_packets}")
+            print(f"  Overall PDR:                 {pdr:.2f}%")
         else:
             print("  No packet summary lines found (TX/RX totals unavailable).")
+
 
         # Show generic visualization for this file.
         visualize_metrics(metrics, title=rel_label)
