@@ -36,10 +36,7 @@ rtt_re = re.compile(
     re.VERBOSE
 )
 
-# Regex for packet summary lines with packet loss (0.0%, 10.0%, 100.0%, etc.)
-# Examples:
-# [2025-12-04T17:52:34.591] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip ...
-# [2025-12-04T17:53:28.088] 1 packets transmitted, 0 packets received. Packet loss = 100.0%.
+# Regex for packet summary lines with packet loss (0.0%, 10.0%, 100.0%, etc.).
 loss_re = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]\s+                  # timestamp in brackets
@@ -51,7 +48,7 @@ loss_re = re.compile(
     re.VERBOSE
 )
 
-# Regex for parent lines, using RLOC16 as parent IDs
+# Regex for parent lines, using RLOC16 as parent IDs.
 parent_re = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]      # timestamp in brackets
@@ -61,7 +58,7 @@ parent_re = re.compile(
     re.VERBOSE
 )
 
-# Regex for OT state lines
+# Regex for OT state lines.
 state_re = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]              # timestamp
@@ -70,7 +67,7 @@ state_re = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
-# Regex for *ping reply* RSS lines (MeshForwarder Received IPv6 ... msg)
+# Regex for *ping reply* RSS lines (MeshForwarder Received IPv6 ... msg).
 rss_re = re.compile(
     r"""
     ^\[(?P<ts>[^\]]+)\]\s+                      # timestamp at start of line
@@ -80,6 +77,7 @@ rss_re = re.compile(
     """,
     re.VERBOSE
 )
+
 
 # Helper to parse timestamps like 2025-12-04T17:52:42.396
 def parse_timestamp(ts_str: str) -> datetime:
@@ -99,13 +97,12 @@ def normalize_rloc16(rloc: str) -> str:
         "0000" -> "0000"
     """
     r = rloc.strip().lower()
-    # tolerate an optional 0x prefix, even though the regex does not capture it
     if r.startswith("0x"):
         r = r[2:]
     try:
         value = int(r, 16)
     except ValueError:
-        # If not valid hex, just return the stripped original
+        # If not valid hex, just return the stripped original.
         return rloc.strip()
     return f"{value:04x}"
 
@@ -123,48 +120,65 @@ class LogMetrics:
     states: List[str]
     eff_parent_timestamps: List[datetime]
     eff_parents: List[str]
-    # Totals for PDR over the entire file
+    # Totals for PDR over the entire file.
     total_tx: int
     total_rx: int
 
 
-def compute_effective_parent(state: Optional[str], parent: Optional[str]) -> str:
+def compute_effective_parent(
+    state: Optional[str],
+    parent: Optional[str],
+) -> Optional[str]:
     """
-    - If state is blank or "blank" or None -> "No Parent"
-    - If state == "detached" -> "No Parent"
-    - Else, if parent missing/none/nan/"" -> "No Parent"
-    - Else -> normalized parent RLOC16 string
+    Determine effective parent for the *current* state/parent pair.
+
+    Returns:
+        - "No Parent" if:
+            - state is 'detached', 'disabled', or 'blank', OR
+            - the parent string is 'none'/'nan'/'no parent'/empty.
+        - A normalized RLOC16 string otherwise.
+        - None if we have *no* explicit parent information yet and
+          the state does not explicitly indicate "no parent".
+
+    This behaviour prevents the plot from starting with "No Parent" just
+    because the parent has not been logged yet.
     """
-    def is_blank_state(v: Optional[str]) -> bool:
-        if v is None:
-            return True
-        s = v.strip().lower()
-        return s == "" or s == "blank"
 
-    st = (state or "").strip().lower()
+    def norm_state(s: Optional[str]) -> Optional[str]:
+        if s is None:
+            return None
+        return s.strip().lower()
 
-    # State overrides parent: detached / blank => no parent
-    if is_blank_state(state) or st == "detached":
+    st = norm_state(state)
+
+    # Explicit "no parent" states.
+    if st in ("detached", "disabled", "blank"):
         return "No Parent"
 
+    # No explicit parent information.
     if parent is None:
-        return "No Parent"
+        return None
+
     p = parent.strip()
-    if not p or p.lower() in ("none", "nan"):
+    if not p or p.lower() in ("none", "nan", "no parent"):
         return "No Parent"
 
-    # Normalize RLOC16 so leading zeros are preserved everywhere
+    # Default: a valid parent, normalize RLOC16.
     return normalize_rloc16(p)
 
 
 def build_parent_timeline(metrics: LogMetrics) -> None:
     """
     Build a time series of "effective parent" where:
-      - state + parent are forward-filled over time
-      - 'detached' or blank state => 'No Parent'
-      - missing/none/nan parent => 'No Parent'
 
-    Timeline includes all timestamps where we have RTT, loss, parent, state, or RSS info.
+      - State and parent are forward-filled over time.
+      - 'detached' / 'disabled' / 'blank' => 'No Parent'.
+      - Parent values such as 'none'/'nan'/'no parent' => 'No Parent'.
+      - Timestamps where we have neither an explicit parent nor an
+        explicit "no parent" state are *skipped*.
+
+    This ensures we do not fabricate "No Parent" at the start of the
+    trace when the log has simply not reported the parent yet.
     """
     parents_at_ts: Dict[datetime, List[str]] = defaultdict(list)
     for ts, pid in zip(metrics.parent_timestamps, metrics.parent_ids):
@@ -197,11 +211,15 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
     for ts in all_ts:
         if ts in states_at_ts:
             current_state = states_at_ts[ts][-1].strip().lower()
-
         if ts in parents_at_ts:
             current_parent = parents_at_ts[ts][-1].strip()
 
         eff_parent = compute_effective_parent(current_state, current_parent)
+        if eff_parent is None:
+            # We do not yet know the parent and do not have an explicit
+            # "no parent" indication -> skip this timestamp.
+            continue
+
         eff_ts.append(ts)
         eff_parents.append(eff_parent)
 
@@ -235,7 +253,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
         for line_no, line in enumerate(f, start=1):
             line_stripped = line.rstrip("\n")
 
-            # --- Packet loss / summary detection (any percentage) ---
+            # --- Packet loss / summary detection (any percentage). ---
             m_loss = loss_re.search(line_stripped)
             if m_loss:
                 ts_loss_str = m_loss.group("ts")
@@ -245,16 +263,16 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 rx = int(m_loss.group("rx"))
                 loss_pct = float(m_loss.group("loss"))
 
-                # Accumulate totals for overall PDR
+                # Accumulate totals for overall PDR.
                 metrics.total_tx += tx
                 metrics.total_rx += rx
 
-                # Keep timestamp for non-zero loss events (for vertical markers)
+                # Keep timestamp for non-zero loss events (for vertical markers).
                 if loss_pct > 0.0:
                     print(f"  [LOSS] Packet loss {loss_pct}% at {ts_loss_str}")
                     metrics.loss_timestamps.append(ts_loss)
 
-            # --- RTT detection (only lines with Round-trip stats) ---
+            # --- RTT detection (only lines with Round-trip stats). ---
             m_rtt = rtt_re.search(line_stripped)
             if m_rtt:
                 print(f"  [USE RTT] Line {line_no}: {line_stripped}")
@@ -265,7 +283,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 metrics.rtt_timestamps.append(ts)
                 metrics.rtt_avgs_ms.append(avg_ms)
 
-            # --- Parent detection (RLOC16 from "Rloc:" lines) ---
+            # --- Parent detection (RLOC16 from "Rloc:" lines). ---
             m_parent = parent_re.search(line_stripped)
             if m_parent:
                 ts_str = m_parent.group("ts")
@@ -277,7 +295,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 metrics.parent_timestamps.append(ts)
                 metrics.parent_ids.append(rloc16)
 
-            # --- State detection ---
+            # --- State detection. ---
             m_state = state_re.search(line_stripped)
             if m_state:
                 ts_str = m_state.group("ts")
@@ -288,7 +306,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 metrics.state_timestamps.append(ts)
                 metrics.states.append(state_norm)
 
-            # --- RSS detection for ping replies ---
+            # --- RSS detection for ping replies. ---
             m_rss = rss_re.search(line_stripped)
             if m_rss:
                 length = int(m_rss.group("len"))
@@ -331,7 +349,7 @@ def plot_rtt(
 
     ax.set_ylabel("RTT (ms)")
 
-    # Build title string
+    # Build title string.
     title = "Ping to Parent Round-trip Time"
     suffix_parts = []
 
@@ -356,6 +374,9 @@ def plot_parents(
 ) -> None:
     """
     Plot parent over time using the *effective* parent.
+
+    'No Parent' is always placed at the bottom of the y-axis when present.
+    Other parents are sorted by their hexadecimal value.
     """
     if metrics.eff_parent_timestamps:
         parent_timestamps = metrics.eff_parent_timestamps
@@ -378,7 +399,24 @@ def plot_parents(
         ax.grid(True)
         return
 
-    unique_parents = sorted(set(parent_ids))
+    # Build ordered list of unique parents with "No Parent" forced to index 0.
+    unique_parent_set = set(parent_ids)
+    other_parents = [p for p in unique_parent_set if p != "No Parent"]
+
+    # Sort hex parents by numeric RLOC16 value.
+    def sort_key(p: str):
+        try:
+            return (0, int(p, 16))
+        except ValueError:
+            return (1, p)
+
+    other_parents_sorted = sorted(other_parents, key=sort_key)
+
+    if "No Parent" in unique_parent_set:
+        unique_parents = ["No Parent"] + other_parents_sorted
+    else:
+        unique_parents = other_parents_sorted
+
     parent_to_index = {p: i for i, p in enumerate(unique_parents)}
     y_values = [parent_to_index[p] for p in parent_ids]
 
@@ -386,6 +424,7 @@ def plot_parents(
     ax.set_ylabel("Parent (RLOC16)")
     ax.set_yticks(range(len(unique_parents)))
     ax.set_yticklabels(unique_parents)
+    ax.set_ylim(-0.5, len(unique_parents) - 0.5)
     ax.set_title("Connected to Parent")
     ax.grid(True)
 
@@ -412,7 +451,7 @@ def plot_rss_and_loss(
 
     plotted_any = False
 
-    # Packet loss vertical lines
+    # Packet loss vertical lines.
     if loss_timestamps:
         for i, ts_loss in enumerate(loss_timestamps):
             ax.axvline(
@@ -424,7 +463,7 @@ def plot_rss_and_loss(
             )
         plotted_any = True
 
-    # RSS scatter
+    # RSS scatter.
     if timestamps_rss:
         ax.plot(
             timestamps_rss,
@@ -436,7 +475,7 @@ def plot_rss_and_loss(
         plotted_any = True
 
     if not timestamps_rss:
-        # Make it clear there's no RSS samples, just loss markers (if any)
+        # Make it clear there are no RSS samples, just loss markers (if any).
         ax.text(
             0.5,
             0.5,
@@ -451,7 +490,7 @@ def plot_rss_and_loss(
 
     ax.set_ylabel("RSS (dBm)")
 
-    # --- RSS statistics for title ---
+    # --- RSS statistics for title. ---
     rss_mean_dbm: Optional[float] = None
     rss_std_db: Optional[float] = None
     if rss_values:
@@ -463,7 +502,7 @@ def plot_rss_and_loss(
         else:
             rss_std_db = 0.0
 
-    # Build title string
+    # Build title string.
     title = "Ping to Parent RSS & Packet Loss"
 
     suffix_parts = []
@@ -485,7 +524,7 @@ def plot_rss_and_loss(
 
 
 def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None:
-    # Work out paths/labels for this file
+    # Work out paths/labels for this file.
     log_path_obj = Path(log_path)
     data_dir_path = Path(DATA_DIR)
 
@@ -498,7 +537,7 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
 
     metrics = parse_log_file(log_path)
 
-    # --- Summaries / RTT collection ---
+    # --- Summaries / RTT collection. ---
     if not metrics.rtt_timestamps and not metrics.loss_timestamps:
         print(f"[SUMMARY] {log_path}: 0 RTT samples and no packet loss.")
     else:
@@ -517,7 +556,7 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
     else:
         print(f"[SUMMARY] {log_path}: no valid parent data (RLOC16) found.")
 
-    # Overall packet delivery rate for the file
+    # Overall packet delivery rate for the file.
     if metrics.total_tx > 0:
         overall_pdr = 100.0 * metrics.total_rx / metrics.total_tx
         print(
@@ -528,7 +567,7 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
         overall_pdr = None
         print(f"[SUMMARY] {log_path}: No packet summary lines found for PDR.")
 
-    # RTT statistics (mean and std) over this file
+    # RTT statistics (mean and std) over this file.
     if metrics.rtt_avgs_ms:
         vals = metrics.rtt_avgs_ms
         n = len(vals)
@@ -546,7 +585,7 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
         rtt_mean_ms = None
         rtt_std_ms = None
 
-    # If there's absolutely nothing to plot, skip.
+    # If there is absolutely nothing to plot, skip.
     if (
         not metrics.rtt_timestamps
         and not metrics.loss_timestamps
@@ -556,7 +595,7 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
         print(f"[INFO] {log_path}: no time-series data to plot; skipping figure.")
         return
 
-    # --- Combined figure (RTT, RSS+loss, Parent stacked) ---
+    # --- Combined figure (RTT, RSS+loss, Parent stacked). ---
     fig, axes = plt.subplots(
         nrows=3,
         ncols=1,
@@ -572,9 +611,9 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]]) -> None
     ax_parent.set_xlabel("Time")
     fig.autofmt_xdate(rotation=45)
 
-    # Top title: only the file label; stats appear in subplots
+    # Top title: only the file label; stats appear in subplots.
     suptitle_text = label_for_file
-    fig.suptitle(suptitle_text, y=0.98)   # only place where filename appears
+    fig.suptitle(suptitle_text, y=0.98)
     fig.tight_layout(rect=[0, 0, 1, 0.96])
 
     out_name = log_path_obj.stem + "_timeseries.png"
