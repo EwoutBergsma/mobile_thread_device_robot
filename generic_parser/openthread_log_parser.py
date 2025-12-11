@@ -293,10 +293,10 @@ def parse_log_file(log_path: str) -> LogMetrics:
         role_from_transition_values=[],
         rloc16_from_transition_timestamps=[],
         rloc16_from_transition_values=[],
-        parent_rloc16_from_query_timestamps=[],
-        parent_rloc16_from_query_values=[],
         parent_router_from_rloc16_transition_timestamps=[],
         parent_router_from_rloc16_transition_values=[],
+        parent_rloc16_from_query_timestamps=[],
+        parent_rloc16_from_query_values=[],
         total_ping_tx_packets=0,
         total_ping_rx_packets=0,
     )
@@ -611,9 +611,10 @@ def visualize_metrics(metrics: LogMetrics, title: str = "OpenThread log metrics"
 
         if values is None:
             # Event-only series: vertical lines.
+            n = len(ts)
             for ts_i in ts:
                 ax.axvline(ts_i, linestyle="--", alpha=0.5)
-            ax.set_title(label)
+            ax.set_title(f"{label} (n={n})")
             ax.set_ylabel("")
             ax.set_yticks([])
         else:
@@ -626,17 +627,24 @@ def visualize_metrics(metrics: LogMetrics, title: str = "OpenThread log metrics"
                 x_plot = [t for t, y in zip(ts, y_vals) if y is not None]
                 y_plot = [y for y in y_vals if y is not None]
 
+                n = len(x_plot)
+
                 if x_plot:
                     ax.step(x_plot, y_plot, where="post")
                 ax.set_yticks(range(len(categories)))
                 ax.set_yticklabels(categories)
                 ax.set_ylabel(label)
-                ax.set_title(label)
+                ax.set_title(f"{label} (n={n})")
             else:
                 # Numeric time series: scatter only, small markers.
-                ax.scatter(ts, values, s=8)
+                x_plot = [t for t, v in zip(ts, values) if v is not None]
+                y_plot = [v for v in values if v is not None]
+
+                n = len(x_plot)
+
+                ax.scatter(x_plot, y_plot, s=8)
                 ax.set_ylabel(label)
-                ax.set_title(label)
+                ax.set_title(f"{label} (n={n})")
 
         _format_time_axis(ax)
 
