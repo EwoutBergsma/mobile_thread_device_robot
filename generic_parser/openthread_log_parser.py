@@ -47,7 +47,7 @@ ping_packet_loss_regex = re.compile(
 )
 
 # Regex for MAC frame tx failures due to NoAck.
-# Example: [2025-12-10T23:29:08.209] I(...) OPENTHREAD:[I] Mac-----------: Frame tx attempt 1/16 failed, error:NoAck, ...
+# Example: [2025-12-10T23:29:08.209] I(19651449) OPENTHREAD:[I] Mac-----------: Frame tx attempt 1/16 failed, error:NoAck, len:40, seqnum:144, type:Data, src:0x70eb, dst:0x7000, sec:yes, ackreq:yes
 # Requires log level 4 or higher.
 mac_frame_tx_noack_failed_regex = re.compile(
     r"""
