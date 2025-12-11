@@ -89,6 +89,27 @@ def parse_timestamp(ts_str: str) -> datetime:
         return datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
 
 
+def normalize_rloc16(rloc: str) -> str:
+    """
+    Normalize an RLOC16 string to a 4-digit lowercase hex representation.
+
+    Examples:
+        "c00"  -> "0c00"
+        "0C00" -> "0c00"
+        "0000" -> "0000"
+    """
+    r = rloc.strip().lower()
+    # tolerate an optional 0x prefix, even though the regex does not capture it
+    if r.startswith("0x"):
+        r = r[2:]
+    try:
+        value = int(r, 16)
+    except ValueError:
+        # If not valid hex, just return the stripped original
+        return rloc.strip()
+    return f"{value:04x}"
+
+
 @dataclass
 class LogMetrics:
     rtt_timestamps: List[datetime]
@@ -112,7 +133,7 @@ def compute_effective_parent(state: Optional[str], parent: Optional[str]) -> str
     - If state is blank or "blank" or None -> "No Parent"
     - If state == "detached" -> "No Parent"
     - Else, if parent missing/none/nan/"" -> "No Parent"
-    - Else -> parent RLOC16 string
+    - Else -> normalized parent RLOC16 string
     """
     def is_blank_state(v: Optional[str]) -> bool:
         if v is None:
@@ -132,7 +153,8 @@ def compute_effective_parent(state: Optional[str], parent: Optional[str]) -> str
     if not p or p.lower() in ("none", "nan"):
         return "No Parent"
 
-    return p
+    # Normalize RLOC16 so leading zeros are preserved everywhere
+    return normalize_rloc16(p)
 
 
 def build_parent_timeline(metrics: LogMetrics) -> None:
@@ -247,7 +269,8 @@ def parse_log_file(log_path: str) -> LogMetrics:
             m_parent = parent_re.search(line_stripped)
             if m_parent:
                 ts_str = m_parent.group("ts")
-                rloc16 = m_parent.group("rloc")
+                raw_rloc16 = m_parent.group("rloc")
+                rloc16 = normalize_rloc16(raw_rloc16)
                 ts = parse_timestamp(ts_str)
                 print(f"  [USE PARENT] Line {line_no}: {line_stripped}")
                 print(f"               -> Parent RLOC16: {rloc16}")
@@ -400,7 +423,7 @@ def plot_rss_and_loss(
                 label="Packet loss" if i == 0 else None,
             )
         plotted_any = True
-        
+
     # RSS scatter
     if timestamps_rss:
         ax.plot(
