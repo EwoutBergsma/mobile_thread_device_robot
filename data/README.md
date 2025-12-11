@@ -36,3 +36,18 @@ Longer run, not separation into two logs this time. But we noticed unexpected 20
 
 __________
 
+`uart_devttyacm0_404cca417de0_20251210_231543.log`
+`uart_devttyacm1_404cca41786c_20251210_231543_PPS.log`
+
+Really nice results, just a small erorr in tx power of routers.
+
+__________
+
+`uart_devttyacm0_404cca41786c_20251211_175927.log`
+`uart_devttyacm1_404cca417de0_20251211_175927.log`
+
+New router placement of routers, but a router died, which caused one of them to go full txpower. Also, wrong log level :(.
+
+__________
+
+
