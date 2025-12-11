@@ -19,10 +19,9 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 # Data directory (relative to this file)
 DATA_DIR = SCRIPT_DIR / "data"
 
-# Regex for RTT lines like:
-# [2025-12-04T17:52:44.956] 1 packets transmitted, 1 packets received.
-# Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
-rtt_re = re.compile(
+# Regex for round trip time of pings.
+# Example: [2025-12-11T00:56:16.332] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 55/55.000/55 ms.
+ping_rtt_regex = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]               # [2025-12-04T17:54:36.720]
     .*?Round-trip\ min/avg/max\ =\   # Round-trip min/avg/max =
@@ -34,7 +33,9 @@ rtt_re = re.compile(
 )
 
 # Regex for packet summary lines with packet loss (0.0%, 10.0%, 100.0%, etc.).
-loss_re = re.compile(
+# Example: [2025-12-11T00:56:16.239] 1 packets transmitted, 0 packets received. Packet loss = 100.0%.
+# Requires periodic pinging from the logged device.
+ping_packet_loss_regex = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]\s+                  # timestamp in brackets
     (?P<tx>\d+)\s+packets\s+transmitted,\s+
@@ -45,8 +46,23 @@ loss_re = re.compile(
     re.VERBOSE,
 )
 
-# Regex for parent lines, using RLOC16 as parent IDs (Rloc: <hex>).
-parent_re = re.compile(
+# Regex for rss (dBm) of pings.
+# Example: [2025-12-10T23:30:32.356] I(19735589) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:8e94, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-101.0
+# Requires periodic pinging from the logged device.
+# Requires log level 4 or higher.
+ping_rss_regex = re.compile(
+    r"""
+    ^\[(?P<ts>[^\]]+)\]\s+                      # timestamp at start of line
+    .*?MeshForwarder-:\s+Received\ IPv6\s+\S+\s+msg,\s+
+    len:(?P<len>\d+),.*?                        # capture len:NN
+    rss:(?P<rss>-?\d+(?:\.\d+)?)                # capture rss:-90.0
+    """,
+    re.VERBOSE,
+)
+
+# Example line: [2025-12-11T00:55:55.384] Rloc: 4000
+# Requires periodic "parent" command send to the cli of the child, when capturing logs.
+cli_command_parent_rloc_regex = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]      # timestamp in brackets
     .*?Rloc:\s*
@@ -56,8 +72,9 @@ parent_re = re.compile(
 )
 
 # Regex for OT state transition lines, e.g.:
-# [2025-12-10T23:30:42.766] ... Mle-----------: Role child -> detached
-state_re = re.compile(
+# Example: [2025-12-11T01:27:24.816] I(26748009) OPENTHREAD:[N] Mle-----------: Role child -> detached
+# Requires log level 4 or higher.
+role_transition_regex = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]                  # timestamp
     .*?Role\s+
@@ -69,8 +86,9 @@ state_re = re.compile(
 )
 
 # Regex for node's own RLOC16 transitions, e.g.:
-# [2025-12-10T23:30:42.766] ... Mle-----------: RLOC16 70eb -> fffe
-node_rloc_re = re.compile(
+# Example: [2025-12-10T23:30:42.771] I(19745999) OPENTHREAD:[N] Mle-----------: RLOC16 70eb -> fffe
+# Requires log level 4 or higher.
+node_transition_regex = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]               # timestamp in brackets
     .*?RLOC16\s+
@@ -80,18 +98,6 @@ node_rloc_re = re.compile(
     """,
     re.IGNORECASE | re.VERBOSE,
 )
-
-# Regex for *ping reply* RSS lines (MeshForwarder Received IPv6 ... msg).
-rss_re = re.compile(
-    r"""
-    ^\[(?P<ts>[^\]]+)\]\s+                      # timestamp at start of line
-    .*?MeshForwarder-:\s+Received\ IPv6\s+\S+\s+msg,\s+
-    len:(?P<len>\d+),.*?                        # capture len:NN
-    rss:(?P<rss>-?\d+(?:\.\d+)?)                # capture rss:-90.0
-    """,
-    re.VERBOSE,
-)
-
 
 # Helper to parse timestamps like 2025-12-04T17:52:42.396
 def parse_timestamp(ts_str: str) -> datetime:
@@ -123,22 +129,36 @@ def normalize_rloc16(rloc: str) -> str:
 
 @dataclass
 class LogMetrics:
-    rtt_timestamps: List[datetime]
-    rtt_avgs_ms: List[float]
-    loss_timestamps: List[datetime]
-    parent_timestamps: List[datetime]
-    parent_ids: List[str]
-    rss_timestamps: List[datetime]
-    rss_values: List[float]
-    state_timestamps: List[datetime]
-    states: List[str]
-    eff_parent_timestamps: List[datetime]
-    eff_parents: List[str]
-    node_rloc_timestamps: List[datetime]
-    node_rloc_values: List[str]
-    # Totals for PDR over the entire file.
-    total_tx: int
-    total_rx: int
+    # Ping RTT (round-trip time) statistics from ping summary lines.
+    ping_rtt_timestamps: List[datetime]      # Timestamps where ping RTT summaries were logged.
+    ping_rtt_avg_ms: List[float]             # Average RTT in milliseconds corresponding to each RTT timestamp.
+
+    # Ping-level packet loss, based on ping summary lines with non-zero loss.
+    ping_packet_loss_timestamps: List[datetime]  # Timestamps of ping summaries reporting non-zero packet loss.
+
+    # Parent RLOC16 values obtained through the CLI "parent" command.
+    parent_rloc16_timestamps: List[datetime] # Timestamps when the parent RLOC16 was queried via CLI.
+    parent_rloc16_values: List[str]         # Normalized parent RLOC16 value at each query timestamp.
+
+    # RSSI measurements for received ping reply messages.
+    ping_rss_timestamps: List[datetime]      # Timestamps of RSS samples for ping reply messages.
+    ping_rss_dbm_values: List[float]         # RSS values in dBm at the corresponding timestamps.
+
+    # OpenThread role state of the node over time.
+    role_state_timestamps: List[datetime]    # Timestamps at which the node role is defined.
+    role_state_values: List[str]             # Node role at each timestamp (child/router/leader/detached/disabled).
+
+    # Effective parent RLOC16 over time, derived from role and parent information.
+    effective_parent_timestamps: List[datetime]       # Timestamps where an effective parent can be determined.
+    effective_parent_rloc16_values: List[str]         # Effective parent RLOC16 or "No Parent" at each timestamp.
+
+    # Node's own RLOC16 (logical address) over time.
+    node_rloc16_timestamps: List[datetime]   # Timestamps associated with the node's own RLOC16.
+    node_rloc16_values: List[str]            # Node RLOC16 value at each timestamp (normalized 4-digit hex).
+
+    # Aggregate ping counters over the entire log, used to compute overall PDR.
+    total_ping_tx_packets: int               # Total number of ping packets transmitted (from summary lines).
+    total_ping_rx_packets: int               # Total number of ping packets received (from summary lines).
 
 
 def compute_effective_parent(
@@ -177,23 +197,23 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
     Build a time series of "effective parent" with forward-filled state/parent.
     """
     parents_at_ts: Dict[datetime, List[str]] = defaultdict(list)
-    for ts, pid in zip(metrics.parent_timestamps, metrics.parent_ids):
+    for ts, pid in zip(metrics.parent_rloc16_timestamps, metrics.parent_rloc16_values):
         parents_at_ts[ts].append(pid)
 
     states_at_ts: Dict[datetime, List[str]] = defaultdict(list)
-    for ts, st in zip(metrics.state_timestamps, metrics.states):
+    for ts, st in zip(metrics.role_state_timestamps, metrics.role_state_values):
         states_at_ts[ts].append(st)
 
     all_ts_set = set()
-    all_ts_set.update(metrics.rtt_timestamps)
-    all_ts_set.update(metrics.loss_timestamps)
-    all_ts_set.update(metrics.parent_timestamps)
-    all_ts_set.update(metrics.state_timestamps)
-    all_ts_set.update(metrics.rss_timestamps)
+    all_ts_set.update(metrics.ping_rtt_timestamps)
+    all_ts_set.update(metrics.ping_packet_loss_timestamps)
+    all_ts_set.update(metrics.parent_rloc16_timestamps)
+    all_ts_set.update(metrics.role_state_timestamps)
+    all_ts_set.update(metrics.ping_rss_timestamps)
 
     if not all_ts_set:
-        metrics.eff_parent_timestamps = []
-        metrics.eff_parents = []
+        metrics.effective_parent_timestamps = []
+        metrics.effective_parent_rloc16_values = []
         return
 
     all_ts = sorted(all_ts_set)
@@ -217,8 +237,8 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
         eff_ts.append(ts)
         eff_parents.append(eff_parent)
 
-    metrics.eff_parent_timestamps = eff_ts
-    metrics.eff_parents = eff_parents
+    metrics.effective_parent_timestamps = eff_ts
+    metrics.effective_parent_rloc16_values = eff_parents
 
 
 def parse_log_file(log_path: str) -> LogMetrics:
@@ -236,21 +256,21 @@ def parse_log_file(log_path: str) -> LogMetrics:
     print(f"\n[PROCESS] Starting file: {log_path}")
 
     metrics = LogMetrics(
-        rtt_timestamps=[],
-        rtt_avgs_ms=[],
-        loss_timestamps=[],
-        parent_timestamps=[],
-        parent_ids=[],
-        rss_timestamps=[],
-        rss_values=[],
-        state_timestamps=[],
-        states=[],
-        eff_parent_timestamps=[],
-        eff_parents=[],
-        node_rloc_timestamps=[],
-        node_rloc_values=[],
-        total_tx=0,
-        total_rx=0,
+        ping_rtt_timestamps=[],
+        ping_rtt_avg_ms=[],
+        ping_packet_loss_timestamps=[],
+        parent_rloc16_timestamps=[],
+        parent_rloc16_values=[],
+        ping_rss_timestamps=[],
+        ping_rss_dbm_values=[],
+        role_state_timestamps=[],
+        role_state_values=[],
+        effective_parent_timestamps=[],
+        effective_parent_rloc16_values=[],
+        node_rloc16_timestamps=[],
+        node_rloc16_values=[],
+        total_ping_tx_packets=0,
+        total_ping_rx_packets=0,
     )
 
     # Track first and last timestamps seen in the entire log file.
@@ -275,7 +295,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
                     last_log_ts = ts_line
 
             # --- Packet loss / summary detection (any percentage). ---
-            m_loss = loss_re.search(line_stripped)
+            m_loss = ping_packet_loss_regex.search(line_stripped)
             if m_loss:
                 ts_loss_str = m_loss.group("ts")
                 ts_loss = parse_timestamp(ts_loss_str)
@@ -285,27 +305,27 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 loss_pct = float(m_loss.group("loss"))
 
                 # Accumulate totals for overall PDR.
-                metrics.total_tx += tx
-                metrics.total_rx += rx
+                metrics.total_ping_tx_packets += tx
+                metrics.total_ping_rx_packets += rx
 
                 # Keep timestamp for non-zero loss events.
                 if loss_pct > 0.0:
                     print(f"  [LOSS] Packet loss {loss_pct}% at {ts_loss_str}")
-                    metrics.loss_timestamps.append(ts_loss)
+                    metrics.ping_packet_loss_timestamps.append(ts_loss)
 
             # --- RTT detection (only lines with Round-trip stats). ---
-            m_rtt = rtt_re.search(line_stripped)
+            m_rtt = ping_rtt_regex.search(line_stripped)
             if m_rtt:
                 print(f"  [USE RTT] Line {line_no}: {line_stripped}")
                 ts_str = m_rtt.group("ts")
                 avg_str = m_rtt.group("avg")
                 ts = parse_timestamp(ts_str)
                 avg_ms = float(avg_str)
-                metrics.rtt_timestamps.append(ts)
-                metrics.rtt_avgs_ms.append(avg_ms)
+                metrics.ping_rtt_timestamps.append(ts)
+                metrics.ping_rtt_avg_ms.append(avg_ms)
 
             # --- Parent detection (RLOC16 from "Rloc:" lines). ---
-            m_parent = parent_re.search(line_stripped)
+            m_parent = cli_command_parent_rloc_regex.search(line_stripped)
             if m_parent:
                 ts_str = m_parent.group("ts")
                 raw_rloc16 = m_parent.group("rloc")
@@ -313,11 +333,11 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 ts = parse_timestamp(ts_str)
                 print(f"  [USE PARENT] Line {line_no}: {line_stripped}")
                 print(f"               -> Parent RLOC16: {rloc16}")
-                metrics.parent_timestamps.append(ts)
-                metrics.parent_ids.append(rloc16)
+                metrics.parent_rloc16_timestamps.append(ts)
+                metrics.parent_rloc16_values.append(rloc16)
 
             # --- State transition detection (Role X -> Y). ---
-            m_state = state_re.search(line_stripped)
+            m_state = role_transition_regex.search(line_stripped)
             if m_state:
                 ts_str = m_state.group("ts")
                 from_state_str = m_state.group("from_state")
@@ -333,15 +353,15 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 if not first_state_seen:
                     first_state_seen = True
                     init_ts = first_log_ts if first_log_ts is not None else ts
-                    metrics.state_timestamps.append(init_ts)
-                    metrics.states.append(from_norm)
+                    metrics.role_state_timestamps.append(init_ts)
+                    metrics.role_state_values.append(from_norm)
 
                 # Always record the destination state at its actual timestamp.
-                metrics.state_timestamps.append(ts)
-                metrics.states.append(state_norm)
+                metrics.role_state_timestamps.append(ts)
+                metrics.role_state_values.append(state_norm)
 
             # --- Node RLOC16 transitions (RLOC16 old -> new). ---
-            m_node_rloc = node_rloc_re.search(line_stripped)
+            m_node_rloc = node_transition_regex.search(line_stripped)
             if m_node_rloc:
                 ts_str = m_node_rloc.group("ts")
                 old_rloc = m_node_rloc.group("old")
@@ -357,15 +377,15 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 if not first_node_rloc_seen:
                     first_node_rloc_seen = True
                     init_ts_rloc = first_log_ts if first_log_ts is not None else ts
-                    metrics.node_rloc_timestamps.append(init_ts_rloc)
-                    metrics.node_rloc_values.append(old_norm)
+                    metrics.node_rloc16_timestamps.append(init_ts_rloc)
+                    metrics.node_rloc16_values.append(old_norm)
 
                 # Always record the new RLOC at its actual timestamp.
-                metrics.node_rloc_timestamps.append(ts)
-                metrics.node_rloc_values.append(new_norm)
+                metrics.node_rloc16_timestamps.append(ts)
+                metrics.node_rloc16_values.append(new_norm)
 
             # --- RSS detection for ping replies. ---
-            m_rss = rss_re.search(line_stripped)
+            m_rss = ping_rss_regex.search(line_stripped)
             if m_rss:
                 length = int(m_rss.group("len"))
                 if length == PING_REPLY_LEN:
@@ -374,26 +394,26 @@ def parse_log_file(log_path: str) -> LogMetrics:
                     ts = parse_timestamp(ts_str)
                     rss_val = float(rss_str)
                     print(f"  [PING RSS] len={length} -> {rss_val} dBm at {ts_str}")
-                    metrics.rss_timestamps.append(ts)
-                    metrics.rss_values.append(rss_val)
+                    metrics.ping_rss_timestamps.append(ts)
+                    metrics.ping_rss_dbm_values.append(rss_val)
 
     # --- Extend last role to the last known timestamp in the log. ---
-    if metrics.state_timestamps and last_log_ts is not None:
-        last_state_ts = metrics.state_timestamps[-1]
-        last_state = metrics.states[-1]
+    if metrics.role_state_timestamps and last_log_ts is not None:
+        last_state_ts = metrics.role_state_timestamps[-1]
+        last_state = metrics.role_state_values[-1]
         # Only add an extra point if the log actually continues beyond
         # the last transition timestamp.
         if last_log_ts > last_state_ts:
-            metrics.state_timestamps.append(last_log_ts)
-            metrics.states.append(last_state)
+            metrics.role_state_timestamps.append(last_log_ts)
+            metrics.role_state_values.append(last_state)
 
     # --- Extend last node RLOC16 to the last known timestamp in the log. ---
-    if metrics.node_rloc_timestamps and last_log_ts is not None:
-        last_node_ts = metrics.node_rloc_timestamps[-1]
-        last_node_val = metrics.node_rloc_values[-1]
+    if metrics.node_rloc16_timestamps and last_log_ts is not None:
+        last_node_ts = metrics.node_rloc16_timestamps[-1]
+        last_node_val = metrics.node_rloc16_values[-1]
         if last_log_ts > last_node_ts:
-            metrics.node_rloc_timestamps.append(last_log_ts)
-            metrics.node_rloc_values.append(last_node_val)
+            metrics.node_rloc16_timestamps.append(last_log_ts)
+            metrics.node_rloc16_values.append(last_node_val)
 
     build_parent_timeline(metrics)
     return metrics
@@ -536,9 +556,13 @@ def visualize_metrics(metrics: LogMetrics, title: str = "OpenThread log metrics"
         axes = [axes]
 
     # Overall PDR summary for the figure title.
-    if metrics.total_tx > 0:
-        pdr = 100.0 * metrics.total_rx / metrics.total_tx
-        sup_title = f"{title} – PDR: {metrics.total_rx}/{metrics.total_tx} ({pdr:.2f}%)"
+    if metrics.total_ping_tx_packets > 0:
+        pdr = 100.0 * metrics.total_ping_rx_packets / metrics.total_ping_tx_packets
+        sup_title = (
+            f"{title} – PDR: "
+            f"{metrics.total_ping_rx_packets}/{metrics.total_ping_tx_packets} "
+            f"({pdr:.2f}%)"
+        )
     else:
         sup_title = title
     fig.suptitle(sup_title, fontsize=14)
@@ -625,20 +649,20 @@ def main() -> None:
         rel_label = str(Path(log_path).relative_to(data_dir_path))
 
         print("\n[SUMMARY]")
-        print(f"  File:            {rel_label}")
-        print(f"  RTT samples:     {len(metrics.rtt_timestamps)}")
-        print(f"  RSS samples:     {len(metrics.rss_timestamps)}")
-        print(f"  State changes:   {len(metrics.state_timestamps)}")
-        print(f"  Parent changes:  {len(metrics.parent_timestamps)}")
-        print(f"  Eff parents:     {len(metrics.eff_parent_timestamps)}")
-        print(f"  Node RLOC changes: {len(metrics.node_rloc_timestamps)}")
-        print(f"  Loss events:     {len(metrics.loss_timestamps)}")
+        print(f"  File:                 {rel_label}")
+        print(f"  RTT samples:          {len(metrics.ping_rtt_timestamps)}")
+        print(f"  RSS samples:          {len(metrics.ping_rss_timestamps)}")
+        print(f"  Role state points:    {len(metrics.role_state_timestamps)}")
+        print(f"  Parent RLOC16 points: {len(metrics.parent_rloc16_timestamps)}")
+        print(f"  Effective parents:    {len(metrics.effective_parent_timestamps)}")
+        print(f"  Node RLOC points:     {len(metrics.node_rloc16_timestamps)}")
+        print(f"  Loss events:          {len(metrics.ping_packet_loss_timestamps)}")
 
-        if metrics.total_tx > 0:
-            pdr = 100.0 * metrics.total_rx / metrics.total_tx
-            print(f"  Total TX:        {metrics.total_tx}")
-            print(f"  Total RX:        {metrics.total_rx}")
-            print(f"  Overall PDR:     {pdr:.2f}%")
+        if metrics.total_ping_tx_packets > 0:
+            pdr = 100.0 * metrics.total_ping_rx_packets / metrics.total_ping_tx_packets
+            print(f"  Total TX:             {metrics.total_ping_tx_packets}")
+            print(f"  Total RX:             {metrics.total_ping_rx_packets}")
+            print(f"  Overall PDR:          {pdr:.2f}%")
         else:
             print("  No packet summary lines found (TX/RX totals unavailable).")
 
