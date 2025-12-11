@@ -41,6 +41,13 @@ __________
 
 Really nice results, just a small erorr in tx power of routers.
 
+there is a weird hiccup in the `uart_devttyacm0_404cca417de0_20251210_231543.log`at [2025-12-11T01:27:26.127]
+
+the correct line should have been:
+[2025-12-11T01:27:26.127] I(26749309) OPENTHREAD:[N] Mle-----------: Role detached -> child
+
+
+
 __________
 
 `uart_devttyacm0_404cca41786c_20251211_175927.log`
