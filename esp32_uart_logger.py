@@ -29,7 +29,7 @@ STARTUP_CMD_RETRY_DELAY = 0.1  # seconds between repeated sends of the startup s
 # Commands sent several times immediately after the serial port is opened.
 # If you set this to an empty list, no startup commands will be sent.
 STARTUP_COMMANDS = [
-    b"txpower -13\r\n",  # set TX power on OpenThread CLI
+    b"txpower -12\r\n",  # set TX power on OpenThread CLI
     b"ipaddr\r\n",       # request IP addresses to learn mesh-local prefix
     b"log level 3\r\n"
 ]
