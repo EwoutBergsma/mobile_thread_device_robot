@@ -46,6 +46,19 @@ ping_packet_loss_regex = re.compile(
     re.VERBOSE,
 )
 
+# Regex for MAC frame tx failures due to NoAck.
+# Example: [2025-12-10T23:29:08.209] I(...) OPENTHREAD:[I] Mac-----------: Frame tx attempt 1/16 failed, error:NoAck, ...
+# Requires log level 4 or higher.
+mac_frame_tx_noack_failed_regex = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]\s+                 # timestamp in brackets
+    .*?Mac-----------:\s+                 # Mac-----------:
+    Frame\s+tx\s+attempt\s+\d+/\d+\s+     # Frame tx attempt 1/16
+    failed,\s+error:\s*NoAck\b            # failed, error:NoAck
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
 # Regex for rss (dBm) of pings.
 # Example: [2025-12-10T23:30:32.356] I(19735589) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:8e94, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-101.0
 # Requires periodic pinging from the logged device.
@@ -173,6 +186,10 @@ class LogMetrics:
     # Ping-level packet loss, based directly on ping summary lines.
     ping_packet_loss_timestamps: List[datetime]  # From ping summary lines that report non-zero packet loss.
 
+    # MAC frame tx failures due to NoAck.
+    # Requires log level 4 or higher.
+    mac_frame_tx_noack_failed_timestamps: List[datetime]  # From "Frame tx attempt ... failed, error:NoAck" lines.
+
     # RSSI measurements for received ping reply messages.
     ping_rss_timestamps: List[datetime]      # From ping RSS log lines for ICMPv6 replies.
     ping_rss_dbm_values: List[float]         # RSS values in dBm at the corresponding timestamps.
@@ -269,6 +286,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
         ping_rtt_timestamps=[],
         ping_rtt_avg_ms=[],
         ping_packet_loss_timestamps=[],
+        mac_frame_tx_noack_failed_timestamps=[],
         ping_rss_timestamps=[],
         ping_rss_dbm_values=[],
         role_from_transition_timestamps=[],
@@ -322,6 +340,14 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 if loss_pct > 0.0:
                     print(f"  [LOSS] Packet loss {loss_pct}% at {ts_loss_str}")
                     metrics.ping_packet_loss_timestamps.append(ts_loss)
+
+            # --- MAC NoAck tx failures. ---
+            m_noack = mac_frame_tx_noack_failed_regex.search(line_stripped)
+            if m_noack:
+                ts_str = m_noack.group("ts")
+                ts = parse_timestamp(ts_str)
+                print(f"  [NOACK] Frame tx failed (NoAck) at {ts_str}")
+                metrics.mac_frame_tx_noack_failed_timestamps.append(ts)
 
             # --- RTT detection (only lines with Round-trip stats). ---
             m_rtt = ping_rtt_regex.search(line_stripped)
@@ -666,6 +692,7 @@ def main() -> None:
         print(f"  Node RLOC16 points:          {len(metrics.rloc16_from_transition_timestamps)}")
         print(f"  Parent RLOC16 queries:       {len(metrics.parent_rloc16_from_query_timestamps)}")
         print(f"  Parent router points:        {len(metrics.parent_router_from_rloc16_transition_timestamps)}")
+        print(f"  MAC NoAck tx failures:       {len(metrics.mac_frame_tx_noack_failed_timestamps)}")
         print(f"  Loss events:                 {len(metrics.ping_packet_loss_timestamps)}")
 
         if metrics.total_ping_tx_packets > 0:
