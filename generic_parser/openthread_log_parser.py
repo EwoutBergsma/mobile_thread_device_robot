@@ -136,31 +136,31 @@ class LogMetrics:
     # Ping-level packet loss, based directly on ping summary lines.
     ping_packet_loss_timestamps: List[datetime]  # From ping summary lines that report non-zero packet loss.
 
-    # Parent RLOC16 values obtained through the CLI "parent" command (no "->" transitions).
-    parent_rloc16_timestamps: List[datetime] # From "Rloc: XXXX" CLI responses.
-    parent_rloc16_values: List[str]         # Normalized parent RLOC16 value at each query timestamp.
-
     # RSSI measurements for received ping reply messages.
     ping_rss_timestamps: List[datetime]      # From ping RSS log lines for ICMPv6 replies.
     ping_rss_dbm_values: List[float]         # RSS values in dBm at the corresponding timestamps.
 
-    # OpenThread role state of the node over time.
+    # OpenThread role of the node over time.
     # These are derived from "Role <from> -> <to>" transition lines (explicit "->" transitions),
     # plus synthetic initial/final points added at the first/last log timestamps.
-    role_state_timestamps: List[datetime]
-    role_state_values: List[str]
+    role_from_transition_timestamps: List[datetime]
+    role_from_transition_values: List[str]
+
+    # Node's own RLOC16 (logical address) over time.
+    # These are derived from "RLOC16 <old> -> <new>" transition lines (explicit "->" transitions),
+    # plus synthetic initial/final points added at the first/last log timestamps.
+    rloc16_from_transition_timestamps: List[datetime]
+    rloc16_from_transition_values: List[str]
+
+    # Parent RLOC16 values obtained through the CLI "parent" command (no "->" transitions).
+    parent_rloc16_from_query_timestamps: List[datetime] # From "Rloc: XXXX" CLI responses.
+    parent_rloc16_from_query_values: List[str]         # Normalized parent RLOC16 value at each query timestamp.
 
     # Effective parent RLOC16 over time.
     # This is computed (not read directly from a single log line) based on role_state_* and parent_rloc16_*,
     # i.e., it is indirectly influenced by the "Role ... -> ..." transitions.
     effective_parent_timestamps: List[datetime]
     effective_parent_rloc16_values: List[str]
-
-    # Node's own RLOC16 (logical address) over time.
-    # These are derived from "RLOC16 <old> -> <new>" transition lines (explicit "->" transitions),
-    # plus synthetic initial/final points added at the first/last log timestamps.
-    node_rloc16_timestamps: List[datetime]
-    node_rloc16_values: List[str]
 
     # Aggregate ping counters over the entire log, used to compute overall PDR.
     total_ping_tx_packets: int               # From ping summary lines (packets transmitted).
@@ -203,18 +203,18 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
     Build a time series of "effective parent" with forward-filled state/parent.
     """
     parents_at_ts: Dict[datetime, List[str]] = defaultdict(list)
-    for ts, pid in zip(metrics.parent_rloc16_timestamps, metrics.parent_rloc16_values):
+    for ts, pid in zip(metrics.parent_rloc16_from_query_timestamps, metrics.parent_rloc16_from_query_values):
         parents_at_ts[ts].append(pid)
 
     states_at_ts: Dict[datetime, List[str]] = defaultdict(list)
-    for ts, st in zip(metrics.role_state_timestamps, metrics.role_state_values):
+    for ts, st in zip(metrics.role_from_transition_timestamps, metrics.role_from_transition_values):
         states_at_ts[ts].append(st)
 
     all_ts_set = set()
     all_ts_set.update(metrics.ping_rtt_timestamps)
     all_ts_set.update(metrics.ping_packet_loss_timestamps)
-    all_ts_set.update(metrics.parent_rloc16_timestamps)
-    all_ts_set.update(metrics.role_state_timestamps)
+    all_ts_set.update(metrics.parent_rloc16_from_query_timestamps)
+    all_ts_set.update(metrics.role_from_transition_timestamps)
     all_ts_set.update(metrics.ping_rss_timestamps)
 
     if not all_ts_set:
@@ -265,16 +265,16 @@ def parse_log_file(log_path: str) -> LogMetrics:
         ping_rtt_timestamps=[],
         ping_rtt_avg_ms=[],
         ping_packet_loss_timestamps=[],
-        parent_rloc16_timestamps=[],
-        parent_rloc16_values=[],
+        parent_rloc16_from_query_timestamps=[],
+        parent_rloc16_from_query_values=[],
         ping_rss_timestamps=[],
         ping_rss_dbm_values=[],
-        role_state_timestamps=[],
-        role_state_values=[],
+        role_from_transition_timestamps=[],
+        role_from_transition_values=[],
         effective_parent_timestamps=[],
         effective_parent_rloc16_values=[],
-        node_rloc16_timestamps=[],
-        node_rloc16_values=[],
+        rloc16_from_transition_timestamps=[],
+        rloc16_from_transition_values=[],
         total_ping_tx_packets=0,
         total_ping_rx_packets=0,
     )
@@ -339,8 +339,8 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 ts = parse_timestamp(ts_str)
                 print(f"  [USE PARENT] Line {line_no}: {line_stripped}")
                 print(f"               -> Parent RLOC16: {rloc16}")
-                metrics.parent_rloc16_timestamps.append(ts)
-                metrics.parent_rloc16_values.append(rloc16)
+                metrics.parent_rloc16_from_query_timestamps.append(ts)
+                metrics.parent_rloc16_from_query_values.append(rloc16)
 
             # --- State transition detection (Role X -> Y). ---
             m_state = role_transition_regex.search(line_stripped)
@@ -359,12 +359,12 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 if not first_state_seen:
                     first_state_seen = True
                     init_ts = first_log_ts if first_log_ts is not None else ts
-                    metrics.role_state_timestamps.append(init_ts)
-                    metrics.role_state_values.append(from_norm)
+                    metrics.role_from_transition_timestamps.append(init_ts)
+                    metrics.role_from_transition_values.append(from_norm)
 
                 # Always record the destination state at its actual timestamp.
-                metrics.role_state_timestamps.append(ts)
-                metrics.role_state_values.append(state_norm)
+                metrics.role_from_transition_timestamps.append(ts)
+                metrics.role_from_transition_values.append(state_norm)
 
             # --- Node RLOC16 transitions (RLOC16 old -> new). ---
             m_node_rloc = node_transition_regex.search(line_stripped)
@@ -383,12 +383,12 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 if not first_node_rloc_seen:
                     first_node_rloc_seen = True
                     init_ts_rloc = first_log_ts if first_log_ts is not None else ts
-                    metrics.node_rloc16_timestamps.append(init_ts_rloc)
-                    metrics.node_rloc16_values.append(old_norm)
+                    metrics.rloc16_from_transition_timestamps.append(init_ts_rloc)
+                    metrics.rloc16_from_transition_values.append(old_norm)
 
                 # Always record the new RLOC at its actual timestamp.
-                metrics.node_rloc16_timestamps.append(ts)
-                metrics.node_rloc16_values.append(new_norm)
+                metrics.rloc16_from_transition_timestamps.append(ts)
+                metrics.rloc16_from_transition_values.append(new_norm)
 
             # --- RSS detection for ping replies. ---
             m_rss = ping_rss_regex.search(line_stripped)
@@ -404,22 +404,22 @@ def parse_log_file(log_path: str) -> LogMetrics:
                     metrics.ping_rss_dbm_values.append(rss_val)
 
     # --- Extend last role to the last known timestamp in the log. ---
-    if metrics.role_state_timestamps and last_log_ts is not None:
-        last_state_ts = metrics.role_state_timestamps[-1]
-        last_state = metrics.role_state_values[-1]
+    if metrics.role_from_transition_timestamps and last_log_ts is not None:
+        last_state_ts = metrics.role_from_transition_timestamps[-1]
+        last_state = metrics.role_from_transition_values[-1]
         # Only add an extra point if the log actually continues beyond
         # the last transition timestamp.
         if last_log_ts > last_state_ts:
-            metrics.role_state_timestamps.append(last_log_ts)
-            metrics.role_state_values.append(last_state)
+            metrics.role_from_transition_timestamps.append(last_log_ts)
+            metrics.role_from_transition_values.append(last_state)
 
     # --- Extend last node RLOC16 to the last known timestamp in the log. ---
-    if metrics.node_rloc16_timestamps and last_log_ts is not None:
-        last_node_ts = metrics.node_rloc16_timestamps[-1]
-        last_node_val = metrics.node_rloc16_values[-1]
+    if metrics.rloc16_from_transition_timestamps and last_log_ts is not None:
+        last_node_ts = metrics.rloc16_from_transition_timestamps[-1]
+        last_node_val = metrics.rloc16_from_transition_values[-1]
         if last_log_ts > last_node_ts:
-            metrics.node_rloc16_timestamps.append(last_log_ts)
-            metrics.node_rloc16_values.append(last_node_val)
+            metrics.rloc16_from_transition_timestamps.append(last_log_ts)
+            metrics.rloc16_from_transition_values.append(last_node_val)
 
     build_parent_timeline(metrics)
     return metrics
@@ -658,10 +658,10 @@ def main() -> None:
         print(f"  File:                 {rel_label}")
         print(f"  RTT samples:          {len(metrics.ping_rtt_timestamps)}")
         print(f"  RSS samples:          {len(metrics.ping_rss_timestamps)}")
-        print(f"  Role state points:    {len(metrics.role_state_timestamps)}")
-        print(f"  Parent RLOC16 points: {len(metrics.parent_rloc16_timestamps)}")
+        print(f"  Role state points:    {len(metrics.role_from_transition_timestamps)}")
+        print(f"  Parent RLOC16 points: {len(metrics.parent_rloc16_from_query_timestamps)}")
         print(f"  Effective parents:    {len(metrics.effective_parent_timestamps)}")
-        print(f"  Node RLOC points:     {len(metrics.node_rloc16_timestamps)}")
+        print(f"  Node RLOC points:     {len(metrics.rloc16_from_transition_timestamps)}")
         print(f"  Loss events:          {len(metrics.ping_packet_loss_timestamps)}")
 
         if metrics.total_ping_tx_packets > 0:
