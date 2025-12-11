@@ -130,35 +130,41 @@ def normalize_rloc16(rloc: str) -> str:
 @dataclass
 class LogMetrics:
     # Ping RTT (round-trip time) statistics from ping summary lines.
-    ping_rtt_timestamps: List[datetime]      # Timestamps where ping RTT summaries were logged.
-    ping_rtt_avg_ms: List[float]             # Average RTT in milliseconds corresponding to each RTT timestamp.
+    ping_rtt_timestamps: List[datetime]      # From ping summary lines with RTT stats.
+    ping_rtt_avg_ms: List[float]             # Average RTT in milliseconds at each RTT timestamp.
 
-    # Ping-level packet loss, based on ping summary lines with non-zero loss.
-    ping_packet_loss_timestamps: List[datetime]  # Timestamps of ping summaries reporting non-zero packet loss.
+    # Ping-level packet loss, based directly on ping summary lines.
+    ping_packet_loss_timestamps: List[datetime]  # From ping summary lines that report non-zero packet loss.
 
-    # Parent RLOC16 values obtained through the CLI "parent" command.
-    parent_rloc16_timestamps: List[datetime] # Timestamps when the parent RLOC16 was queried via CLI.
+    # Parent RLOC16 values obtained through the CLI "parent" command (no "->" transitions).
+    parent_rloc16_timestamps: List[datetime] # From "Rloc: XXXX" CLI responses.
     parent_rloc16_values: List[str]         # Normalized parent RLOC16 value at each query timestamp.
 
     # RSSI measurements for received ping reply messages.
-    ping_rss_timestamps: List[datetime]      # Timestamps of RSS samples for ping reply messages.
+    ping_rss_timestamps: List[datetime]      # From ping RSS log lines for ICMPv6 replies.
     ping_rss_dbm_values: List[float]         # RSS values in dBm at the corresponding timestamps.
 
     # OpenThread role state of the node over time.
-    role_state_timestamps: List[datetime]    # Timestamps at which the node role is defined.
-    role_state_values: List[str]             # Node role at each timestamp (child/router/leader/detached/disabled).
+    # These are derived from "Role <from> -> <to>" transition lines (explicit "->" transitions),
+    # plus synthetic initial/final points added at the first/last log timestamps.
+    role_state_timestamps: List[datetime]
+    role_state_values: List[str]
 
-    # Effective parent RLOC16 over time, derived from role and parent information.
-    effective_parent_timestamps: List[datetime]       # Timestamps where an effective parent can be determined.
-    effective_parent_rloc16_values: List[str]         # Effective parent RLOC16 or "No Parent" at each timestamp.
+    # Effective parent RLOC16 over time.
+    # This is computed (not read directly from a single log line) based on role_state_* and parent_rloc16_*,
+    # i.e., it is indirectly influenced by the "Role ... -> ..." transitions.
+    effective_parent_timestamps: List[datetime]
+    effective_parent_rloc16_values: List[str]
 
     # Node's own RLOC16 (logical address) over time.
-    node_rloc16_timestamps: List[datetime]   # Timestamps associated with the node's own RLOC16.
-    node_rloc16_values: List[str]            # Node RLOC16 value at each timestamp (normalized 4-digit hex).
+    # These are derived from "RLOC16 <old> -> <new>" transition lines (explicit "->" transitions),
+    # plus synthetic initial/final points added at the first/last log timestamps.
+    node_rloc16_timestamps: List[datetime]
+    node_rloc16_values: List[str]
 
     # Aggregate ping counters over the entire log, used to compute overall PDR.
-    total_ping_tx_packets: int               # Total number of ping packets transmitted (from summary lines).
-    total_ping_rx_packets: int               # Total number of ping packets received (from summary lines).
+    total_ping_tx_packets: int               # From ping summary lines (packets transmitted).
+    total_ping_rx_packets: int               # From ping summary lines (packets received).
 
 
 def compute_effective_parent(
