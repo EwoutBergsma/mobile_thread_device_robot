@@ -224,6 +224,14 @@ def build_parent_timeline(metrics: LogMetrics) -> None:
 def parse_log_file(log_path: str) -> LogMetrics:
     """
     Read a log file and extract metrics.
+
+    Additionally:
+      - Record the initial role (from_state of the first "Role X -> Y" line)
+        at the first timestamp seen in the log.
+      - Extend the last role to the last timestamp seen in the log.
+      - Record the initial node RLOC16 (old value of the first "RLOC16 A -> B"
+        line) at the first timestamp seen in the log.
+      - Extend the last node RLOC16 to the last timestamp seen in the log.
     """
     print(f"\n[PROCESS] Starting file: {log_path}")
 
@@ -245,9 +253,26 @@ def parse_log_file(log_path: str) -> LogMetrics:
         total_rx=0,
     )
 
+    # Track first and last timestamps seen in the entire log file.
+    first_log_ts: Optional[datetime] = None
+    last_log_ts: Optional[datetime] = None
+
+    # Flags to handle "initial" injection for state and node RLOC.
+    first_state_seen = False
+    first_node_rloc_seen = False
+
     with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
         for line_no, line in enumerate(f, start=1):
             line_stripped = line.rstrip("\n")
+
+            # --- Global timestamp tracking (first/last in the whole log). ---
+            m_ts_generic = re.match(r"\[(?P<ts>[^\]]+)\]", line_stripped)
+            if m_ts_generic:
+                ts_line = parse_timestamp(m_ts_generic.group("ts"))
+                if first_log_ts is None or ts_line < first_log_ts:
+                    first_log_ts = ts_line
+                if last_log_ts is None or ts_line > last_log_ts:
+                    last_log_ts = ts_line
 
             # --- Packet loss / summary detection (any percentage). ---
             m_loss = loss_re.search(line_stripped)
@@ -301,6 +326,17 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 state_norm = state_str.strip().lower()
                 from_norm = from_state_str.strip().lower()
                 print(f"  [STATE] {from_norm} -> {state_norm} at {ts_str}")
+
+                # For the first state transition, also record the "from" state at
+                # the first timestamp in the log so that the initial role
+                # (e.g. 'detached') appears in the plots.
+                if not first_state_seen:
+                    first_state_seen = True
+                    init_ts = first_log_ts if first_log_ts is not None else ts
+                    metrics.state_timestamps.append(init_ts)
+                    metrics.states.append(from_norm)
+
+                # Always record the destination state at its actual timestamp.
                 metrics.state_timestamps.append(ts)
                 metrics.states.append(state_norm)
 
@@ -314,6 +350,17 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 new_norm = normalize_rloc16(new_rloc)
                 old_norm = normalize_rloc16(old_rloc)
                 print(f"  [NODE RLOC] {old_norm} -> {new_norm} at {ts_str}")
+
+                # For the first node RLOC transition, also record the "old"
+                # RLOC16 at the first timestamp in the log so the initial
+                # RLOC16 (e.g. 403a) appears in the plots.
+                if not first_node_rloc_seen:
+                    first_node_rloc_seen = True
+                    init_ts_rloc = first_log_ts if first_log_ts is not None else ts
+                    metrics.node_rloc_timestamps.append(init_ts_rloc)
+                    metrics.node_rloc_values.append(old_norm)
+
+                # Always record the new RLOC at its actual timestamp.
                 metrics.node_rloc_timestamps.append(ts)
                 metrics.node_rloc_values.append(new_norm)
 
@@ -329,6 +376,24 @@ def parse_log_file(log_path: str) -> LogMetrics:
                     print(f"  [PING RSS] len={length} -> {rss_val} dBm at {ts_str}")
                     metrics.rss_timestamps.append(ts)
                     metrics.rss_values.append(rss_val)
+
+    # --- Extend last role to the last known timestamp in the log. ---
+    if metrics.state_timestamps and last_log_ts is not None:
+        last_state_ts = metrics.state_timestamps[-1]
+        last_state = metrics.states[-1]
+        # Only add an extra point if the log actually continues beyond
+        # the last transition timestamp.
+        if last_log_ts > last_state_ts:
+            metrics.state_timestamps.append(last_log_ts)
+            metrics.states.append(last_state)
+
+    # --- Extend last node RLOC16 to the last known timestamp in the log. ---
+    if metrics.node_rloc_timestamps and last_log_ts is not None:
+        last_node_ts = metrics.node_rloc_timestamps[-1]
+        last_node_val = metrics.node_rloc_values[-1]
+        if last_log_ts > last_node_ts:
+            metrics.node_rloc_timestamps.append(last_log_ts)
+            metrics.node_rloc_values.append(last_node_val)
 
     build_parent_timeline(metrics)
     return metrics
