@@ -1,13 +1,13 @@
 # Target labels
  bootloader
 # Source files and their labels
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/CMakeFiles/bootloader
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/CMakeFiles/bootloader.rule
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/CMakeFiles/bootloader-complete.rule
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
-C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/CMakeFiles/bootloader
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/CMakeFiles/bootloader.rule
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/CMakeFiles/bootloader-complete.rule
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

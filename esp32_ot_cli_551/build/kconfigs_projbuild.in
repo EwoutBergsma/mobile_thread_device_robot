@@ -3,5 +3,5 @@ source "C:/Users/beeo/esp/v5.5.1/esp-idf/components/esp_app_format/Kconfig.projb
 source "C:/Users/beeo/esp/v5.5.1/esp-idf/components/esp_rom/Kconfig.projbuild"
 source "C:/Users/beeo/esp/v5.5.1/esp-idf/components/esptool_py/Kconfig.projbuild"
 source "C:/Users/beeo/esp/v5.5.1/esp-idf/components/partition_table/Kconfig.projbuild"
-source "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/main/Kconfig.projbuild"
+source "C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/main/Kconfig.projbuild"
 source "C:/Users/beeo/esp/v5.5.1/esp-idf/examples/openthread/ot_common_components/ot_led/Kconfig.projbuild"

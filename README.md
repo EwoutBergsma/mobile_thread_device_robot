@@ -3,7 +3,7 @@
 
 ```cmd
 
-    ssh fieldlab@10.149.24.26
+ssh fieldlab@10.149.24.26
 
 
 // to start the experiment:

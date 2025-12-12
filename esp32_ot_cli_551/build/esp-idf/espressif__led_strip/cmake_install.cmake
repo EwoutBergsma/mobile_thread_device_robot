@@ -1,4 +1,4 @@
-# Install script for directory: C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/managed_components/espressif__led_strip
+# Install script for directory: C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/managed_components/espressif__led_strip
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

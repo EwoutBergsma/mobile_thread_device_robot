@@ -53,7 +53,7 @@ __________
 `uart_devttyacm0_404cca41786c_20251211_175927.log`
 `uart_devttyacm1_404cca417de0_20251211_175927.log`
 
-New router placement of routers, but a router died, which caused one of them to go full txpower. Also, wrong log level :(.
+New router placement of routers, but a router died, which caused one of them to go full txpower. Also, wrong log level :(. fk ferwerda
 
 __________
 

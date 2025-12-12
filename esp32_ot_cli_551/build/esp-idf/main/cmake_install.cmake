@@ -1,4 +1,4 @@
-# Install script for directory: C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551_redo/main
+# Install script for directory: C:/Repositories/mobile_thread_device_robot/esp32_ot_cli_551/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

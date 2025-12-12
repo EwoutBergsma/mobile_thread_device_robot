@@ -19,76 +19,65 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / "data"
 
 # Regex for round trip time of pings.
-# Example: [2025-12-11T00:56:16.332] 1 packets transmitted, 1 packets received. Packet loss = 0.0%. Round-trip min/avg/max = 55/55.000/55 ms.
 ping_rtt_regex = re.compile(
     r"""
-    \[(?P<ts>[^\]]+)\]               # [2025-12-04T17:54:36.720]
-    .*?Round-trip\ min/avg/max\ =\   # Round-trip min/avg/max =
-    (?P<min>\d+(?:\.\d+)?)/          # min
-    (?P<avg>\d+(?:\.\d+)?)/          # avg
-    (?P<max>\d+(?:\.\d+)?)\ ms\.?    # max ms.
+    \[(?P<ts>[^\]]+)\]
+    .*?Round-trip\ min/avg/max\ =\
+    (?P<min>\d+(?:\.\d+)?)/ 
+    (?P<avg>\d+(?:\.\d+)?)/ 
+    (?P<max>\d+(?:\.\d+)?)\ ms\.?
     """,
     re.VERBOSE,
 )
 
-# Regex for packet summary lines with packet loss (0.0%, 10.0%, 100.0%, etc.).
-# Example: [2025-12-11T00:56:16.239] 1 packets transmitted, 0 packets received. Packet loss = 100.0%.
-# Requires periodic pinging from the logged device.
+# Regex for packet summary lines with packet loss.
 ping_packet_loss_regex = re.compile(
     r"""
-    \[(?P<ts>[^\]]+)\]\s+                  # timestamp in brackets
+    \[(?P<ts>[^\]]+)\]\s+
     (?P<tx>\d+)\s+packets\s+transmitted,\s+
     (?P<rx>\d+)\s+packets\s+received\.\s+
     Packet\ loss\s*=\s*
-    (?P<loss>\d+(?:\.\d+)?)%              # e.g. 0.0, 10.0, 100.0
+    (?P<loss>\d+(?:\.\d+)?)%
     """,
     re.VERBOSE,
 )
 
 # Regex for MAC frame tx failures due to NoAck.
-# Example: [2025-12-10T23:29:08.209] I(19651449) OPENTHREAD:[I] Mac-----------: Frame tx attempt 1/16 failed, error:NoAck, len:40, seqnum:144, type:Data, src:0x70eb, dst:0x7000, sec:yes, ackreq:yes
-# Requires log level 4 or higher.
 mac_frame_tx_noack_failed_regex = re.compile(
     r"""
-    \[(?P<ts>[^\]]+)\]\s+                 # timestamp in brackets
-    .*?Mac-----------:\s+                 # Mac-----------:
-    Frame\s+tx\s+attempt\s+\d+/\d+\s+     # Frame tx attempt 1/16
-    failed,\s+error:\s*NoAck\b            # failed, error:NoAck
+    \[(?P<ts>[^\]]+)\]\s+
+    .*?Mac-----------:\s+
+    Frame\s+tx\s+attempt\s+\d+/\d+\s+
+    failed,\s+error:\s*NoAck\b
     """,
     re.IGNORECASE | re.VERBOSE,
 )
 
 # Regex for rss (dBm) of pings.
-# Example: [2025-12-10T23:30:32.356] I(19735589) OPENTHREAD:[I] MeshForwarder-: Received IPv6 ICMP6 msg, len:56, chksum:8e94, ecn:no, from:0x7000, sec:yes, prio:normal, rss:-101.0
-# Requires periodic pinging from the logged device.
-# Requires log level 4 or higher.
 ping_rss_regex = re.compile(
     r"""
-    ^\[(?P<ts>[^\]]+)\]\s+                      # timestamp at start of line
+    ^\[(?P<ts>[^\]]+)\]\s+
     .*?MeshForwarder-:\s+Received\ IPv6\s+\S+\s+msg,\s+
-    len:(?P<len>\d+),.*?                        # capture len:NN
-    rss:(?P<rss>-?\d+(?:\.\d+)?)                # capture rss:-90.0
+    len:(?P<len>\d+),.*?
+    rss:(?P<rss>-?\d+(?:\.\d+)?)
     """,
     re.VERBOSE,
 )
 
 # Example line: [2025-12-11T00:55:55.384] Rloc: 4000
-# Requires periodic "parent" command send to the cli of the child, when capturing logs.
 cli_command_parent_rloc_regex = re.compile(
     r"""
-    \[(?P<ts>[^\]]+)\]      # timestamp in brackets
+    \[(?P<ts>[^\]]+)\]
     .*?Rloc:\s*
-    (?P<rloc>[0-9A-Fa-f]+)  # hex-only RLOC16 value
+    (?P<rloc>[0-9A-Fa-f]+)
     """,
     re.VERBOSE,
 )
 
-# Regex for OT state transition lines, e.g.:
-# Example: [2025-12-11T01:27:24.816] I(26748009) OPENTHREAD:[N] Mle-----------: Role child -> detached
-# Requires log level 4 or higher.
+# Regex for OT state transition lines.
 role_transition_regex = re.compile(
     r"""
-    \[(?P<ts>[^\]]+)\]                  # timestamp
+    \[(?P<ts>[^\]]+)\]
     .*?Role\s+
     (?P<from_state>disabled|detached|child|router|leader)
     \s*->\s*
@@ -97,28 +86,86 @@ role_transition_regex = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
-# Regex for node's own RLOC16 transitions, e.g.:
-# Example: [2025-12-10T23:30:42.771] I(19745999) OPENTHREAD:[N] Mle-----------: RLOC16 70eb -> fffe
-# Requires log level 4 or higher.
+# Regex for node's own RLOC16 transitions.
 node_transition_regex = re.compile(
     r"""
-    \[(?P<ts>[^\]]+)\]               # timestamp in brackets
+    \[(?P<ts>[^\]]+)\]
     .*?RLOC16\s+
-    (?P<old>[0-9A-Fa-f]+)            # old RLOC16
+    (?P<old>[0-9A-Fa-f]+)
     \s*->\s*
-    (?P<new>[0-9A-Fa-f]+)            # new RLOC16
+    (?P<new>[0-9A-Fa-f]+)
     """,
     re.IGNORECASE | re.VERBOSE,
 )
 
-# Regex for PeriodicParentSearch backoff interval passed log line, e.g.:
-# [2025-12-11T00:00:00.000] OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Backoff interval passed
+# PPS: Backoff interval passed.
 pps_backoff_interval_passed_regex = re.compile(
     r"""
-    \[(?P<ts>[^\]]+)\]\s+                     # timestamp in brackets
-    .*?Mle-----------:\s+                     # Mle-----------:
-    PeriodicParentSearch:\s+                  # PeriodicParentSearch:
-    Backoff\s+interval\s+passed\b             # Backoff interval passed
+    \[(?P<ts>[^\]]+)\]\s+
+    .*?Mle-----------:\s+
+    PeriodicParentSearch:\s+
+    Backoff\s+interval\s+passed\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+# PPS: Parent RSS value.
+pps_parent_rss_regex = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]\s+
+    .*?Mle-----------:\s+
+    PeriodicParentSearch:\s+
+    Parent\s+RSS\s+
+    (?P<rss>-?\d+(?:\.\d+)?)\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+# PPS: RSS threshold met -> searching new parents.
+pps_rss_new_parent_search_threshold_met_regex = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]\s+
+    .*?Mle-----------:\s+
+    PeriodicParentSearch:\s+
+    Parent\s+RSS\s+less\s+than\s+
+    (?P<thresh>-?\d+(?:\.\d+)?)\s*,\s*
+    searching\s+for\s+new\s+parents\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+# PPS: (Re)starting timer for backoff interval.
+pps_restart_timer_for_backoff_interval_regex = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]\s+
+    .*?Mle-----------:\s+
+    PeriodicParentSearch:\s+
+    \(Re\)starting\s+timer\s+for\s+backoff\s+interval\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+# Mle: Send Child ID Request (timestamp-only).
+send_child_id_request_regex = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]\s+
+    .*?Mle-----------:\s+
+    Send\s+Child\s+ID\s+Request\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+# Mle: Receive Child ID Response (timestamp + rloc16), e.g.:
+# [2025-12-09T11:28:20.891] ... Mle-----------: Receive Child ID Response (...,0x0c00)
+receive_child_id_response_regex = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]\s+
+    .*?Mle-----------:\s+
+    Receive\s+Child\s+ID\s+Response\s*
+    \(
+        [^,]+,\s*                     # address part up to comma
+        (?P<rloc>0x[0-9A-Fa-f]+)       # capture 0x0c00
+    \)
     """,
     re.IGNORECASE | re.VERBOSE,
 )
@@ -135,11 +182,6 @@ def parse_timestamp(ts_str: str) -> datetime:
 def normalize_rloc16(rloc: str) -> str:
     """
     Normalize an RLOC16 string to a 4-digit lowercase hex representation.
-
-    Examples:
-        "c00"  -> "0c00"
-        "0C00" -> "0c00"
-        "0000" -> "0000"
     """
     r = rloc.strip().lower()
     if r.startswith("0x"):
@@ -147,14 +189,10 @@ def normalize_rloc16(rloc: str) -> str:
     try:
         value = int(r, 16)
     except ValueError:
-        # If not valid hex, just return the stripped original.
         return rloc.strip()
     return f"{value:04x}"
 
 
-# RLOC16 interpretation:
-# - 0xfffe indicates no/invalid RLOC16 (treat as "No Parent")
-# - Parent router RLOC16 can be derived by clearing the Child ID bits (low 10 bits).
 INVALID_RLOC16 = 0xFFFE
 PARENT_ROUTER_MASK = 0xFC00
 
@@ -170,11 +208,6 @@ def _rloc16_to_int(rloc: str) -> Optional[int]:
 
 
 def derive_parent_router_from_rloc16(node_rloc16: Optional[str]) -> Optional[str]:
-    """
-    Derive the parent router's RLOC16 from the node's RLOC16.
-
-    If node RLOC16 is fffe, this indicates no parent.
-    """
     if node_rloc16 is None:
         return None
 
@@ -191,53 +224,48 @@ def derive_parent_router_from_rloc16(node_rloc16: Optional[str]) -> Optional[str
 
 @dataclass
 class LogMetrics:
-    # Ping RTT (round-trip time) statistics from ping summary lines.
-    ping_rtt_timestamps: List[datetime]      # From ping summary lines with RTT stats.
-    ping_rtt_avg_ms: List[float]             # Average RTT in milliseconds at each RTT timestamp.
+    ping_rtt_timestamps: List[datetime]
+    ping_rtt_avg_ms: List[float]
 
-    # Ping-level packet loss, based directly on ping summary lines.
-    ping_packet_loss_timestamps: List[datetime]  # From ping summary lines that report non-zero packet loss.
+    ping_packet_loss_timestamps: List[datetime]
 
-    # MAC frame tx failures due to NoAck.
-    # Requires log level 4 or higher.
-    mac_frame_tx_noack_failed_timestamps: List[datetime]  # From "Frame tx attempt ... failed, error:NoAck" lines.
+    mac_frame_tx_noack_failed_timestamps: List[datetime]
 
-    # RSSI measurements for received ping reply messages.
-    ping_rss_timestamps: List[datetime]      # From ping RSS log lines for ICMPv6 replies.
-    ping_rss_dbm_values: List[float]         # RSS values in dBm at the corresponding timestamps.
+    ping_rss_timestamps: List[datetime]
+    ping_rss_dbm_values: List[float]
 
-    # OpenThread role of the node over time.
-    # These are derived from "Role <from> -> <to>" transition lines (explicit "->" transitions),
-    # plus synthetic initial/final points added at the first/last log timestamps.
     role_from_transition_timestamps: List[datetime]
     role_from_transition_values: List[str]
 
-    # Node's own RLOC16 (logical address) over time.
-    # These are derived from "RLOC16 <old> -> <new>" transition lines (explicit "->" transitions),
-    # plus synthetic initial/final points added at the first/last log timestamps.
     rloc16_from_transition_timestamps: List[datetime]
     rloc16_from_transition_values: List[str]
 
-    # Parent router RLOC16 over time derived from the node's RLOC16 transitions.
     parent_router_from_rloc16_transition_timestamps: List[datetime]
     parent_router_from_rloc16_transition_values: List[str]
 
-    # Parent RLOC16 values obtained through the CLI "parent" command (no "->" transitions).
-    parent_rloc16_from_query_timestamps: List[datetime]  # From "Rloc: XXXX" CLI responses.
-    parent_rloc16_from_query_values: List[str]           # Normalized parent RLOC16 value at each query timestamp.
+    parent_rloc16_from_query_timestamps: List[datetime]
+    parent_rloc16_from_query_values: List[str]
 
-    # PeriodicParentSearch: Backoff interval passed timestamps.
     pps_backoff_interval_passed_timestamps: List[datetime]
 
-    # Aggregate ping counters over the entire log, used to compute overall PDR.
-    total_ping_tx_packets: int               # From ping summary lines (packets transmitted).
-    total_ping_rx_packets: int               # From ping summary lines (packets received).
+    pps_parent_rss_timestamps: List[datetime]
+    pps_parent_rss_dbm_values: List[float]
+
+    pps_rss_new_parent_search_threshold_met_timestamps: List[datetime]
+
+    pps_restart_timer_for_backoff_interval_timestamps: List[datetime]
+
+    send_child_id_request_timestamps: List[datetime]
+
+    # Receive_Child_ID_Response: timestamps + rloc16 values (normalized, e.g., 0c00).
+    receive_child_id_response_timestamps: List[datetime]
+    receive_child_id_response_rloc16_values: List[str]
+
+    total_ping_tx_packets: int
+    total_ping_rx_packets: int
 
 
 def build_parent_router_timeline(metrics: LogMetrics) -> None:
-    """
-    Build a time series of the parent router RLOC16 from node RLOC16 transitions.
-    """
     if metrics.rloc16_from_transition_timestamps:
         out_ts: List[datetime] = []
         out_vals: List[str] = []
@@ -260,17 +288,6 @@ def build_parent_router_timeline(metrics: LogMetrics) -> None:
 
 
 def parse_log_file(log_path: str) -> LogMetrics:
-    """
-    Read a log file and extract metrics.
-
-    Additionally:
-      - Record the initial role (from_state of the first "Role X -> Y" line)
-        at the first timestamp seen in the log.
-      - Extend the last role to the last timestamp seen in the log.
-      - Record the initial node RLOC16 (old value of the first "RLOC16 A -> B"
-        line) at the first timestamp seen in the log.
-      - Extend the last node RLOC16 to the last timestamp seen in the log.
-    """
     print(f"\n[PROCESS] Starting file: {log_path}")
 
     metrics = LogMetrics(
@@ -289,15 +306,19 @@ def parse_log_file(log_path: str) -> LogMetrics:
         parent_rloc16_from_query_timestamps=[],
         parent_rloc16_from_query_values=[],
         pps_backoff_interval_passed_timestamps=[],
+        pps_parent_rss_timestamps=[],
+        pps_parent_rss_dbm_values=[],
+        pps_rss_new_parent_search_threshold_met_timestamps=[],
+        pps_restart_timer_for_backoff_interval_timestamps=[],
+        send_child_id_request_timestamps=[],
+        receive_child_id_response_timestamps=[],
+        receive_child_id_response_rloc16_values=[],
         total_ping_tx_packets=0,
         total_ping_rx_packets=0,
     )
 
-    # Track first and last timestamps seen in the entire log file.
     first_log_ts: Optional[datetime] = None
     last_log_ts: Optional[datetime] = None
-
-    # Flags to handle "initial" injection for state and node RLOC.
     first_state_seen = False
     first_node_rloc_seen = False
 
@@ -305,7 +326,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
         for line_no, line in enumerate(f, start=1):
             line_stripped = line.rstrip("\n")
 
-            # --- Global timestamp tracking (first/last in the whole log). ---
+            # Global timestamp tracking (first/last in the whole log).
             m_ts_generic = re.match(r"\[(?P<ts>[^\]]+)\]", line_stripped)
             if m_ts_generic:
                 ts_line = parse_timestamp(m_ts_generic.group("ts"))
@@ -314,15 +335,62 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 if last_log_ts is None or ts_line > last_log_ts:
                     last_log_ts = ts_line
 
-            # --- PeriodicParentSearch backoff interval passed detection. ---
-            m_pps = pps_backoff_interval_passed_regex.search(line_stripped)
-            if m_pps:
-                ts_str = m_pps.group("ts")
+            # Receive_Child_ID_Response (timestamp + rloc16).
+            m_child_id_resp = receive_child_id_response_regex.search(line_stripped)
+            if m_child_id_resp:
+                ts_str = m_child_id_resp.group("ts")
+                raw_rloc = m_child_id_resp.group("rloc")  # e.g. 0x0c00
+                ts = parse_timestamp(ts_str)
+                rloc16_norm = normalize_rloc16(raw_rloc)  # e.g. 0c00
+                print(f"  [CHILD ID RESP] Receive Child ID Response rloc16={rloc16_norm} at {ts_str}")
+                metrics.receive_child_id_response_timestamps.append(ts)
+                metrics.receive_child_id_response_rloc16_values.append(rloc16_norm)
+
+            # Send Child ID Request (timestamp-only).
+            m_child_id_req = send_child_id_request_regex.search(line_stripped)
+            if m_child_id_req:
+                ts_str = m_child_id_req.group("ts")
+                ts = parse_timestamp(ts_str)
+                print(f"  [CHILD ID REQ] Send Child ID Request at {ts_str}")
+                metrics.send_child_id_request_timestamps.append(ts)
+
+            # PPS: Parent RSS value.
+            m_pps_rss = pps_parent_rss_regex.search(line_stripped)
+            if m_pps_rss:
+                ts_str = m_pps_rss.group("ts")
+                rss_str = m_pps_rss.group("rss")
+                ts = parse_timestamp(ts_str)
+                rss_val = float(rss_str)
+                print(f"  [PPS RSS] Parent RSS {rss_val} dBm at {ts_str}")
+                metrics.pps_parent_rss_timestamps.append(ts)
+                metrics.pps_parent_rss_dbm_values.append(rss_val)
+
+            # PPS: RSS threshold met (searching for new parents).
+            m_pps_thresh = pps_rss_new_parent_search_threshold_met_regex.search(line_stripped)
+            if m_pps_thresh:
+                ts_str = m_pps_thresh.group("ts")
+                ts = parse_timestamp(ts_str)
+                thresh = m_pps_thresh.group("thresh")
+                print(f"  [PPS THRESH] Parent RSS less than {thresh} -> searching new parents at {ts_str}")
+                metrics.pps_rss_new_parent_search_threshold_met_timestamps.append(ts)
+
+            # PPS: (Re)starting timer for backoff interval.
+            m_pps_restart = pps_restart_timer_for_backoff_interval_regex.search(line_stripped)
+            if m_pps_restart:
+                ts_str = m_pps_restart.group("ts")
+                ts = parse_timestamp(ts_str)
+                print(f"  [PPS TIMER] (Re)starting timer for backoff interval at {ts_str}")
+                metrics.pps_restart_timer_for_backoff_interval_timestamps.append(ts)
+
+            # PPS: Backoff interval passed.
+            m_pps_backoff = pps_backoff_interval_passed_regex.search(line_stripped)
+            if m_pps_backoff:
+                ts_str = m_pps_backoff.group("ts")
                 ts = parse_timestamp(ts_str)
                 print(f"  [PPS] Backoff interval passed at {ts_str}")
                 metrics.pps_backoff_interval_passed_timestamps.append(ts)
 
-            # --- Packet loss / summary detection (any percentage). ---
+            # Packet loss / summary detection (any percentage).
             m_loss = ping_packet_loss_regex.search(line_stripped)
             if m_loss:
                 ts_loss_str = m_loss.group("ts")
@@ -332,16 +400,14 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 rx = int(m_loss.group("rx"))
                 loss_pct = float(m_loss.group("loss"))
 
-                # Accumulate totals for overall PDR.
                 metrics.total_ping_tx_packets += tx
                 metrics.total_ping_rx_packets += rx
 
-                # Keep timestamp for non-zero loss events.
                 if loss_pct > 0.0:
                     print(f"  [LOSS] Packet loss {loss_pct}% at {ts_loss_str}")
                     metrics.ping_packet_loss_timestamps.append(ts_loss)
 
-            # --- MAC NoAck tx failures. ---
+            # MAC NoAck tx failures.
             m_noack = mac_frame_tx_noack_failed_regex.search(line_stripped)
             if m_noack:
                 ts_str = m_noack.group("ts")
@@ -349,7 +415,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 print(f"  [NOACK] Frame tx failed (NoAck) at {ts_str}")
                 metrics.mac_frame_tx_noack_failed_timestamps.append(ts)
 
-            # --- RTT detection (only lines with Round-trip stats). ---
+            # RTT detection.
             m_rtt = ping_rtt_regex.search(line_stripped)
             if m_rtt:
                 print(f"  [USE RTT] Line {line_no}: {line_stripped}")
@@ -360,14 +426,13 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 metrics.ping_rtt_timestamps.append(ts)
                 metrics.ping_rtt_avg_ms.append(avg_ms)
 
-            # --- Parent detection (RLOC16 from "Rloc:" lines). ---
+            # Parent detection (RLOC16 from "Rloc:" lines).
             m_parent = cli_command_parent_rloc_regex.search(line_stripped)
             if m_parent:
                 ts_str = m_parent.group("ts")
                 raw_rloc16 = m_parent.group("rloc")
                 rloc16_norm = normalize_rloc16(raw_rloc16)
 
-                # Convert invalid parent RLOC16 to a readable categorical value.
                 p_int = _rloc16_to_int(rloc16_norm)
                 if p_int == INVALID_RLOC16:
                     rloc16_val = "No Parent"
@@ -380,7 +445,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 metrics.parent_rloc16_from_query_timestamps.append(ts)
                 metrics.parent_rloc16_from_query_values.append(rloc16_val)
 
-            # --- State transition detection (Role X -> Y). ---
+            # State transition detection (Role X -> Y).
             m_state = role_transition_regex.search(line_stripped)
             if m_state:
                 ts_str = m_state.group("ts")
@@ -391,19 +456,16 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 from_norm = from_state_str.strip().lower()
                 print(f"  [STATE] {from_norm} -> {state_norm} at {ts_str}")
 
-                # For the first state transition, also record the "from" state at
-                # the first timestamp in the log so that the initial role appears in the plots.
                 if not first_state_seen:
                     first_state_seen = True
                     init_ts = first_log_ts if first_log_ts is not None else ts
                     metrics.role_from_transition_timestamps.append(init_ts)
                     metrics.role_from_transition_values.append(from_norm)
 
-                # Always record the destination state at its actual timestamp.
                 metrics.role_from_transition_timestamps.append(ts)
                 metrics.role_from_transition_values.append(state_norm)
 
-            # --- Node RLOC16 transitions (RLOC16 old -> new). ---
+            # Node RLOC16 transitions (RLOC16 old -> new).
             m_node_rloc = node_transition_regex.search(line_stripped)
             if m_node_rloc:
                 ts_str = m_node_rloc.group("ts")
@@ -414,19 +476,16 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 old_norm = normalize_rloc16(old_rloc)
                 print(f"  [NODE RLOC] {old_norm} -> {new_norm} at {ts_str}")
 
-                # For the first node RLOC transition, also record the "old" RLOC16
-                # at the first timestamp in the log so the initial RLOC16 appears in the plots.
                 if not first_node_rloc_seen:
                     first_node_rloc_seen = True
                     init_ts_rloc = first_log_ts if first_log_ts is not None else ts
                     metrics.rloc16_from_transition_timestamps.append(init_ts_rloc)
                     metrics.rloc16_from_transition_values.append(old_norm)
 
-                # Always record the new RLOC at its actual timestamp.
                 metrics.rloc16_from_transition_timestamps.append(ts)
                 metrics.rloc16_from_transition_values.append(new_norm)
 
-            # --- RSS detection for ping replies. ---
+            # RSS detection for ping replies.
             m_rss = ping_rss_regex.search(line_stripped)
             if m_rss:
                 length = int(m_rss.group("len"))
@@ -439,17 +498,15 @@ def parse_log_file(log_path: str) -> LogMetrics:
                     metrics.ping_rss_timestamps.append(ts)
                     metrics.ping_rss_dbm_values.append(rss_val)
 
-    # --- Extend last role to the last known timestamp in the log. ---
+    # Extend last role to the last known timestamp in the log.
     if metrics.role_from_transition_timestamps and last_log_ts is not None:
         last_state_ts = metrics.role_from_transition_timestamps[-1]
         last_state = metrics.role_from_transition_values[-1]
-        # Only add an extra point if the log actually continues beyond
-        # the last transition timestamp.
         if last_log_ts > last_state_ts:
             metrics.role_from_transition_timestamps.append(last_log_ts)
             metrics.role_from_transition_values.append(last_state)
 
-    # --- Extend last node RLOC16 to the last known timestamp in the log. ---
+    # Extend last node RLOC16 to the last known timestamp in the log.
     if metrics.rloc16_from_transition_timestamps and last_log_ts is not None:
         last_node_ts = metrics.rloc16_from_transition_timestamps[-1]
         last_node_val = metrics.rloc16_from_transition_values[-1]
@@ -457,7 +514,6 @@ def parse_log_file(log_path: str) -> LogMetrics:
             metrics.rloc16_from_transition_timestamps.append(last_log_ts)
             metrics.rloc16_from_transition_values.append(last_node_val)
 
-    # Build derived parent-router timeline.
     build_parent_router_timeline(metrics)
     return metrics
 
@@ -467,34 +523,15 @@ def parse_log_file(log_path: str) -> LogMetrics:
 # ---------------------------------------------------------------------------
 
 def _format_time_axis(ax):
-    """Helper to format datetime x-axis consistently."""
     ax.xaxis.set_major_locator(mdates.AutoDateLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
     ax.grid(True, which="both", linestyle="--", alpha=0.3)
 
 
 def _discover_time_series(metrics: LogMetrics) -> List[Dict[str, Any]]:
-    """
-    Inspect LogMetrics and automatically discover time series.
-
-    Logic:
-      - Any field ending with `_timestamps` and containing a non-empty list
-        is treated as a time axis.
-      - For its 'root' (everything before `_timestamps`), find list fields:
-          * whose name starts with root + '_'
-          * or whose name equals root
-          * or whose name equals root + 's' (simple plural)
-        and that have the same length as the timestamps list.
-      - If at least one matching value list exists, each becomes a value
-        series on that time axis; otherwise the root becomes an event-only
-        series.
-    """
     series: List[Dict[str, Any]] = []
 
-    # Map field name -> value.
-    metric_values: Dict[str, Any] = {
-        f.name: getattr(metrics, f.name) for f in fields(LogMetrics)
-    }
+    metric_values: Dict[str, Any] = {f.name: getattr(metrics, f.name) for f in fields(LogMetrics)}
 
     for fname, fval in metric_values.items():
         if not fname.endswith("_timestamps"):
@@ -503,13 +540,10 @@ def _discover_time_series(metrics: LogMetrics) -> List[Dict[str, Any]]:
             continue
 
         timestamps = fval
-
-        # Root is everything before the final "_timestamps" token.
         tokens = fname.split("_")[:-1]  # drop 'timestamps'
         root = "_".join(tokens) if tokens else fname[:-len("_timestamps")]
         root_label = root.replace("_", " ").title() if root else fname
 
-        # Candidate value names to match against.
         candidate_prefix = root + "_"
         candidate_exact = root
         candidate_plural = root + "s"
@@ -523,24 +557,19 @@ def _discover_time_series(metrics: LogMetrics) -> List[Dict[str, Any]]:
             if len(other_val) != len(timestamps):
                 continue
 
-            name_matches = (
+            if (
                 other_name.startswith(candidate_prefix)
                 or other_name == candidate_exact
                 or other_name == candidate_plural
-            )
-            if not name_matches:
-                continue
-
-            candidates.append({"name": other_name, "values": other_val})
+            ):
+                candidates.append({"name": other_name, "values": other_val})
 
         if candidates:
             for c in candidates:
                 values = c["values"]
-                # Determine if categorical (string) or numeric.
                 non_none = next((v for v in values if v is not None), None)
                 categorical = isinstance(non_none, str) if non_none is not None else False
 
-                # Build a readable label: "Root – Suffix" where possible.
                 val_name = c["name"]
                 if val_name.startswith(candidate_prefix):
                     suffix = val_name[len(candidate_prefix):]
@@ -550,10 +579,7 @@ def _discover_time_series(metrics: LogMetrics) -> List[Dict[str, Any]]:
                     suffix = val_name
                 pretty_suffix = suffix.replace("_", " ").title()
 
-                if pretty_suffix and pretty_suffix.lower() != root_label.lower():
-                    label = f"{root_label} – {pretty_suffix}"
-                else:
-                    label = root_label
+                label = f"{root_label} – {pretty_suffix}" if pretty_suffix and pretty_suffix.lower() != root_label.lower() else root_label
 
                 series.append(
                     {
@@ -564,13 +590,11 @@ def _discover_time_series(metrics: LogMetrics) -> List[Dict[str, Any]]:
                     }
                 )
         else:
-            # Event-only series (no associated value list).
-            label = f"{root_label} Events"
             series.append(
                 {
                     "timestamps": timestamps,
                     "values": None,
-                    "label": label,
+                    "label": f"{root_label} Events",
                     "categorical": False,
                 }
             )
@@ -579,14 +603,6 @@ def _discover_time_series(metrics: LogMetrics) -> List[Dict[str, Any]]:
 
 
 def visualize_metrics(metrics: LogMetrics, title: str = "OpenThread log metrics") -> None:
-    """
-    Generic visualization of all parsed metrics.
-
-    Every discovered time series (or event series) gets its own subplot:
-      - numeric values: scatter only (no line)
-      - categorical values: stepped series with discrete y-ticks
-      - events (timestamps only): vertical lines vs. time
-    """
     series_list = _discover_time_series(metrics)
 
     if not series_list:
@@ -598,7 +614,6 @@ def visualize_metrics(metrics: LogMetrics, title: str = "OpenThread log metrics"
     if nrows == 1:
         axes = [axes]
 
-    # Overall PDR summary for the figure title.
     if metrics.total_ping_tx_packets > 0:
         pdr = 100.0 * metrics.total_ping_rx_packets / metrics.total_ping_tx_packets
         sup_title = (
@@ -617,23 +632,19 @@ def visualize_metrics(metrics: LogMetrics, title: str = "OpenThread log metrics"
         categorical = spec["categorical"]
 
         if values is None:
-            # Event-only series: vertical lines.
             n = len(ts)
             for ts_i in ts:
                 ax.axvline(ts_i, linestyle="--", alpha=0.5)
             ax.set_title(f"{label} (n={n})")
-            ax.set_ylabel("")
             ax.set_yticks([])
         else:
             if categorical:
-                # Map categories to integer y values.
                 categories = sorted({v for v in values if v is not None})
                 y_map = {cat: idx for idx, cat in enumerate(categories)}
                 y_vals = [y_map.get(v, None) for v in values]
 
                 x_plot = [t for t, y in zip(ts, y_vals) if y is not None]
                 y_plot = [y for y in y_vals if y is not None]
-
                 n = len(x_plot)
 
                 if x_plot:
@@ -643,10 +654,8 @@ def visualize_metrics(metrics: LogMetrics, title: str = "OpenThread log metrics"
                 ax.set_ylabel(label)
                 ax.set_title(f"{label} (n={n})")
             else:
-                # Numeric time series: scatter only, small markers.
                 x_plot = [t for t, v in zip(ts, values) if v is not None]
                 y_plot = [v for v in values if v is not None]
-
                 n = len(x_plot)
 
                 ax.scatter(x_plot, y_plot, s=8)
@@ -659,14 +668,9 @@ def visualize_metrics(metrics: LogMetrics, title: str = "OpenThread log metrics"
     plt.show()
 
 
-# ---------------------------------------------------------------------------
-# CLI entry point: glob log files, generic visualization, no boxplots
-# ---------------------------------------------------------------------------
-
 def main() -> None:
     data_dir_path = DATA_DIR
 
-    # Search for all .log files under data_dir_path (relative to this script)
     pattern = str(DATA_DIR / "**" / "*.log")
     all_candidates = glob(pattern, recursive=True)
 
@@ -676,12 +680,10 @@ def main() -> None:
         try:
             rel_parts = p.relative_to(data_dir_path).parts
         except ValueError:
-            # Should not happen, but be defensive.
             continue
 
         dir_parts = rel_parts[:-1]
         if any(part.startswith(".") for part in dir_parts):
-            # Skip dot-directories under data/
             continue
 
         log_files.append(path_str)
@@ -694,32 +696,35 @@ def main() -> None:
     for lf in log_files:
         print(f"  - {lf}")
 
-    # Process each log file: parse, summarize, visualize
     for log_path in log_files:
         metrics = parse_log_file(log_path)
         rel_label = str(Path(log_path).relative_to(data_dir_path))
 
         print("\n[SUMMARY]")
-        print(f"  File:                        {rel_label}")
-        print(f"  RTT samples:                 {len(metrics.ping_rtt_timestamps)}")
-        print(f"  RSS samples:                 {len(metrics.ping_rss_timestamps)}")
-        print(f"  Role-from-transition points: {len(metrics.role_from_transition_timestamps)}")
-        print(f"  Node RLOC16 points:          {len(metrics.rloc16_from_transition_timestamps)}")
-        print(f"  Parent RLOC16 queries:       {len(metrics.parent_rloc16_from_query_timestamps)}")
-        print(f"  Parent router points:        {len(metrics.parent_router_from_rloc16_transition_timestamps)}")
-        print(f"  MAC NoAck tx failures:       {len(metrics.mac_frame_tx_noack_failed_timestamps)}")
-        print(f"  Loss events:                 {len(metrics.ping_packet_loss_timestamps)}")
-        print(f"  PPS backoff passed events:   {len(metrics.pps_backoff_interval_passed_timestamps)}")
+        print(f"  File:                                {rel_label}")
+        print(f"  RTT samples:                         {len(metrics.ping_rtt_timestamps)}")
+        print(f"  RSS samples:                         {len(metrics.ping_rss_timestamps)}")
+        print(f"  Role-from-transition points:         {len(metrics.role_from_transition_timestamps)}")
+        print(f"  Node RLOC16 points:                  {len(metrics.rloc16_from_transition_timestamps)}")
+        print(f"  Parent RLOC16 queries:               {len(metrics.parent_rloc16_from_query_timestamps)}")
+        print(f"  Parent router points:                {len(metrics.parent_router_from_rloc16_transition_timestamps)}")
+        print(f"  MAC NoAck tx failures:               {len(metrics.mac_frame_tx_noack_failed_timestamps)}")
+        print(f"  Loss events:                         {len(metrics.ping_packet_loss_timestamps)}")
+        print(f"  PPS backoff passed events:           {len(metrics.pps_backoff_interval_passed_timestamps)}")
+        print(f"  PPS Parent RSS samples:              {len(metrics.pps_parent_rss_timestamps)}")
+        print(f"  PPS new-parent-search threshold met: {len(metrics.pps_rss_new_parent_search_threshold_met_timestamps)}")
+        print(f"  PPS restart timer (backoff) events:  {len(metrics.pps_restart_timer_for_backoff_interval_timestamps)}")
+        print(f"  Send Child ID Request events:        {len(metrics.send_child_id_request_timestamps)}")
+        print(f"  Receive Child ID Response events:    {len(metrics.receive_child_id_response_timestamps)}")
 
         if metrics.total_ping_tx_packets > 0:
             pdr = 100.0 * metrics.total_ping_rx_packets / metrics.total_ping_tx_packets
-            print(f"  Total TX:                    {metrics.total_ping_tx_packets}")
-            print(f"  Total RX:                    {metrics.total_ping_rx_packets}")
-            print(f"  Overall PDR:                 {pdr:.2f}%")
+            print(f"  Total TX:                            {metrics.total_ping_tx_packets}")
+            print(f"  Total RX:                            {metrics.total_ping_rx_packets}")
+            print(f"  Overall PDR:                         {pdr:.2f}%")
         else:
             print("  No packet summary lines found (TX/RX totals unavailable).")
 
-        # Show generic visualization for this file.
         visualize_metrics(metrics, title=rel_label)
 
 
