@@ -5,7 +5,6 @@ from pathlib import Path
 from datetime import datetime
 from dataclasses import dataclass, fields
 from typing import List, Dict, Optional, Any
-from collections import defaultdict
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -112,6 +111,19 @@ node_transition_regex = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
+# Regex for PeriodicParentSearch backoff interval passed log line, e.g.:
+# [2025-12-11T00:00:00.000] OPENTHREAD:[I] Mle-----------: PeriodicParentSearch: Backoff interval passed
+pps_backoff_interval_passed_regex = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]\s+                     # timestamp in brackets
+    .*?Mle-----------:\s+                     # Mle-----------:
+    PeriodicParentSearch:\s+                  # PeriodicParentSearch:
+    Backoff\s+interval\s+passed\b             # Backoff interval passed
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+
 # Helper to parse timestamps like 2025-12-04T17:52:42.396
 def parse_timestamp(ts_str: str) -> datetime:
     try:
@@ -206,14 +218,16 @@ class LogMetrics:
     rloc16_from_transition_timestamps: List[datetime]
     rloc16_from_transition_values: List[str]
 
-    # Parent router RLOC16 over time.
-    # This is derived from the node's own RLOC16 transitions by extracting the parent router portion.
+    # Parent router RLOC16 over time derived from the node's RLOC16 transitions.
     parent_router_from_rloc16_transition_timestamps: List[datetime]
     parent_router_from_rloc16_transition_values: List[str]
 
     # Parent RLOC16 values obtained through the CLI "parent" command (no "->" transitions).
-    parent_rloc16_from_query_timestamps: List[datetime] # From "Rloc: XXXX" CLI responses.
-    parent_rloc16_from_query_values: List[str]         # Normalized parent RLOC16 value at each query timestamp.
+    parent_rloc16_from_query_timestamps: List[datetime]  # From "Rloc: XXXX" CLI responses.
+    parent_rloc16_from_query_values: List[str]           # Normalized parent RLOC16 value at each query timestamp.
+
+    # PeriodicParentSearch: Backoff interval passed timestamps.
+    pps_backoff_interval_passed_timestamps: List[datetime]
 
     # Aggregate ping counters over the entire log, used to compute overall PDR.
     total_ping_tx_packets: int               # From ping summary lines (packets transmitted).
@@ -222,14 +236,7 @@ class LogMetrics:
 
 def build_parent_router_timeline(metrics: LogMetrics) -> None:
     """
-    Build a time series of the parent router RLOC16.
-
-    Primary source:
-      - Node RLOC16 transitions ("RLOC16 old -> new"), because the parent router portion
-        is encoded within the node's RLOC16.
-
-    Fallback (if no node RLOC16 transitions exist):
-      - Parent RLOC16 values obtained via periodic CLI "parent" queries ("Rloc: XXXX").
+    Build a time series of the parent router RLOC16 from node RLOC16 transitions.
     """
     if metrics.rloc16_from_transition_timestamps:
         out_ts: List[datetime] = []
@@ -243,22 +250,6 @@ def build_parent_router_timeline(metrics: LogMetrics) -> None:
                 continue
             out_ts.append(ts)
             out_vals.append(parent_router)
-
-        metrics.parent_router_from_rloc16_transition_timestamps = out_ts
-        metrics.parent_router_from_rloc16_transition_values = out_vals
-        return
-
-    # Fallback: use CLI "parent" queries if present.
-    if metrics.parent_rloc16_from_query_timestamps:
-        out_ts = list(metrics.parent_rloc16_from_query_timestamps)
-        out_vals: List[str] = []
-        for p in metrics.parent_rloc16_from_query_values:
-            p_norm = normalize_rloc16(p)
-            p_int = _rloc16_to_int(p_norm)
-            if p_int == INVALID_RLOC16:
-                out_vals.append("No Parent")
-            else:
-                out_vals.append(p_norm)
 
         metrics.parent_router_from_rloc16_transition_timestamps = out_ts
         metrics.parent_router_from_rloc16_transition_values = out_vals
@@ -297,6 +288,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
         parent_router_from_rloc16_transition_values=[],
         parent_rloc16_from_query_timestamps=[],
         parent_rloc16_from_query_values=[],
+        pps_backoff_interval_passed_timestamps=[],
         total_ping_tx_packets=0,
         total_ping_rx_packets=0,
     )
@@ -321,6 +313,14 @@ def parse_log_file(log_path: str) -> LogMetrics:
                     first_log_ts = ts_line
                 if last_log_ts is None or ts_line > last_log_ts:
                     last_log_ts = ts_line
+
+            # --- PeriodicParentSearch backoff interval passed detection. ---
+            m_pps = pps_backoff_interval_passed_regex.search(line_stripped)
+            if m_pps:
+                ts_str = m_pps.group("ts")
+                ts = parse_timestamp(ts_str)
+                print(f"  [PPS] Backoff interval passed at {ts_str}")
+                metrics.pps_backoff_interval_passed_timestamps.append(ts)
 
             # --- Packet loss / summary detection (any percentage). ---
             m_loss = ping_packet_loss_regex.search(line_stripped)
@@ -365,12 +365,20 @@ def parse_log_file(log_path: str) -> LogMetrics:
             if m_parent:
                 ts_str = m_parent.group("ts")
                 raw_rloc16 = m_parent.group("rloc")
-                rloc16 = normalize_rloc16(raw_rloc16)
+                rloc16_norm = normalize_rloc16(raw_rloc16)
+
+                # Convert invalid parent RLOC16 to a readable categorical value.
+                p_int = _rloc16_to_int(rloc16_norm)
+                if p_int == INVALID_RLOC16:
+                    rloc16_val = "No Parent"
+                else:
+                    rloc16_val = rloc16_norm
+
                 ts = parse_timestamp(ts_str)
                 print(f"  [USE PARENT] Line {line_no}: {line_stripped}")
-                print(f"               -> Parent RLOC16: {rloc16}")
+                print(f"               -> Parent RLOC16: {rloc16_val}")
                 metrics.parent_rloc16_from_query_timestamps.append(ts)
-                metrics.parent_rloc16_from_query_values.append(rloc16)
+                metrics.parent_rloc16_from_query_values.append(rloc16_val)
 
             # --- State transition detection (Role X -> Y). ---
             m_state = role_transition_regex.search(line_stripped)
@@ -384,8 +392,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 print(f"  [STATE] {from_norm} -> {state_norm} at {ts_str}")
 
                 # For the first state transition, also record the "from" state at
-                # the first timestamp in the log so that the initial role
-                # (e.g. 'detached') appears in the plots.
+                # the first timestamp in the log so that the initial role appears in the plots.
                 if not first_state_seen:
                     first_state_seen = True
                     init_ts = first_log_ts if first_log_ts is not None else ts
@@ -407,9 +414,8 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 old_norm = normalize_rloc16(old_rloc)
                 print(f"  [NODE RLOC] {old_norm} -> {new_norm} at {ts_str}")
 
-                # For the first node RLOC transition, also record the "old"
-                # RLOC16 at the first timestamp in the log so the initial
-                # RLOC16 (e.g. 403a) appears in the plots.
+                # For the first node RLOC transition, also record the "old" RLOC16
+                # at the first timestamp in the log so the initial RLOC16 appears in the plots.
                 if not first_node_rloc_seen:
                     first_node_rloc_seen = True
                     init_ts_rloc = first_log_ts if first_log_ts is not None else ts
@@ -451,6 +457,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
             metrics.rloc16_from_transition_timestamps.append(last_log_ts)
             metrics.rloc16_from_transition_values.append(last_node_val)
 
+    # Build derived parent-router timeline.
     build_parent_router_timeline(metrics)
     return metrics
 
@@ -702,6 +709,7 @@ def main() -> None:
         print(f"  Parent router points:        {len(metrics.parent_router_from_rloc16_transition_timestamps)}")
         print(f"  MAC NoAck tx failures:       {len(metrics.mac_frame_tx_noack_failed_timestamps)}")
         print(f"  Loss events:                 {len(metrics.ping_packet_loss_timestamps)}")
+        print(f"  PPS backoff passed events:   {len(metrics.pps_backoff_interval_passed_timestamps)}")
 
         if metrics.total_ping_tx_packets > 0:
             pdr = 100.0 * metrics.total_ping_rx_packets / metrics.total_ping_tx_packets
@@ -710,7 +718,6 @@ def main() -> None:
             print(f"  Overall PDR:                 {pdr:.2f}%")
         else:
             print("  No packet summary lines found (TX/RX totals unavailable).")
-
 
         # Show generic visualization for this file.
         visualize_metrics(metrics, title=rel_label)
