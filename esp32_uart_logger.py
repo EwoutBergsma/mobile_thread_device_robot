@@ -14,7 +14,7 @@ from serial.tools import list_ports
 from serial.tools.list_ports_common import ListPortInfo
 
 
-BAUDRATE = 2000000
+BAUDRATE = 1000000
 SCAN_INTERVAL = 2.0  # seconds between rescans for new/removed devices
 PING_INTERVAL = 1.0  # seconds between OT CLI pings to parent
 
@@ -31,7 +31,7 @@ STARTUP_CMD_RETRY_DELAY = 0.1  # seconds between repeated sends of the startup s
 STARTUP_COMMANDS = [
     b"txpower -12\r\n",  # set TX power on OpenThread CLI
     b"ipaddr\r\n",       # request IP addresses to learn mesh-local prefix
-    b"log level 3\r\n"
+    b"log level 4\r\n"
 ]
 
 # Base commands sent on every periodic tick (before optional ping).
