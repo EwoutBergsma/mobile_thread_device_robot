@@ -1,496 +1,277 @@
+# openthread_log_visualizer.py
+from __future__ import annotations
+
 import os
-import re
 from glob import glob
 from pathlib import Path
-from datetime import datetime
-from dataclasses import dataclass, fields
-from typing import List, Dict, Optional, Any
-from collections import defaultdict
-
+from typing import Dict, List, Optional, Tuple
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+from openthread_log_parser import parse_log_file, LogMetrics, DATA_DIR as PARSER_DATA_DIR
 
-# Length (in bytes) of the ping reply ICMPv6 message in the log.
-PING_REPLY_LEN = 56
 
-# Base directory: the directory where this script resides
+# -----------------------------------------------------------------------------
+# Output / plotting configuration
+# -----------------------------------------------------------------------------
+
+# Base directory: the directory where this visualizer script resides
 SCRIPT_DIR = Path(__file__).resolve().parent
 
-# Data directory (relative to this file)
-DATA_DIR = SCRIPT_DIR / "data"
-
-# Regex for RTT lines like:
-# [2025-12-04T17:52:44.956] 1 packets transmitted, 1 packets received.
-# Packet loss = 0.0%. Round-trip min/avg/max = 239/239.000/239 ms.
-rtt_re = re.compile(
-    r"""
-    \[(?P<ts>[^\]]+)\]               # [2025-12-04T17:54:36.720]
-    .*?Round-trip\ min/avg/max\ =\   # Round-trip min/avg/max =
-    (?P<min>\d+(?:\.\d+)?)/          # min
-    (?P<avg>\d+(?:\.\d+)?)/          # avg
-    (?P<max>\d+(?:\.\d+)?)\ ms\.?    # max ms.
-    """,
-    re.VERBOSE
-)
-
-# Regex for packet summary lines with packet loss (0.0%, 10.0%, 100.0%, etc.).
-loss_re = re.compile(
-    r"""
-    \[(?P<ts>[^\]]+)\]\s+                  # timestamp in brackets
-    (?P<tx>\d+)\s+packets\s+transmitted,\s+
-    (?P<rx>\d+)\s+packets\s+received\.\s+
-    Packet\ loss\s*=\s*
-    (?P<loss>\d+(?:\.\d+)?)%              # e.g. 0.0, 10.0, 100.0
-    """,
-    re.VERBOSE
-)
-
-# Regex for parent lines, using RLOC16 as parent IDs.
-parent_re = re.compile(
-    r"""
-    \[(?P<ts>[^\]]+)\]      # timestamp in brackets
-    .*?Rloc:\s*
-    (?P<rloc>[0-9A-Fa-f]+)  # hex-only RLOC16 value
-    """,
-    re.VERBOSE
-)
-
-# Regex for OT state lines.
-state_re = re.compile(
-    r"""
-    \[(?P<ts>[^\]]+)\]              # timestamp
-    .*?\b(?P<state>disabled|detached|child|router|leader)\b
-    """,
-    re.IGNORECASE | re.VERBOSE,
-)
-
-# Regex for *ping reply* RSS lines (MeshForwarder Received IPv6 ... msg).
-rss_re = re.compile(
-    r"""
-    ^\[(?P<ts>[^\]]+)\]\s+                      # timestamp at start of line
-    .*?MeshForwarder-:\s+Received\ IPv6\s+\S+\s+msg,\s+
-    len:(?P<len>\d+),.*?                        # capture len:NN
-    rss:(?P<rss>-?\d+(?:\.\d+)?)                # capture rss:-90.0
-    """,
-    re.VERBOSE
-)
-
-
-# Helper to parse timestamps like 2025-12-04T17:52:42.396
-def parse_timestamp(ts_str: str) -> datetime:
-    try:
-        return datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S.%f")
-    except ValueError:
-        return datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
-
-
-def normalize_rloc16(rloc: str) -> str:
-    """
-    Normalize an RLOC16 string to a 4-digit lowercase hex representation.
-
-    Examples:
-        "c00"  -> "0c00"
-        "0C00" -> "0c00"
-        "0000" -> "0000"
-    """
-    r = rloc.strip().lower()
-    if r.startswith("0x"):
-        r = r[2:]
-    try:
-        value = int(r, 16)
-    except ValueError:
-        # If not valid hex, just return the stripped original.
-        return rloc.strip()
-    return f"{value:04x}"
-
-
-@dataclass
-class LogMetrics:
-    rtt_timestamps: List[datetime]
-    rtt_avgs_ms: List[float]
-    loss_timestamps: List[datetime]
-    parent_timestamps: List[datetime]
-    parent_ids: List[str]
-    rss_timestamps: List[datetime]
-    rss_values: List[float]
-    state_timestamps: List[datetime]
-    states: List[str]
-    eff_parent_timestamps: List[datetime]
-    eff_parents: List[str]
-    # Totals for PDR over the entire file.
-    total_tx: int
-    total_rx: int
-
-
-def compute_effective_parent(
-    state: Optional[str],
-    parent: Optional[str],
-) -> Optional[str]:
-    """
-    Determine effective parent for the *current* state/parent pair.
-    """
-    def norm_state(s: Optional[str]) -> Optional[str]:
-        if s is None:
-            return None
-        return s.strip().lower()
-
-    st = norm_state(state)
-
-    # Explicit "no parent" states.
-    if st in ("detached", "disabled", "blank"):
-        return "No Parent"
-
-    # No explicit parent information.
-    if parent is None:
-        return None
-
-    p = parent.strip()
-    if not p or p.lower() in ("none", "nan", "no parent"):
-        return "No Parent"
-
-    # Default: a valid parent, normalize RLOC16.
-    return normalize_rloc16(p)
-
-
-def build_parent_timeline(metrics: LogMetrics) -> None:
-    """
-    Build a time series of "effective parent" with forward-filled state/parent.
-    """
-    parents_at_ts: Dict[datetime, List[str]] = defaultdict(list)
-    for ts, pid in zip(metrics.parent_timestamps, metrics.parent_ids):
-        parents_at_ts[ts].append(pid)
-
-    states_at_ts: Dict[datetime, List[str]] = defaultdict(list)
-    for ts, st in zip(metrics.state_timestamps, metrics.states):
-        states_at_ts[ts].append(st)
-
-    all_ts_set = set()
-    all_ts_set.update(metrics.rtt_timestamps)
-    all_ts_set.update(metrics.loss_timestamps)
-    all_ts_set.update(metrics.parent_timestamps)
-    all_ts_set.update(metrics.state_timestamps)
-    all_ts_set.update(metrics.rss_timestamps)
-
-    if not all_ts_set:
-        metrics.eff_parent_timestamps = []
-        metrics.eff_parents = []
-        return
-
-    all_ts = sorted(all_ts_set)
-
-    current_state: Optional[str] = None
-    current_parent: Optional[str] = None
-
-    eff_ts: List[datetime] = []
-    eff_parents: List[str] = []
-
-    for ts in all_ts:
-        if ts in states_at_ts:
-            current_state = states_at_ts[ts][-1].strip().lower()
-        if ts in parents_at_ts:
-            current_parent = parents_at_ts[ts][-1].strip()
-
-        eff_parent = compute_effective_parent(current_state, current_parent)
-        if eff_parent is None:
-            continue
-
-        eff_ts.append(ts)
-        eff_parents.append(eff_parent)
-
-    metrics.eff_parent_timestamps = eff_ts
-    metrics.eff_parents = eff_parents
-
-
-def parse_log_file(log_path: str) -> LogMetrics:
-    """
-    Read a log file and extract metrics.
-    """
-    print(f"\n[PROCESS] Starting file: {log_path}")
-
-    metrics = LogMetrics(
-        rtt_timestamps=[],
-        rtt_avgs_ms=[],
-        loss_timestamps=[],
-        parent_timestamps=[],
-        parent_ids=[],
-        rss_timestamps=[],
-        rss_values=[],
-        state_timestamps=[],
-        states=[],
-        eff_parent_timestamps=[],
-        eff_parents=[],
-        total_tx=0,
-        total_rx=0,
-    )
-
-    with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
-        for line_no, line in enumerate(f, start=1):
-            line_stripped = line.rstrip("\n")
-
-            # --- Packet loss / summary detection (any percentage). ---
-            m_loss = loss_re.search(line_stripped)
-            if m_loss:
-                ts_loss_str = m_loss.group("ts")
-                ts_loss = parse_timestamp(ts_loss_str)
-
-                tx = int(m_loss.group("tx"))
-                rx = int(m_loss.group("rx"))
-                loss_pct = float(m_loss.group("loss"))
-
-                # Accumulate totals for overall PDR.
-                metrics.total_tx += tx
-                metrics.total_rx += rx
-
-                # Keep timestamp for non-zero loss events.
-                if loss_pct > 0.0:
-                    print(f"  [LOSS] Packet loss {loss_pct}% at {ts_loss_str}")
-                    metrics.loss_timestamps.append(ts_loss)
-
-            # --- RTT detection (only lines with Round-trip stats). ---
-            m_rtt = rtt_re.search(line_stripped)
-            if m_rtt:
-                print(f"  [USE RTT] Line {line_no}: {line_stripped}")
-                ts_str = m_rtt.group("ts")
-                avg_str = m_rtt.group("avg")
-                ts = parse_timestamp(ts_str)
-                avg_ms = float(avg_str)
-                metrics.rtt_timestamps.append(ts)
-                metrics.rtt_avgs_ms.append(avg_ms)
-
-            # --- Parent detection (RLOC16 from "Rloc:" lines). ---
-            m_parent = parent_re.search(line_stripped)
-            if m_parent:
-                ts_str = m_parent.group("ts")
-                raw_rloc16 = m_parent.group("rloc")
-                rloc16 = normalize_rloc16(raw_rloc16)
-                ts = parse_timestamp(ts_str)
-                print(f"  [USE PARENT] Line {line_no}: {line_stripped}")
-                print(f"               -> Parent RLOC16: {rloc16}")
-                metrics.parent_timestamps.append(ts)
-                metrics.parent_ids.append(rloc16)
-
-            # --- State detection. ---
-            m_state = state_re.search(line_stripped)
-            if m_state:
-                ts_str = m_state.group("ts")
-                state_str = m_state.group("state")
-                ts = parse_timestamp(ts_str)
-                state_norm = state_str.strip().lower()
-                print(f"  [STATE] {state_norm} at {ts_str}")
-                metrics.state_timestamps.append(ts)
-                metrics.states.append(state_norm)
-
-            # --- RSS detection for ping replies. ---
-            m_rss = rss_re.search(line_stripped)
-            if m_rss:
-                length = int(m_rss.group("len"))
-                if length == PING_REPLY_LEN:
-                    ts_str = m_rss.group("ts")
-                    rss_str = m_rss.group("rss")
-                    ts = parse_timestamp(ts_str)
-                    rss_val = float(rss_str)
-                    print(f"  [PING RSS] len={length} -> {rss_val} dBm at {ts_str}")
-                    metrics.rss_timestamps.append(ts)
-                    metrics.rss_values.append(rss_val)
-
-    build_parent_timeline(metrics)
-    return metrics
-
-
-# ---------------------------------------------------------------------------
-# Generic visualization
-# ---------------------------------------------------------------------------
-
-def _format_time_axis(ax):
-    """Helper to format datetime x-axis consistently."""
-    ax.xaxis.set_major_locator(mdates.AutoDateLocator())
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
-    ax.grid(True, which="both", linestyle="--", alpha=0.3)
-
-
-def _discover_time_series(metrics: LogMetrics) -> List[Dict[str, Any]]:
-    """
-    Inspect LogMetrics and automatically discover time series.
-
-    Logic:
-      - Any field ending with `_timestamps` and containing a non-empty list
-        is treated as a time axis.
-      - For its 'root' (everything before `_timestamps`), find list fields:
-          * whose name starts with root + '_'
-          * or whose name equals root
-          * or whose name equals root + 's' (simple plural)
-        and that have the same length as the timestamps list.
-      - If at least one matching value list exists, each becomes a value
-        series on that time axis; otherwise the root becomes an event-only
-        series.
-    """
-    series: List[Dict[str, Any]] = []
-
-    # Map field name -> value.
-    metric_values: Dict[str, Any] = {
-        f.name: getattr(metrics, f.name) for f in fields(LogMetrics)
-    }
-
-    for fname, fval in metric_values.items():
-        if not fname.endswith("_timestamps"):
-            continue
-        if not isinstance(fval, list) or not fval:
-            continue
-
-        timestamps = fval
-
-        # Root is everything before the final "_timestamps" token.
-        tokens = fname.split("_")[:-1]  # drop 'timestamps'
-        root = "_".join(tokens) if tokens else fname[:-len("_timestamps")]
-        root_label = root.replace("_", " ").title() if root else fname
-
-        # Candidate value names to match against.
-        candidate_prefix = root + "_"
-        candidate_exact = root
-        candidate_plural = root + "s"
-
-        candidates: List[Dict[str, Any]] = []
-        for other_name, other_val in metric_values.items():
-            if other_name == fname:
-                continue
-            if not isinstance(other_val, list):
-                continue
-            if len(other_val) != len(timestamps):
-                continue
-
-            name_matches = (
-                other_name.startswith(candidate_prefix)
-                or other_name == candidate_exact
-                or other_name == candidate_plural
-            )
-            if not name_matches:
-                continue
-
-            candidates.append({"name": other_name, "values": other_val})
-
-        if candidates:
-            for c in candidates:
-                values = c["values"]
-                # Determine if categorical (string) or numeric.
-                non_none = next((v for v in values if v is not None), None)
-                categorical = isinstance(non_none, str) if non_none is not None else False
-
-                # Build a readable label: "Root – Suffix" where possible.
-                val_name = c["name"]
-                if val_name.startswith(candidate_prefix):
-                    suffix = val_name[len(candidate_prefix):]
-                elif val_name in (candidate_exact, candidate_plural):
-                    suffix = val_name  # keep as-is
-                else:
-                    suffix = val_name
-                pretty_suffix = suffix.replace("_", " ").title()
-
-                if pretty_suffix and pretty_suffix.lower() != root_label.lower():
-                    label = f"{root_label} – {pretty_suffix}"
-                else:
-                    label = root_label
-
-                series.append(
-                    {
-                        "timestamps": timestamps,
-                        "values": values,
-                        "label": label,
-                        "categorical": categorical,
-                    }
-                )
-        else:
-            # Event-only series (no associated value list).
-            label = f"{root_label} Events"
-            series.append(
-                {
-                    "timestamps": timestamps,
-                    "values": None,
-                    "label": label,
-                    "categorical": False,
-                }
-            )
-
-    return series
-
-
-def visualize_metrics(metrics: LogMetrics, title: str = "OpenThread log metrics") -> None:
-    """
-    Generic visualization of all parsed metrics.
-
-    Every discovered time series (or event series) gets its own subplot:
-      - numeric values: scatter only (no line)
-      - categorical values: stepped series with discrete y-ticks
-      - events (timestamps only): vertical lines vs. time
-    """
-    series_list = _discover_time_series(metrics)
-
-    if not series_list:
-        print("[VIS] No metrics to visualize.")
-        return
-
-    nrows = len(series_list)
-    fig, axes = plt.subplots(nrows=nrows, ncols=1, sharex=True, figsize=(12, 3 * nrows))
-    if nrows == 1:
-        axes = [axes]
-
-    # Overall PDR summary for the figure title.
-    if metrics.total_tx > 0:
-        pdr = 100.0 * metrics.total_rx / metrics.total_tx
-        sup_title = f"{title} – PDR: {metrics.total_rx}/{metrics.total_tx} ({pdr:.2f}%)"
+# Data directory: prefer parser's DATA_DIR to keep behavior consistent
+DATA_DIR = Path(PARSER_DATA_DIR) if PARSER_DATA_DIR is not None else (SCRIPT_DIR / "data")
+
+# Graph output directory (relative to this visualizer file)
+GRAPHS_DIR = SCRIPT_DIR / "graphs"
+
+# Fixed y-axis ranges (set to None to auto-scale)
+RTT_YLIM: Optional[Tuple[float, float]] = (0, 3000)    # ms
+RSS_YLIM: Optional[Tuple[float, float]] = (-120, 0)    # dBm
+
+os.makedirs(GRAPHS_DIR, exist_ok=True)
+
+
+# -----------------------------------------------------------------------------
+# Stats helpers
+# -----------------------------------------------------------------------------
+
+def _mean_std(values: List[float]) -> Tuple[Optional[float], Optional[float]]:
+    if not values:
+        return None, None
+    n = len(values)
+    mu = sum(values) / n
+    if n > 1:
+        var = sum((v - mu) ** 2 for v in values) / n  # population variance
+        sigma = var ** 0.5
     else:
-        sup_title = title
-    fig.suptitle(sup_title, fontsize=14)
-
-    for ax, spec in zip(axes, series_list):
-        ts = spec["timestamps"]
-        values = spec["values"]
-        label = spec["label"]
-        categorical = spec["categorical"]
-
-        if values is None:
-            # Event-only series: vertical lines.
-            for ts_i in ts:
-                ax.axvline(ts_i, linestyle="--", alpha=0.5)
-            ax.set_title(label)
-            ax.set_ylabel("")
-            ax.set_yticks([])
-        else:
-            if categorical:
-                # Map categories to integer y values.
-                categories = sorted({v for v in values if v is not None})
-                y_map = {cat: idx for idx, cat in enumerate(categories)}
-                y_vals = [y_map.get(v, None) for v in values]
-
-                x_plot = [t for t, y in zip(ts, y_vals) if y is not None]
-                y_plot = [y for y in y_vals if y is not None]
-
-                if x_plot:
-                    ax.step(x_plot, y_plot, where="post")
-                ax.set_yticks(range(len(categories)))
-                ax.set_yticklabels(categories)
-                ax.set_ylabel(label)
-                ax.set_title(label)
-            else:
-                # Numeric time series: scatter only, small markers.
-                ax.scatter(ts, values, s=8)  # small points, no connecting line
-                ax.set_ylabel(label)
-                ax.set_title(label)
-
-        _format_time_axis(ax)
-
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.show()
+        sigma = 0.0
+    return mu, sigma
 
 
-# ---------------------------------------------------------------------------
-# CLI entry point: glob log files, generic visualization, no boxplots
-# ---------------------------------------------------------------------------
+def _overall_pdr(metrics: LogMetrics) -> Optional[float]:
+    if getattr(metrics, "total_ping_tx_packets", 0) > 0:
+        return 100.0 * metrics.total_ping_rx_packets / metrics.total_ping_tx_packets
+    return None
 
-def main() -> None:
-    data_dir_path = DATA_DIR
 
-    # Search for all .log files under data_dir_path (relative to this script)
-    pattern = str(DATA_DIR / "**" / "*.log")
+# -----------------------------------------------------------------------------
+# Plotting primitives (match previous 3-panel figure style)
+# -----------------------------------------------------------------------------
+
+def plot_rtt(ax, metrics: LogMetrics) -> None:
+    ts = metrics.ping_rtt_timestamps
+    rtt = metrics.ping_rtt_avg_ms
+    n = len(rtt)
+
+    if ts and rtt:
+        ax.plot(ts, rtt, marker=".", linestyle="", label="RTT (ms)")
+        ax.legend()
+    else:
+        ax.text(0.5, 0.5, "No RTT data", transform=ax.transAxes, ha="center", va="center")
+
+    ax.set_ylabel("RTT (ms)")
+
+    mu, sigma = _mean_std(rtt)
+    title = "Ping to Parent Round-trip Time"
+    suffix_parts: List[str] = []
+    if n > 0:
+        suffix_parts.append(f"nRTT={n}")
+    if mu is not None and sigma is not None:
+        suffix_parts.append(f"avg={mu:.1f} ms, std={sigma:.1f} ms")
+    if suffix_parts:
+        title += " (" + ", ".join(suffix_parts) + ")"
+    ax.set_title(title)
+
+    ax.grid(True)
+    if RTT_YLIM is not None:
+        ax.set_ylim(*RTT_YLIM)
+
+
+def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
+    ts_rss = metrics.ping_rss_timestamps
+    rss = metrics.ping_rss_dbm_values
+    loss_ts = metrics.ping_packet_loss_timestamps
+
+    plotted_any = False
+
+    # Packet loss vertical markers
+    if loss_ts:
+        for i, t in enumerate(loss_ts):
+            ax.axvline(
+                t,
+                linestyle="--",
+                color="red",
+                alpha=0.7,
+                label="Packet loss" if i == 0 else None,
+            )
+        plotted_any = True
+
+    # RSS scatter
+    if ts_rss and rss:
+        ax.plot(ts_rss, rss, marker=".", linestyle="", label="RTT RSS")
+        plotted_any = True
+    else:
+        ax.text(0.5, 0.5, "No RSS data", transform=ax.transAxes, ha="center", va="center")
+
+    if plotted_any:
+        ax.legend()
+
+    ax.set_ylabel("RSS (dBm)")
+
+    pdr = _overall_pdr(metrics)
+    n_rss = len(rss)
+    mu, sigma = _mean_std(rss)
+
+    title = "Ping to Parent RSS & Packet Loss"
+    suffix_parts: List[str] = []
+    if pdr is not None:
+        suffix_parts.append(f"PDR={pdr:.1f}%")
+    if n_rss > 0:
+        suffix_parts.append(f"nRSS={n_rss}")
+    if mu is not None and sigma is not None:
+        suffix_parts.append(f"avgRSS={mu:.1f} dBm, stdRSS={sigma:.1f} dB")
+    if suffix_parts:
+        title += " (" + ", ".join(suffix_parts) + ")"
+    ax.set_title(title)
+
+    ax.grid(True)
+    if RSS_YLIM is not None:
+        ax.set_ylim(*RSS_YLIM)
+
+
+def _select_parent_series(metrics: LogMetrics):
+    """
+    Prefer parent-router derived from node RLOC16 transitions (matches earlier plots where
+    parent IDs looked like 0c00/4000/7000/etc). Fall back to CLI parent query series.
+    """
+    ts = getattr(metrics, "parent_router_from_rloc16_transition_timestamps", [])
+    vals = getattr(metrics, "parent_router_from_rloc16_transition_values", [])
+    if ts and vals:
+        return ts, vals
+
+    ts2 = getattr(metrics, "parent_rloc16_from_query_timestamps", [])
+    vals2 = getattr(metrics, "parent_rloc16_from_query_values", [])
+    return ts2, vals2
+
+
+def plot_parents(ax, metrics: LogMetrics) -> None:
+    parent_ts, parent_vals = _select_parent_series(metrics)
+
+    if not parent_ts:
+        ax.set_title("Connected to Parent")
+        ax.text(0.5, 0.5, "No parent data", transform=ax.transAxes, ha="center", va="center")
+        ax.set_yticks([])
+        ax.grid(True)
+        return
+
+    unique_set = set(parent_vals)
+    other_parents = [p for p in unique_set if p != "No Parent"]
+
+    def sort_key(p: str):
+        try:
+            return (0, int(p, 16))
+        except Exception:
+            return (1, p)
+
+    other_sorted = sorted(other_parents, key=sort_key)
+
+    if "No Parent" in unique_set:
+        unique_parents = ["No Parent"] + other_sorted
+    else:
+        unique_parents = other_sorted
+
+    parent_to_index = {p: i for i, p in enumerate(unique_parents)}
+    y = [parent_to_index[p] for p in parent_vals]
+
+    ax.scatter(parent_ts, y)
+    ax.set_ylabel("Parent (RLOC16)")
+    ax.set_yticks(range(len(unique_parents)))
+    ax.set_yticklabels(unique_parents)
+    ax.set_ylim(-0.5, len(unique_parents) - 0.5)
+    ax.set_title("Connected to Parent")
+    ax.grid(True)
+
+
+# -----------------------------------------------------------------------------
+# Per-file processing (save the same 3-panel figure as before)
+# -----------------------------------------------------------------------------
+
+def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]], show: bool = False) -> None:
+    log_path_obj = Path(log_path)
+    data_dir_path = Path(DATA_DIR)
+
+    # Mirror input subdirectories under GRAPHS_DIR
+    rel_log_path = log_path_obj.relative_to(data_dir_path)
+    graph_dir = GRAPHS_DIR / rel_log_path.parent
+    graph_dir.mkdir(parents=True, exist_ok=True)
+
+    label_for_file = str(rel_log_path)
+
+    metrics = parse_log_file(log_path)
+
+    # Collect RTTs for the across-files boxplot
+    if metrics.ping_rtt_avg_ms:
+        rtt_by_file[label_for_file] = metrics.ping_rtt_avg_ms
+
+    # Skip figure only if absolutely nothing relevant is present
+    has_any = (
+        bool(metrics.ping_rtt_timestamps)
+        or bool(metrics.ping_rss_timestamps)
+        or bool(metrics.ping_packet_loss_timestamps)
+        or bool(getattr(metrics, "parent_router_from_rloc16_transition_timestamps", []))
+        or bool(getattr(metrics, "parent_rloc16_from_query_timestamps", []))
+    )
+    if not has_any:
+        print(f"[INFO] {label_for_file}: no time-series data to plot; skipping figure.")
+        return
+
+    fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(12, 8))
+    ax_rtt, ax_rss, ax_parent = axes
+
+    plot_rtt(ax_rtt, metrics)
+    plot_rss_and_loss(ax_rss, metrics)
+    plot_parents(ax_parent, metrics)
+
+    ax_parent.set_xlabel("Time")
+    fig.autofmt_xdate(rotation=45)
+
+    # Top title: only the file label; stats are in subplot titles
+    fig.suptitle(label_for_file, y=0.98)
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
+
+    out_name = log_path_obj.stem + "_timeseries.png"
+    out_path = graph_dir / out_name
+    fig.savefig(out_path)
+    print(f"[OK] Saved combined time-series graph for {label_for_file} -> {out_path}")
+
+    if show:
+        plt.show()
+    plt.close(fig)
+
+
+def create_rtt_boxplot(rtt_by_file: Dict[str, List[float]]) -> None:
+    if not rtt_by_file:
+        print("[INFO] No RTT data collected; skipping RTT box plot.")
+        return
+
+    labels = list(rtt_by_file.keys())
+    data = [rtt_by_file[label] for label in labels]
+
+    plt.figure()
+    plt.boxplot(data, labels=labels, showfliers=False)
+    plt.ylabel("RTT (ms)")
+    plt.title("Ping to Parent Round-trip Time per File")
+    plt.xticks(rotation=45, ha="right")
+    plt.tight_layout()
+
+    boxplot_path = GRAPHS_DIR / "all_files_rtt_boxplot.png"
+    plt.savefig(boxplot_path)
+    plt.close()
+    print(f"[OK] Saved RTT box plot -> {boxplot_path}")
+
+
+def main(show: bool = False) -> None:
+    data_dir_path = Path(DATA_DIR)
+
+    pattern = str(data_dir_path / "**" / "*.log")
     all_candidates = glob(pattern, recursive=True)
 
     log_files: List[str] = []
@@ -499,12 +280,11 @@ def main() -> None:
         try:
             rel_parts = p.relative_to(data_dir_path).parts
         except ValueError:
-            # Should not happen, but be defensive.
             continue
 
+        # Exclude dot-directories (e.g., .git, .cache)
         dir_parts = rel_parts[:-1]
         if any(part.startswith(".") for part in dir_parts):
-            # Skip dot-directories under data/
             continue
 
         log_files.append(path_str)
@@ -517,16 +297,13 @@ def main() -> None:
     for lf in log_files:
         print(f"  - {lf}")
 
-    # Process each log file: parse, summarize, visualize
+    rtt_by_file: Dict[str, List[float]] = {}
     for log_path in log_files:
-        metrics = parse_log_file(log_path)
-        rel_label = str(Path(log_path).relative_to(data_dir_path))
+        process_log_file(log_path, rtt_by_file, show=show)
 
-        print("\n[SUMMARY]")
-        print(f"  File:            {rel_label}")
-        print(f"  RTT samples:     {len(metrics.rtt_timestamps)}")
-        print(f"  RSS samples:     {len(metrics.rss_timestamps)}")
-        print(f"  State changes:   {len(metrics.state_timestamps)}")
-        print(f"  Parent changes:  {len(metrics.parent_timestamps)}")
-        print(f"  Eff parents:     {len(metrics.eff_parent_timestamps)}")
-        print(f"  Loss events:     {len(metrics.loss_timestamps)}")
+    create_rtt_boxplot(rtt_by_file)
+
+
+if __name__ == "__main__":
+    # Set show=True if you want interactive windows in addition to saved PNGs.
+    main(show=False)
