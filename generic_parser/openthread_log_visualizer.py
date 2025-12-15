@@ -593,7 +593,12 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
 # Per-file processing (save the 3-panel figure)
 # -----------------------------------------------------------------------------
 
-def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]], show: bool = False) -> None:
+def process_log_file(
+    log_path: str,
+    rtt_by_file: Dict[str, List[float]],
+    rss_by_file: Dict[str, List[float]],
+    show: bool = False,
+) -> None:
     log_path_obj = Path(log_path)
     data_dir_path = Path(DATA_DIR)
 
@@ -613,6 +618,9 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]], show: b
 
     if metrics.ping_rtt_avg_ms:
         rtt_by_file[label_for_file] = metrics.ping_rtt_avg_ms
+
+    if getattr(metrics, "ping_rss_dbm_values", None):
+        rss_by_file[label_for_file] = metrics.ping_rss_dbm_values
 
     has_any = (
         bool(metrics.ping_rtt_timestamps)
@@ -680,6 +688,27 @@ def create_rtt_boxplot(rtt_by_file: Dict[str, List[float]]) -> None:
     print(f"[OK] Saved RTT box plot -> {boxplot_path}")
 
 
+def create_rss_boxplot(rss_by_file: Dict[str, List[float]]) -> None:
+    if not rss_by_file:
+        print("[INFO] No RSS data collected; skipping RSS box plot.")
+        return
+
+    labels = list(rss_by_file.keys())
+    data = [rss_by_file[label] for label in labels]
+
+    plt.figure()
+    plt.boxplot(data, labels=labels, showfliers=False)
+    plt.ylabel("RSS (dBm)")
+    plt.title("Ping to Parent RSS per File")
+    plt.xticks(rotation=45, ha="right")
+    plt.tight_layout()
+
+    boxplot_path = GRAPHS_DIR / "all_files_rss_boxplot.png"
+    plt.savefig(boxplot_path)
+    plt.close()
+    print(f"[OK] Saved RSS box plot -> {boxplot_path}")
+
+
 def main(show: bool = False) -> None:
     data_dir_path = Path(DATA_DIR)
 
@@ -709,10 +738,13 @@ def main(show: bool = False) -> None:
         print(f"  - {lf}")
 
     rtt_by_file: Dict[str, List[float]] = {}
+    rss_by_file: Dict[str, List[float]] = {}
+
     for log_path in log_files:
-        process_log_file(log_path, rtt_by_file, show=show)
+        process_log_file(log_path, rtt_by_file, rss_by_file, show=show)
 
     create_rtt_boxplot(rtt_by_file)
+    create_rss_boxplot(rss_by_file)
 
 
 if __name__ == "__main__":
