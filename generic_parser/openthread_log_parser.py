@@ -22,13 +22,17 @@ DATA_DIR = SCRIPT_DIR / "data"
 ping_rtt_regex = re.compile(
     r"""
     \[(?P<ts>[^\]]+)\]
-    .*?Round-trip\ min/avg/max\ =\
-    (?P<min>\d+(?:\.\d+)?)/ 
-    (?P<avg>\d+(?:\.\d+)?)/ 
-    (?P<max>\d+(?:\.\d+)?)\ ms\.?
+    .*?Round-trip\ min/avg/max\ \=\s*
+    (?P<min>\d+(?:\.\d+)?)
+    /
+    (?P<avg>\d+(?:\.\d+)?)
+    /
+    (?P<max>\d+(?:\.\d+)?)
+    \s*ms\.?
     """,
     re.VERBOSE,
 )
+
 
 # Regex for packet summary lines with packet loss.
 ping_packet_loss_regex = re.compile(
