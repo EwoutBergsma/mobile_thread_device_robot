@@ -1,0 +1,10 @@
+# Ignore venv folders
+venv/
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+
+# video files are too large to upload to github
+*.mp4
+
