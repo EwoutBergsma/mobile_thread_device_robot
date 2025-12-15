@@ -582,8 +582,8 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
     ax.set_yticklabels(unique_parents, fontfamily="monospace")
     ax.set_ylim(-0.5, len(unique_parents) - 0.5)
 
-    switches = max(0, len(segments) - 1)
-    ax.set_title(f"Connected to Parent (handoffs={switches})")
+    n_parents = max(0, len(segments))
+    ax.set_title(f"Connected to Parent (nParents={n_parents})")
 
     ax.grid(True, axis="y")
     ax.grid(False, axis="x")
