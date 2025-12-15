@@ -13,20 +13,23 @@ from openthread_log_parser import parse_log_file, LogMetrics, DATA_DIR as PARSER
 # Output / plotting configuration
 # -----------------------------------------------------------------------------
 
-# Base directory: the directory where this visualizer script resides
 SCRIPT_DIR = Path(__file__).resolve().parent
-
-# Data directory: prefer parser's DATA_DIR to keep behavior consistent
 DATA_DIR = Path(PARSER_DATA_DIR) if PARSER_DATA_DIR is not None else (SCRIPT_DIR / "data")
 
-# Graph output directory (relative to this visualizer file)
 GRAPHS_DIR = SCRIPT_DIR / "graphs"
-
-# Fixed y-axis ranges (set to None to auto-scale)
-RTT_YLIM: Optional[Tuple[float, float]] = (0, 3000)    # ms
-RSS_YLIM: Optional[Tuple[float, float]] = (-120, 0)    # dBm
-
 os.makedirs(GRAPHS_DIR, exist_ok=True)
+
+RSS_YLIM: Optional[Tuple[float, float]] = (-120, 0)  # dBm
+
+# Horizontal threshold line on RSS subplot
+PSS_RSS_THRESHOLD_DBM: float = -65.0
+
+# Packet-loss "rug" settings (fraction of y-range at the top)
+LOSS_RUG_FRACTION: float = 1  # ~8% of the y-range
+
+# Legend styling
+LEGEND_FRAME_ALPHA: float = 1.0
+LEGEND_ZORDER: int = 50
 
 
 # -----------------------------------------------------------------------------
@@ -52,8 +55,20 @@ def _overall_pdr(metrics: LogMetrics) -> Optional[float]:
     return None
 
 
+def _add_legend_on_top(ax) -> None:
+    """
+    Make legend opaque (no transparency) and ensure it draws above plot artists.
+    """
+    leg = ax.legend(framealpha=LEGEND_FRAME_ALPHA)
+    if leg is not None:
+        leg.set_zorder(LEGEND_ZORDER)
+        frame = leg.get_frame()
+        if frame is not None:
+            frame.set_alpha(LEGEND_FRAME_ALPHA)
+
+
 # -----------------------------------------------------------------------------
-# Plotting primitives (match previous 3-panel figure style)
+# Plotting primitives (3-panel figure)
 # -----------------------------------------------------------------------------
 
 def plot_rtt(ax, metrics: LogMetrics) -> None:
@@ -62,8 +77,8 @@ def plot_rtt(ax, metrics: LogMetrics) -> None:
     n = len(rtt)
 
     if ts and rtt:
-        ax.plot(ts, rtt, marker=".", linestyle="", label="RTT (ms)")
-        ax.legend()
+        ax.plot(ts, rtt, marker=".", linestyle="", label="RTT (ms)", zorder=4)
+        _add_legend_on_top(ax)
     else:
         ax.text(0.5, 0.5, "No RTT data", transform=ax.transAxes, ha="center", va="center")
 
@@ -81,8 +96,10 @@ def plot_rtt(ax, metrics: LogMetrics) -> None:
     ax.set_title(title)
 
     ax.grid(True)
-    if RTT_YLIM is not None:
-        ax.set_ylim(*RTT_YLIM)
+
+    # Dynamic RTT y-axis: 0..max(1000, max(RTT))
+    upper = max(1000.0, float(max(rtt))) if rtt else 1000.0
+    ax.set_ylim(0.0, upper)
 
 
 def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
@@ -90,29 +107,63 @@ def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
     rss = metrics.ping_rss_dbm_values
     loss_ts = metrics.ping_packet_loss_timestamps
 
-    plotted_any = False
+    # Decide y-limits first (so we can draw the packet-loss rug in data coords).
+    if RSS_YLIM is not None:
+        y_min, y_max = RSS_YLIM
+    else:
+        # Fallback: derive from RSS if available; otherwise use a reasonable default.
+        if rss:
+            y_min = min(rss) - 5.0
+            y_max = max(rss) + 5.0
+        else:
+            y_min, y_max = (-120.0, 0.0)
 
-    # Packet loss vertical markers
+        # Ensure threshold is visible in auto mode.
+        y_min = min(y_min, PSS_RSS_THRESHOLD_DBM - 5.0)
+        y_max = max(y_max, PSS_RSS_THRESHOLD_DBM + 5.0)
+
+    ax.set_ylim(y_min, y_max)
+
+    # Packet loss "rug" at the top (short ticks, not full-height lines).
     if loss_ts:
-        for i, t in enumerate(loss_ts):
-            ax.axvline(
-                t,
-                linestyle="--",
-                color="red",
-                alpha=0.7,
-                label="Packet loss" if i == 0 else None,
-            )
-        plotted_any = True
+        y_range = y_max - y_min
+        rug_bottom = y_max - (LOSS_RUG_FRACTION * y_range)
+        rug_top = y_max
+        ax.vlines(
+            loss_ts,
+            rug_bottom,
+            rug_top,
+            colors="red",
+            linestyles="--",
+            linewidth=0.5,  # thinner red vertical lines
+            label="Packet loss",
+            zorder=6,
+        )
 
     # RSS scatter
     if ts_rss and rss:
-        ax.plot(ts_rss, rss, marker=".", linestyle="", label="RTT RSS")
-        plotted_any = True
+        ax.plot(
+            ts_rss,
+            rss,
+            marker=".",
+            linestyle="",
+            label="RTT RSS",
+            zorder=7,
+        )
     else:
         ax.text(0.5, 0.5, "No RSS data", transform=ax.transAxes, ha="center", va="center")
 
-    if plotted_any:
-        ax.legend()
+    # PSS RSS Threshold line (on top of data, below legend)
+    ax.axhline(
+        PSS_RSS_THRESHOLD_DBM,
+        linestyle="--",
+        color="black",   # black horizontal line
+        linewidth=1.5,   # horizontal line
+        label="PSS RSS Threshold",
+        zorder=10,
+    )
+
+    _add_legend_on_top(ax)
 
     ax.set_ylabel("RSS (dBm)")
 
@@ -133,14 +184,11 @@ def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
     ax.set_title(title)
 
     ax.grid(True)
-    if RSS_YLIM is not None:
-        ax.set_ylim(*RSS_YLIM)
 
 
 def _select_parent_series(metrics: LogMetrics):
     """
-    Prefer parent-router derived from node RLOC16 transitions (matches earlier plots where
-    parent IDs looked like 0c00/4000/7000/etc). Fall back to CLI parent query series.
+    Prefer parent-router derived from node RLOC16 transitions; fall back to CLI parent query series.
     """
     ts = getattr(metrics, "parent_router_from_rloc16_transition_timestamps", [])
     vals = getattr(metrics, "parent_router_from_rloc16_transition_values", [])
@@ -181,7 +229,7 @@ def plot_parents(ax, metrics: LogMetrics) -> None:
     parent_to_index = {p: i for i, p in enumerate(unique_parents)}
     y = [parent_to_index[p] for p in parent_vals]
 
-    ax.scatter(parent_ts, y)
+    ax.scatter(parent_ts, y, zorder=4)
     ax.set_ylabel("Parent (RLOC16)")
     ax.set_yticks(range(len(unique_parents)))
     ax.set_yticklabels(unique_parents)
@@ -191,14 +239,13 @@ def plot_parents(ax, metrics: LogMetrics) -> None:
 
 
 # -----------------------------------------------------------------------------
-# Per-file processing (save the same 3-panel figure as before)
+# Per-file processing (save the 3-panel figure)
 # -----------------------------------------------------------------------------
 
 def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]], show: bool = False) -> None:
     log_path_obj = Path(log_path)
     data_dir_path = Path(DATA_DIR)
 
-    # Mirror input subdirectories under GRAPHS_DIR
     rel_log_path = log_path_obj.relative_to(data_dir_path)
     graph_dir = GRAPHS_DIR / rel_log_path.parent
     graph_dir.mkdir(parents=True, exist_ok=True)
@@ -207,11 +254,9 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]], show: b
 
     metrics = parse_log_file(log_path)
 
-    # Collect RTTs for the across-files boxplot
     if metrics.ping_rtt_avg_ms:
         rtt_by_file[label_for_file] = metrics.ping_rtt_avg_ms
 
-    # Skip figure only if absolutely nothing relevant is present
     has_any = (
         bool(metrics.ping_rtt_timestamps)
         or bool(metrics.ping_rss_timestamps)
@@ -233,7 +278,6 @@ def process_log_file(log_path: str, rtt_by_file: Dict[str, List[float]], show: b
     ax_parent.set_xlabel("Time")
     fig.autofmt_xdate(rotation=45)
 
-    # Top title: only the file label; stats are in subplot titles
     fig.suptitle(label_for_file, y=0.98)
     fig.tight_layout(rect=[0, 0, 1, 0.96])
 
@@ -282,7 +326,6 @@ def main(show: bool = False) -> None:
         except ValueError:
             continue
 
-        # Exclude dot-directories (e.g., .git, .cache)
         dir_parts = rel_parts[:-1]
         if any(part.startswith(".") for part in dir_parts):
             continue
@@ -305,5 +348,4 @@ def main(show: bool = False) -> None:
 
 
 if __name__ == "__main__":
-    # Set show=True if you want interactive windows in addition to saved PNGs.
     main(show=False)
