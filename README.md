@@ -21,3 +21,11 @@ nano wander.log
 nano esp32_logger.log
 
 ```
+
+
+
+```
+ros2 service call /robot_1/wall_follow/_action/cancel_goal action_msgs/srv/CancelGoal \
+"{goal_info: {goal_id: {uuid: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}, stamp: {sec: 0, nanosec: 0}}}"
+
+```

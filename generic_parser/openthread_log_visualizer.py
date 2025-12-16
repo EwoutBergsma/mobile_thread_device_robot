@@ -27,7 +27,7 @@ os.makedirs(GRAPHS_DIR, exist_ok=True)
 RSS_YLIM: Optional[Tuple[float, float]] = (-120, 0)  # dBm
 
 # Horizontal threshold line on RSS subplot
-PSS_RSS_THRESHOLD_DBM: float = -65.0
+PPS_RSS_THRESHOLD_DBM: float = -65.0
 
 # Packet-loss "rug" settings (fraction of y-range at the top)
 LOSS_RUG_FRACTION: float = 1  # fraction of y-range at top
@@ -399,8 +399,8 @@ def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
         else:
             y_min, y_max = (-120.0, 0.0)
 
-        y_min = min(y_min, PSS_RSS_THRESHOLD_DBM - 5.0)
-        y_max = max(y_max, PSS_RSS_THRESHOLD_DBM + 5.0)
+        y_min = min(y_min, PPS_RSS_THRESHOLD_DBM - 5.0)
+        y_max = max(y_max, PPS_RSS_THRESHOLD_DBM + 5.0)
 
     ax.set_ylim(y_min, y_max)
 
@@ -425,11 +425,11 @@ def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
         ax.text(0.5, 0.5, "No RSS data", transform=ax.transAxes, ha="center", va="center")
 
     ax.axhline(
-        PSS_RSS_THRESHOLD_DBM,
+        PPS_RSS_THRESHOLD_DBM,
         linestyle="--",
         color="black",
         linewidth=1.5,
-        label="PSS RSS Threshold",
+        label="PPS RSS Threshold",
         zorder=10,
     )
 
