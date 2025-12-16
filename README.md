@@ -11,9 +11,10 @@ ssh fieldlab@10.149.24.26
 // nohup python3 esp32_uart_logger.py > esp32_logger.log 2>&1 &
 
 nohup python3 wander.py > wander.log 2>&1 & nohup python3 esp32_uart_logger.py > esp32_uart_logger.log 2>&1 &
+nohup python3 wall_follow_and_log.py > wall_follow_and_log.log 2>&1 & nohup python3 esp32_uart_logger.py > esp32_uart_logger.log 2>&1 &
 
 // to stop the node:
-ps aux | grep wander.py & ps aux | grep esp32_uart_logger.py
+ps aux | grep wander.py & ps aux | grep esp32_uart_logger.py & ps aux | grep wall_follow_and_log.py
 kill <PID>
 
 // to view logs:

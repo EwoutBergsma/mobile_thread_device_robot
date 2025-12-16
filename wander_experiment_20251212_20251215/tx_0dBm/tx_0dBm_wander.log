@@ -1,0 +1,985 @@
+nohup: ignoring input
+[INFO] [1765540339.332645921] [create3_wander_full_control]: Wander node started (full control, no reflexes).
+[INFO] [1765540340.024284138] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540340.028066131] [create3_wander_full_control]: Will turn -45.2° for 0.53s.
+[INFO] [1765540342.890269188] [create3_wander_full_control]: IR obstacle (max=706) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540342.893949348] [create3_wander_full_control]: Will turn -56.3° for 0.65s.
+[INFO] [1765540365.482673693] [create3_wander_full_control]: IR obstacle (max=723) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540365.486278989] [create3_wander_full_control]: Will turn -166.2° for 1.93s.
+[INFO] [1765540369.562990789] [create3_wander_full_control]: IR obstacle (max=1226) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540369.718037780] [create3_wander_full_control]: Will turn 152.4° for 1.77s.
+[INFO] [1765540373.674971316] [create3_wander_full_control]: IR obstacle (max=758) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540373.677620400] [create3_wander_full_control]: Will turn 47.4° for 0.55s.
+[INFO] [1765540375.837296556] [create3_wander_full_control]: IR obstacle (max=752) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540375.841357532] [create3_wander_full_control]: Will turn 136.7° for 1.59s.
+[INFO] [1765540380.842580727] [create3_wander_full_control]: IR obstacle (max=837) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540380.845188219] [create3_wander_full_control]: Will turn 25.7° for 0.30s.
+[INFO] [1765540382.875288472] [create3_wander_full_control]: IR obstacle (max=701) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540382.878732844] [create3_wander_full_control]: Will turn 110.6° for 1.29s.
+[INFO] [1765540461.937810887] [create3_wander_full_control]: IR obstacle (max=731) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540461.941716015] [create3_wander_full_control]: Will turn 92.0° for 1.07s.
+[INFO] [1765540529.558614414] [create3_wander_full_control]: IR obstacle (max=747) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540529.562755280] [create3_wander_full_control]: Will turn 135.6° for 1.58s.
+[INFO] [1765540535.252932303] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540535.255504203] [create3_wander_full_control]: Will turn 158.0° for 1.84s.
+[INFO] [1765540595.002241432] [create3_wander_full_control]: IR obstacle (max=789) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540595.006912294] [create3_wander_full_control]: Will turn -84.5° for 0.98s.
+[INFO] [1765540600.216459465] [create3_wander_full_control]: IR obstacle (max=764) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540600.219111984] [create3_wander_full_control]: Will turn -103.2° for 1.20s.
+[INFO] [1765540623.546247863] [create3_wander_full_control]: IR obstacle (max=700) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540623.550249772] [create3_wander_full_control]: Will turn -58.5° for 0.68s.
+[INFO] [1765540625.962001315] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540625.965968001] [create3_wander_full_control]: Will turn 125.3° for 1.46s.
+[INFO] [1765540628.875768879] [create3_wander_full_control]: IR obstacle (max=743) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540628.879071057] [create3_wander_full_control]: Will turn -179.8° for 2.09s.
+[INFO] [1765540632.026219160] [create3_wander_full_control]: IR obstacle (max=754) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540632.029643113] [create3_wander_full_control]: Will turn -87.7° for 1.02s.
+[INFO] [1765540667.880928840] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540667.884233628] [create3_wander_full_control]: Will turn 58.4° for 0.68s.
+[INFO] [1765540670.345287462] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540670.348870265] [create3_wander_full_control]: Will turn -82.0° for 0.95s.
+[INFO] [1765540672.921360800] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540672.923843044] [create3_wander_full_control]: Will turn -2.4° for 0.03s.
+[INFO] [1765540674.651152202] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540674.654709135] [create3_wander_full_control]: Will turn -15.3° for 0.18s.
+[INFO] [1765540676.426431965] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540676.429486219] [create3_wander_full_control]: Will turn -67.7° for 0.79s.
+[INFO] [1765540679.817084542] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540679.820386442] [create3_wander_full_control]: Will turn 72.0° for 0.84s.
+[INFO] [1765540682.317870982] [create3_wander_full_control]: IR obstacle (max=922) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540682.320490464] [create3_wander_full_control]: Will turn 154.1° for 1.79s.
+[INFO] [1765540686.109223778] [create3_wander_full_control]: IR obstacle (max=789) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540686.112855469] [create3_wander_full_control]: Will turn 156.6° for 1.82s.
+[INFO] [1765540690.001826859] [create3_wander_full_control]: IR obstacle (max=772) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540690.005890693] [create3_wander_full_control]: Will turn -176.3° for 2.05s.
+[INFO] [1765540755.249521887] [create3_wander_full_control]: IR obstacle (max=719) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540755.252833990] [create3_wander_full_control]: Will turn -9.7° for 0.11s.
+[INFO] [1765540757.059745525] [create3_wander_full_control]: IR obstacle (max=769) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540757.064272111] [create3_wander_full_control]: Will turn -45.3° for 0.53s.
+[INFO] [1765540758.802424140] [create3_wander_full_control]: IR obstacle (max=717) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540758.806390326] [create3_wander_full_control]: Will turn 75.0° for 0.87s.
+[INFO] [1765540760.722722295] [create3_wander_full_control]: IR obstacle (max=2078) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540760.824568627] [create3_wander_full_control]: Will turn -127.5° for 1.48s.
+[INFO] [1765540763.376144652] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540763.379230795] [create3_wander_full_control]: Will turn -19.4° for 0.23s.
+[INFO] [1765540765.040468261] [create3_wander_full_control]: IR obstacle (max=716) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540765.044110712] [create3_wander_full_control]: Will turn 111.5° for 1.30s.
+[INFO] [1765540780.177911531] [create3_wander_full_control]: IR obstacle (max=700) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540780.181365299] [create3_wander_full_control]: Will turn -38.4° for 0.45s.
+[INFO] [1765540781.682595615] [create3_wander_full_control]: IR obstacle (max=932) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540781.685530168] [create3_wander_full_control]: Will turn -64.7° for 0.75s.
+[INFO] [1765540783.523336281] [create3_wander_full_control]: IR obstacle (max=1820) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540783.527444633] [create3_wander_full_control]: Will turn -40.6° for 0.47s.
+[INFO] [1765540785.075546069] [create3_wander_full_control]: IR obstacle (max=1574) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540785.079297666] [create3_wander_full_control]: Will turn -42.2° for 0.49s.
+[INFO] [1765540786.626263599] [create3_wander_full_control]: IR obstacle (max=2658) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540786.629668663] [create3_wander_full_control]: Will turn 165.9° for 1.93s.
+[INFO] [1765540789.621117964] [create3_wander_full_control]: IR obstacle (max=1403) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540789.625073392] [create3_wander_full_control]: Will turn 87.5° for 1.02s.
+[INFO] [1765540791.729291537] [create3_wander_full_control]: IR obstacle (max=1909) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540791.825833054] [create3_wander_full_control]: Will turn 98.9° for 1.15s.
+[INFO] [1765540845.267742108] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540845.271476372] [create3_wander_full_control]: Will turn -21.7° for 0.25s.
+[INFO] [1765540847.425803485] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765540847.428571818] [create3_wander_full_control]: Will turn -83.4° for 0.97s.
+[INFO] [1765540868.903740949] [create3_wander_full_control]: IR obstacle (max=740) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540868.907694877] [create3_wander_full_control]: Will turn 28.7° for 0.33s.
+[INFO] [1765540870.837948904] [create3_wander_full_control]: IR obstacle (max=794) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540870.840668052] [create3_wander_full_control]: Will turn -75.4° for 0.88s.
+[INFO] [1765540872.773756873] [create3_wander_full_control]: IR obstacle (max=889) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540873.908427779] [create3_wander_full_control]: Will turn 79.2° for 0.92s.
+[INFO] [1765540875.879166385] [create3_wander_full_control]: IR obstacle (max=1199) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540875.882533543] [create3_wander_full_control]: Will turn -150.6° for 1.75s.
+[INFO] [1765540904.473099506] [create3_wander_full_control]: IR obstacle (max=760) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540904.476389665] [create3_wander_full_control]: Will turn -115.0° for 1.34s.
+[INFO] [1765540961.483196293] [create3_wander_full_control]: IR obstacle (max=746) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765540961.486482859] [create3_wander_full_control]: Will turn 167.2° for 1.95s.
+[INFO] [1765541003.426946782] [create3_wander_full_control]: IR obstacle (max=739) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541003.430067703] [create3_wander_full_control]: Will turn -131.0° for 1.52s.
+[INFO] [1765541077.728295962] [create3_wander_full_control]: IR obstacle (max=771) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541077.731356034] [create3_wander_full_control]: Will turn -53.4° for 0.62s.
+[INFO] [1765541079.923554672] [create3_wander_full_control]: IR obstacle (max=800) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541079.927667860] [create3_wander_full_control]: Will turn -131.1° for 1.53s.
+[INFO] [1765541082.528833550] [create3_wander_full_control]: IR obstacle (max=725) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541082.532234359] [create3_wander_full_control]: Will turn -26.8° for 0.31s.
+[INFO] [1765541083.921525756] [create3_wander_full_control]: IR obstacle (max=727) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541083.924144056] [create3_wander_full_control]: Will turn -12.8° for 0.15s.
+[INFO] [1765541085.666915288] [create3_wander_full_control]: IR obstacle (max=973) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541085.671043679] [create3_wander_full_control]: Will turn -110.3° for 1.28s.
+[INFO] [1765541088.031416317] [create3_wander_full_control]: IR obstacle (max=881) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541088.034031691] [create3_wander_full_control]: Will turn -154.0° for 1.79s.
+[INFO] [1765541109.202192071] [create3_wander_full_control]: IR obstacle (max=814) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541109.205005646] [create3_wander_full_control]: Will turn 82.8° for 0.96s.
+[INFO] [1765541154.821646938] [create3_wander_full_control]: IR obstacle (max=717) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541154.824330367] [create3_wander_full_control]: Will turn 164.2° for 1.91s.
+[INFO] [1765541250.730777693] [create3_wander_full_control]: IR obstacle (max=714) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541250.733556640] [create3_wander_full_control]: Will turn 153.2° for 1.78s.
+[INFO] [1765541299.790379471] [create3_wander_full_control]: IR obstacle (max=725) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541299.794377366] [create3_wander_full_control]: Will turn -131.0° for 1.52s.
+[INFO] [1765541329.948851846] [create3_wander_full_control]: IR obstacle (max=729) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541329.951687550] [create3_wander_full_control]: Will turn 13.5° for 0.16s.
+[INFO] [1765541331.840470424] [create3_wander_full_control]: IR obstacle (max=771) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541333.294061642] [create3_wander_full_control]: Will turn -54.5° for 0.63s.
+[INFO] [1765541335.024659143] [create3_wander_full_control]: IR obstacle (max=708) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541335.028346983] [create3_wander_full_control]: Will turn 114.3° for 1.33s.
+[INFO] [1765541337.424868602] [create3_wander_full_control]: IR obstacle (max=1109) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541337.428490129] [create3_wander_full_control]: Will turn 138.9° for 1.62s.
+[INFO] [1765541379.216627020] [create3_wander_full_control]: IR obstacle (max=718) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541379.219645906] [create3_wander_full_control]: Will turn 26.3° for 0.31s.
+[INFO] [1765541381.955448622] [create3_wander_full_control]: IR obstacle (max=714) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541381.960003377] [create3_wander_full_control]: Will turn -53.5° for 0.62s.
+[INFO] [1765541383.634589481] [create3_wander_full_control]: IR obstacle (max=1004) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541383.638178582] [create3_wander_full_control]: Will turn 82.8° for 0.96s.
+[INFO] [1765541388.629787018] [create3_wander_full_control]: IR obstacle (max=793) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541388.638020910] [create3_wander_full_control]: Will turn 7.5° for 0.09s.
+[INFO] [1765541389.777754124] [create3_wander_full_control]: IR obstacle (max=1155) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541389.781706684] [create3_wander_full_control]: Will turn 25.7° for 0.30s.
+[INFO] [1765541391.169464893] [create3_wander_full_control]: IR obstacle (max=1156) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541391.172228227] [create3_wander_full_control]: Will turn 176.8° for 2.06s.
+[INFO] [1765541439.958450277] [create3_wander_full_control]: IR obstacle (max=749) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541439.962466317] [create3_wander_full_control]: Will turn 11.2° for 0.13s.
+[INFO] [1765541441.766595281] [create3_wander_full_control]: IR obstacle (max=789) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541441.770724005] [create3_wander_full_control]: Will turn 3.8° for 0.04s.
+[INFO] [1765541443.427199419] [create3_wander_full_control]: IR obstacle (max=786) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541443.430243176] [create3_wander_full_control]: Will turn -174.4° for 2.03s.
+[INFO] [1765541501.854185545] [create3_wander_full_control]: IR obstacle (max=723) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541501.857514872] [create3_wander_full_control]: Will turn -34.0° for 0.40s.
+[INFO] [1765541504.135648132] [create3_wander_full_control]: IR obstacle (max=803) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541504.138467836] [create3_wander_full_control]: Will turn 144.7° for 1.68s.
+[INFO] [1765541507.242324680] [create3_wander_full_control]: IR obstacle (max=703) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541507.246300869] [create3_wander_full_control]: Will turn -113.3° for 1.32s.
+[INFO] [1765541509.627062768] [create3_wander_full_control]: IR obstacle (max=967) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541509.630199986] [create3_wander_full_control]: Will turn 43.3° for 0.50s.
+[INFO] [1765541511.226325728] [create3_wander_full_control]: IR obstacle (max=1567) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541511.229815256] [create3_wander_full_control]: Will turn 169.4° for 1.97s.
+[INFO] [1765541574.379171022] [create3_wander_full_control]: IR obstacle (max=760) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541574.382059021] [create3_wander_full_control]: Will turn -20.4° for 0.24s.
+[INFO] [1765541576.300784874] [create3_wander_full_control]: IR obstacle (max=759) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541576.304424882] [create3_wander_full_control]: Will turn 138.4° for 1.61s.
+[INFO] [1765541581.005764857] [create3_wander_full_control]: IR obstacle (max=708) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541581.009637973] [create3_wander_full_control]: Will turn -149.8° for 1.74s.
+[INFO] [1765541583.775932038] [create3_wander_full_control]: IR obstacle (max=999) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541583.780846291] [create3_wander_full_control]: Will turn 67.9° for 0.79s.
+[INFO] [1765541585.628939866] [create3_wander_full_control]: IR obstacle (max=1186) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541585.633044110] [create3_wander_full_control]: Will turn 30.9° for 0.36s.
+[INFO] [1765541587.085108635] [create3_wander_full_control]: IR obstacle (max=1084) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541587.088435797] [create3_wander_full_control]: Will turn 76.3° for 0.89s.
+[INFO] [1765541589.026707203] [create3_wander_full_control]: IR obstacle (max=2072) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541590.934380808] [create3_wander_full_control]: Will turn -48.7° for 0.57s.
+[INFO] [1765541592.575339295] [create3_wander_full_control]: IR obstacle (max=1908) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541592.579898238] [create3_wander_full_control]: Will turn 160.0° for 1.86s.
+[INFO] [1765541595.532796675] [create3_wander_full_control]: IR obstacle (max=2125) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541595.536406908] [create3_wander_full_control]: Will turn 95.1° for 1.11s.
+[INFO] [1765541597.725388687] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765541597.728936605] [create3_wander_full_control]: Will turn -163.2° for 1.90s.
+[INFO] [1765541600.671925037] [create3_wander_full_control]: IR obstacle (max=1880) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541600.675989801] [create3_wander_full_control]: Will turn -60.9° for 0.71s.
+[INFO] [1765541602.476694470] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765541602.480389053] [create3_wander_full_control]: Will turn -83.5° for 0.97s.
+[INFO] [1765541604.525958280] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765541604.529239387] [create3_wander_full_control]: Will turn 24.1° for 0.28s.
+[INFO] [1765541605.872456369] [create3_wander_full_control]: IR obstacle (max=2025) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541605.876407190] [create3_wander_full_control]: Will turn -7.3° for 0.08s.
+[INFO] [1765541607.023606705] [create3_wander_full_control]: IR obstacle (max=2022) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541607.027386824] [create3_wander_full_control]: Will turn 162.2° for 1.89s.
+[INFO] [1765541676.565932946] [create3_wander_full_control]: IR obstacle (max=764) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541676.569942155] [create3_wander_full_control]: Will turn 65.5° for 0.76s.
+[INFO] [1765541694.309056873] [create3_wander_full_control]: IR obstacle (max=742) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541694.312952491] [create3_wander_full_control]: Will turn 27.9° for 0.32s.
+[INFO] [1765541696.338088159] [create3_wander_full_control]: IR obstacle (max=779) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541698.440843391] [create3_wander_full_control]: Will turn -102.4° for 1.19s.
+[INFO] [1765541700.709570318] [create3_wander_full_control]: IR obstacle (max=701) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541700.712602761] [create3_wander_full_control]: Will turn 18.3° for 0.21s.
+[INFO] [1765541702.355819573] [create3_wander_full_control]: IR obstacle (max=733) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541702.359773004] [create3_wander_full_control]: Will turn -159.5° for 1.86s.
+[INFO] [1765541711.122962401] [create3_wander_full_control]: IR obstacle (max=713) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541711.125765922] [create3_wander_full_control]: Will turn -37.8° for 0.44s.
+[INFO] [1765541788.438314331] [create3_wander_full_control]: IR obstacle (max=738) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541788.441986840] [create3_wander_full_control]: Will turn 114.0° for 1.33s.
+[INFO] [1765541840.975699754] [create3_wander_full_control]: IR obstacle (max=760) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541840.980857764] [create3_wander_full_control]: Will turn 142.8° for 1.66s.
+[INFO] [1765541889.615180768] [create3_wander_full_control]: IR obstacle (max=820) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541889.619764457] [create3_wander_full_control]: Will turn -116.7° for 1.36s.
+[INFO] [1765541894.253667119] [create3_wander_full_control]: IR obstacle (max=751) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541894.257396688] [create3_wander_full_control]: Will turn -89.9° for 1.05s.
+[INFO] [1765541896.990087442] [create3_wander_full_control]: IR obstacle (max=703) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541896.993772048] [create3_wander_full_control]: Will turn 170.2° for 1.98s.
+[INFO] [1765541944.514583100] [create3_wander_full_control]: IR obstacle (max=765) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541944.518741960] [create3_wander_full_control]: Will turn 118.2° for 1.38s.
+[INFO] [1765541998.421570966] [create3_wander_full_control]: IR obstacle (max=748) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765541998.425519921] [create3_wander_full_control]: Will turn -93.3° for 1.09s.
+[INFO] [1765542000.995286894] [create3_wander_full_control]: IR obstacle (max=728) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542000.999340736] [create3_wander_full_control]: Will turn -119.2° for 1.39s.
+[INFO] [1765542049.045975284] [create3_wander_full_control]: IR obstacle (max=753) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542049.049967960] [create3_wander_full_control]: Will turn -67.9° for 0.79s.
+[INFO] [1765542052.517763721] [create3_wander_full_control]: IR obstacle (max=711) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542052.520383098] [create3_wander_full_control]: Will turn 52.8° for 0.61s.
+[INFO] [1765542054.230764951] [create3_wander_full_control]: IR obstacle (max=921) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542055.264844477] [create3_wander_full_control]: Will turn -25.7° for 0.30s.
+[INFO] [1765542056.838869188] [create3_wander_full_control]: IR obstacle (max=713) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542056.844005130] [create3_wander_full_control]: Will turn 95.0° for 1.11s.
+[INFO] [1765542059.033254942] [create3_wander_full_control]: IR obstacle (max=1087) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542059.036872623] [create3_wander_full_control]: Will turn -0.3° for 0.00s.
+[INFO] [1765542060.119628480] [create3_wander_full_control]: IR obstacle (max=1254) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542060.122408522] [create3_wander_full_control]: Will turn -174.5° for 2.03s.
+[INFO] [1765542063.224072032] [create3_wander_full_control]: IR obstacle (max=1174) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542063.227354365] [create3_wander_full_control]: Will turn 64.0° for 0.74s.
+[INFO] [1765542065.048223619] [create3_wander_full_control]: IR obstacle (max=702) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542065.052184648] [create3_wander_full_control]: Will turn -107.6° for 1.25s.
+[INFO] [1765542114.905307028] [create3_wander_full_control]: IR obstacle (max=753) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542114.908980243] [create3_wander_full_control]: Will turn 169.5° for 1.97s.
+[INFO] [1765542160.698828444] [create3_wander_full_control]: IR obstacle (max=807) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542160.701424116] [create3_wander_full_control]: Will turn -154.5° for 1.80s.
+[INFO] [1765542165.374646055] [create3_wander_full_control]: IR obstacle (max=749) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542165.885109302] [create3_wander_full_control]: Will turn 58.0° for 0.67s.
+[INFO] [1765542168.236813395] [create3_wander_full_control]: IR obstacle (max=757) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542168.408278727] [create3_wander_full_control]: Will turn -143.6° for 1.67s.
+[INFO] [1765542171.212798598] [create3_wander_full_control]: IR obstacle (max=916) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542171.215722081] [create3_wander_full_control]: Will turn -2.0° for 0.02s.
+[INFO] [1765542236.463771980] [create3_wander_full_control]: IR obstacle (max=726) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542236.467853542] [create3_wander_full_control]: Will turn -155.3° for 1.81s.
+[INFO] [1765542335.654753688] [create3_wander_full_control]: IR obstacle (max=716) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542335.658856009] [create3_wander_full_control]: Will turn 131.1° for 1.53s.
+[INFO] [1765542352.262699586] [create3_wander_full_control]: IR obstacle (max=817) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542352.266790777] [create3_wander_full_control]: Will turn 35.6° for 0.41s.
+[INFO] [1765542353.735840589] [create3_wander_full_control]: IR obstacle (max=794) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542353.739435064] [create3_wander_full_control]: Will turn -38.6° for 0.45s.
+[INFO] [1765542355.225037972] [create3_wander_full_control]: IR obstacle (max=793) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542355.228745390] [create3_wander_full_control]: Will turn -26.0° for 0.30s.
+[INFO] [1765542356.632302292] [create3_wander_full_control]: IR obstacle (max=792) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542357.996296987] [create3_wander_full_control]: Will turn 156.6° for 1.82s.
+[INFO] [1765542412.153951569] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542412.156693200] [create3_wander_full_control]: Will turn 136.7° for 1.59s.
+[INFO] [1765542419.738562723] [create3_wander_full_control]: IR obstacle (max=722) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542419.742482839] [create3_wander_full_control]: Will turn -109.8° for 1.28s.
+[INFO] [1765542422.974485846] [create3_wander_full_control]: IR obstacle (max=784) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542424.368032905] [create3_wander_full_control]: Will turn -1.2° for 0.01s.
+[INFO] [1765542426.171574521] [create3_wander_full_control]: IR obstacle (max=771) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542426.174160303] [create3_wander_full_control]: Will turn -106.8° for 1.24s.
+[INFO] [1765542428.942190703] [create3_wander_full_control]: IR obstacle (max=700) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542428.948069016] [create3_wander_full_control]: Will turn 81.3° for 0.95s.
+[INFO] [1765542430.922158656] [create3_wander_full_control]: IR obstacle (max=1038) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542430.924842381] [create3_wander_full_control]: Will turn 48.9° for 0.57s.
+[INFO] [1765542432.573801639] [create3_wander_full_control]: IR obstacle (max=1576) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542432.577418981] [create3_wander_full_control]: Will turn 26.8° for 0.31s.
+[INFO] [1765542433.979396637] [create3_wander_full_control]: IR obstacle (max=1935) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542433.982623151] [create3_wander_full_control]: Will turn -88.8° for 1.03s.
+[INFO] [1765542436.075898731] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765542436.079199374] [create3_wander_full_control]: Will turn -16.9° for 0.20s.
+[INFO] [1765542483.376250834] [create3_wander_full_control]: IR obstacle (max=725) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542483.380313153] [create3_wander_full_control]: Will turn 163.1° for 1.90s.
+[INFO] [1765542537.182672077] [create3_wander_full_control]: IR obstacle (max=702) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542537.185313043] [create3_wander_full_control]: Will turn 16.4° for 0.19s.
+[INFO] [1765542539.172308591] [create3_wander_full_control]: IR obstacle (max=734) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542539.174945391] [create3_wander_full_control]: Will turn -81.5° for 0.95s.
+[INFO] [1765542541.183398684] [create3_wander_full_control]: IR obstacle (max=780) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542541.186196426] [create3_wander_full_control]: Will turn -152.2° for 1.77s.
+[INFO] [1765542544.033473238] [create3_wander_full_control]: IR obstacle (max=962) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542544.037065248] [create3_wander_full_control]: Will turn 45.4° for 0.53s.
+[INFO] [1765542545.889695199] [create3_wander_full_control]: IR obstacle (max=734) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542545.893305801] [create3_wander_full_control]: Will turn 131.3° for 1.53s.
+[INFO] [1765542548.480270052] [create3_wander_full_control]: IR obstacle (max=1734) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542548.482806556] [create3_wander_full_control]: Will turn 172.2° for 2.00s.
+[INFO] [1765542599.494483037] [create3_wander_full_control]: IR obstacle (max=702) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542599.499659045] [create3_wander_full_control]: Will turn 143.4° for 1.67s.
+[INFO] [1765542603.014932949] [create3_wander_full_control]: IR obstacle (max=705) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542603.019516132] [create3_wander_full_control]: Will turn 134.7° for 1.57s.
+[INFO] [1765542608.375475307] [create3_wander_full_control]: IR obstacle (max=723) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542608.378757061] [create3_wander_full_control]: Will turn -62.6° for 0.73s.
+[INFO] [1765542614.613665910] [create3_wander_full_control]: IR obstacle (max=700) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542614.617736209] [create3_wander_full_control]: Will turn -25.9° for 0.30s.
+[INFO] [1765542692.727937698] [create3_wander_full_control]: IR obstacle (max=967) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542692.730530683] [create3_wander_full_control]: Will turn 44.1° for 0.51s.
+[INFO] [1765542695.192515124] [create3_wander_full_control]: IR obstacle (max=743) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542695.195238367] [create3_wander_full_control]: Will turn -67.2° for 0.78s.
+[INFO] [1765542697.638632045] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765542697.641150235] [create3_wander_full_control]: Will turn 18.8° for 0.22s.
+[INFO] [1765542699.448816372] [create3_wander_full_control]: IR obstacle (max=870) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542699.452765192] [create3_wander_full_control]: Will turn -127.1° for 1.48s.
+[INFO] [1765542745.659499477] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542745.662096629] [create3_wander_full_control]: Will turn 80.9° for 0.94s.
+[INFO] [1765542748.573685472] [create3_wander_full_control]: IR obstacle (max=722) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542748.577633051] [create3_wander_full_control]: Will turn 172.1° for 2.00s.
+[INFO] [1765542764.940293346] [create3_wander_full_control]: IR obstacle (max=704) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542764.944285591] [create3_wander_full_control]: Will turn 9.2° for 0.11s.
+[INFO] [1765542766.861881693] [create3_wander_full_control]: IR obstacle (max=743) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542766.865817791] [create3_wander_full_control]: Will turn -167.6° for 1.95s.
+[INFO] [1765542940.886578853] [create3_wander_full_control]: IR obstacle (max=726) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542940.890154642] [create3_wander_full_control]: Will turn 137.2° for 1.60s.
+[INFO] [1765542966.663400081] [create3_wander_full_control]: IR obstacle (max=703) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542966.666142325] [create3_wander_full_control]: Will turn 60.5° for 0.70s.
+[INFO] [1765542969.415428158] [create3_wander_full_control]: IR obstacle (max=742) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542969.419401498] [create3_wander_full_control]: Will turn -119.7° for 1.39s.
+[INFO] [1765542972.026000720] [create3_wander_full_control]: IR obstacle (max=701) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542972.029450437] [create3_wander_full_control]: Will turn -101.4° for 1.18s.
+[INFO] [1765542989.752150683] [create3_wander_full_control]: IR obstacle (max=771) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542989.754947408] [create3_wander_full_control]: Will turn -67.9° for 0.79s.
+[INFO] [1765542993.243395445] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542993.247531154] [create3_wander_full_control]: Will turn 79.9° for 0.93s.
+[INFO] [1765542995.228235998] [create3_wander_full_control]: IR obstacle (max=742) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765542995.231127129] [create3_wander_full_control]: Will turn -139.7° for 1.63s.
+[INFO] [1765543037.853392620] [create3_wander_full_control]: IR obstacle (max=802) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543037.857835065] [create3_wander_full_control]: Will turn 37.7° for 0.44s.
+[INFO] [1765543039.916422839] [create3_wander_full_control]: IR obstacle (max=787) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543039.920371475] [create3_wander_full_control]: Will turn -81.8° for 0.95s.
+[INFO] [1765543041.980787670] [create3_wander_full_control]: IR obstacle (max=1034) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543041.984760547] [create3_wander_full_control]: Will turn 121.4° for 1.41s.
+[INFO] [1765543044.476130708] [create3_wander_full_control]: IR obstacle (max=1033) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543044.479515277] [create3_wander_full_control]: Will turn 148.0° for 1.72s.
+[INFO] [1765543066.783265019] [create3_wander_full_control]: IR obstacle (max=795) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543066.786867179] [create3_wander_full_control]: Will turn 58.6° for 0.68s.
+[INFO] [1765543069.451170800] [create3_wander_full_control]: IR obstacle (max=753) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543069.453825545] [create3_wander_full_control]: Will turn 140.1° for 1.63s.
+[INFO] [1765543087.264821704] [create3_wander_full_control]: IR obstacle (max=750) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543087.269228760] [create3_wander_full_control]: Will turn 141.1° for 1.64s.
+[INFO] [1765543090.879772348] [create3_wander_full_control]: IR obstacle (max=723) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543090.883813687] [create3_wander_full_control]: Will turn -63.7° for 0.74s.
+[INFO] [1765543092.671363264] [create3_wander_full_control]: IR obstacle (max=725) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543092.674112101] [create3_wander_full_control]: Will turn 124.9° for 1.45s.
+[INFO] [1765543107.550427193] [create3_wander_full_control]: IR obstacle (max=835) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543107.554119240] [create3_wander_full_control]: Will turn 97.0° for 1.13s.
+[INFO] [1765543151.106840855] [create3_wander_full_control]: IR obstacle (max=776) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543151.111441909] [create3_wander_full_control]: Will turn -142.8° for 1.66s.
+[INFO] [1765543164.101136368] [create3_wander_full_control]: IR obstacle (max=801) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543164.105548369] [create3_wander_full_control]: Will turn -48.7° for 0.57s.
+[INFO] [1765543166.307363710] [create3_wander_full_control]: IR obstacle (max=750) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543166.311346846] [create3_wander_full_control]: Will turn -74.8° for 0.87s.
+[INFO] [1765543210.629085606] [create3_wander_full_control]: IR obstacle (max=757) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543210.631879146] [create3_wander_full_control]: Will turn -0.8° for 0.01s.
+[INFO] [1765543212.437776016] [create3_wander_full_control]: IR obstacle (max=756) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543212.442910341] [create3_wander_full_control]: Will turn 133.0° for 1.55s.
+[INFO] [1765543220.757537815] [create3_wander_full_control]: IR obstacle (max=758) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543220.760170153] [create3_wander_full_control]: Will turn -1.5° for 0.02s.
+[INFO] [1765543222.486793259] [create3_wander_full_control]: IR obstacle (max=746) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543222.490262234] [create3_wander_full_control]: Will turn -75.7° for 0.88s.
+[INFO] [1765543224.903578098] [create3_wander_full_control]: IR obstacle (max=737) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543224.907530012] [create3_wander_full_control]: Will turn -43.7° for 0.51s.
+[INFO] [1765543226.835355175] [create3_wander_full_control]: IR obstacle (max=728) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543226.837854496] [create3_wander_full_control]: Will turn 55.4° for 0.64s.
+[INFO] [1765543228.536197191] [create3_wander_full_control]: IR obstacle (max=808) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543228.540127162] [create3_wander_full_control]: Will turn -100.0° for 1.16s.
+[INFO] [1765543230.775281295] [create3_wander_full_control]: IR obstacle (max=707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543230.777915078] [create3_wander_full_control]: Will turn 64.2° for 0.75s.
+[INFO] [1765543232.649423638] [create3_wander_full_control]: IR obstacle (max=722) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543232.653433237] [create3_wander_full_control]: Will turn 89.0° for 1.04s.
+[INFO] [1765543234.725954376] [create3_wander_full_control]: IR obstacle (max=2561) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543234.728853099] [create3_wander_full_control]: Will turn -22.9° for 0.27s.
+[INFO] [1765543236.072352706] [create3_wander_full_control]: IR obstacle (max=2006) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543236.076265509] [create3_wander_full_control]: Will turn -156.7° for 1.82s.
+[INFO] [1765543238.984395070] [create3_wander_full_control]: IR obstacle (max=1460) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543238.988021247] [create3_wander_full_control]: Will turn -7.0° for 0.08s.
+[INFO] [1765543242.585403201] [create3_wander_full_control]: IR obstacle (max=723) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543242.589338486] [create3_wander_full_control]: Will turn 157.0° for 1.83s.
+[INFO] [1765543245.481360671] [create3_wander_full_control]: IR obstacle (max=879) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543245.485297789] [create3_wander_full_control]: Will turn -18.2° for 0.21s.
+[INFO] [1765543246.776789796] [create3_wander_full_control]: IR obstacle (max=852) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543246.780639896] [create3_wander_full_control]: Will turn -122.6° for 1.43s.
+[INFO] [1765543249.272682104] [create3_wander_full_control]: IR obstacle (max=1588) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543249.276613111] [create3_wander_full_control]: Will turn 74.7° for 0.87s.
+[INFO] [1765543251.226482614] [create3_wander_full_control]: IR obstacle (max=2272) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543251.229679426] [create3_wander_full_control]: Will turn 149.5° for 1.74s.
+[INFO] [1765543254.025195523] [create3_wander_full_control]: IR obstacle (max=1900) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543254.028373928] [create3_wander_full_control]: Will turn -21.4° for 0.25s.
+[INFO] [1765543255.322036852] [create3_wander_full_control]: IR obstacle (max=1879) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543255.325947027] [create3_wander_full_control]: Will turn 81.2° for 0.95s.
+[INFO] [1765543257.322408510] [create3_wander_full_control]: IR obstacle (max=1875) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543257.326882029] [create3_wander_full_control]: Will turn -124.0° for 1.44s.
+[INFO] [1765543259.850665624] [create3_wander_full_control]: IR obstacle (max=777) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543259.854716370] [create3_wander_full_control]: Will turn 82.6° for 0.96s.
+[INFO] [1765543264.680270425] [create3_wander_full_control]: IR obstacle (max=758) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543264.683028521] [create3_wander_full_control]: Will turn -78.6° for 0.91s.
+[INFO] [1765543267.145663739] [create3_wander_full_control]: IR obstacle (max=707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543267.150064037] [create3_wander_full_control]: Will turn 178.5° for 2.08s.
+[INFO] [1765543322.046743359] [create3_wander_full_control]: IR obstacle (max=775) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543322.052475881] [create3_wander_full_control]: Will turn -113.2° for 1.32s.
+[INFO] [1765543325.371105789] [create3_wander_full_control]: IR obstacle (max=723) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543325.373691239] [create3_wander_full_control]: Will turn -149.3° for 1.74s.
+[INFO] [1765543389.425100957] [create3_wander_full_control]: IR obstacle (max=737) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543389.428805874] [create3_wander_full_control]: Will turn -41.3° for 0.48s.
+[INFO] [1765543391.519482048] [create3_wander_full_control]: IR obstacle (max=807) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543391.523462073] [create3_wander_full_control]: Will turn -0.9° for 0.01s.
+[INFO] [1765543393.167542648] [create3_wander_full_control]: IR obstacle (max=858) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543393.170666701] [create3_wander_full_control]: Will turn -10.3° for 0.12s.
+[INFO] [1765543394.385312482] [create3_wander_full_control]: IR obstacle (max=1198) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543396.299128415] [create3_wander_full_control]: Will turn 144.8° for 1.69s.
+[INFO] [1765543402.319485083] [create3_wander_full_control]: IR obstacle (max=792) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543402.323488329] [create3_wander_full_control]: Will turn 42.9° for 0.50s.
+[INFO] [1765543404.592879864] [create3_wander_full_control]: IR obstacle (max=704) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543404.596832110] [create3_wander_full_control]: Will turn 133.5° for 1.55s.
+[INFO] [1765543454.610784965] [create3_wander_full_control]: IR obstacle (max=707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543454.614897432] [create3_wander_full_control]: Will turn -80.6° for 0.94s.
+[INFO] [1765543457.828352586] [create3_wander_full_control]: IR obstacle (max=732) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543457.831437880] [create3_wander_full_control]: Will turn 63.3° for 0.74s.
+[INFO] [1765543459.779795153] [create3_wander_full_control]: IR obstacle (max=720) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543459.783552642] [create3_wander_full_control]: Will turn -27.6° for 0.32s.
+[INFO] [1765543461.604394421] [create3_wander_full_control]: IR obstacle (max=728) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543461.608367370] [create3_wander_full_control]: Will turn -91.8° for 1.07s.
+[INFO] [1765543463.732680226] [create3_wander_full_control]: IR obstacle (max=1899) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543463.735639800] [create3_wander_full_control]: Will turn 141.4° for 1.65s.
+[INFO] [1765543466.420766673] [create3_wander_full_control]: IR obstacle (max=2482) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543466.424334257] [create3_wander_full_control]: Will turn -50.9° for 0.59s.
+[INFO] [1765543468.082952408] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765543468.086136571] [create3_wander_full_control]: Will turn 36.1° for 0.42s.
+[INFO] [1765543469.571466975] [create3_wander_full_control]: IR obstacle (max=1763) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543469.575547701] [create3_wander_full_control]: Will turn 4.9° for 0.06s.
+[INFO] [1765543470.722922594] [create3_wander_full_control]: IR obstacle (max=1761) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543470.725504932] [create3_wander_full_control]: Will turn -118.7° for 1.38s.
+[INFO] [1765543473.170582164] [create3_wander_full_control]: IR obstacle (max=1765) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543473.173711273] [create3_wander_full_control]: Will turn 53.9° for 0.63s.
+[INFO] [1765543474.885064477] [create3_wander_full_control]: IR obstacle (max=1731) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543474.888661950] [create3_wander_full_control]: Will turn 147.3° for 1.71s.
+[INFO] [1765543531.704059030] [create3_wander_full_control]: IR obstacle (max=767) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543531.708443474] [create3_wander_full_control]: Will turn -73.4° for 0.85s.
+[INFO] [1765543534.121538353] [create3_wander_full_control]: IR obstacle (max=779) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543534.125648542] [create3_wander_full_control]: Will turn -127.9° for 1.49s.
+[INFO] [1765543630.909272117] [create3_wander_full_control]: IR obstacle (max=735) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543630.913122106] [create3_wander_full_control]: Will turn 42.8° for 0.50s.
+[INFO] [1765543644.109108662] [create3_wander_full_control]: IR obstacle (max=724) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543644.112619210] [create3_wander_full_control]: Will turn -168.8° for 1.96s.
+[INFO] [1765543650.047495722] [create3_wander_full_control]: IR obstacle (max=754) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543650.052014831] [create3_wander_full_control]: Will turn -166.6° for 1.94s.
+[INFO] [1765543695.231060132] [create3_wander_full_control]: IR obstacle (max=750) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543695.233660433] [create3_wander_full_control]: Will turn -54.2° for 0.63s.
+[INFO] [1765543697.265639015] [create3_wander_full_control]: IR obstacle (max=762) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543697.268750828] [create3_wander_full_control]: Will turn 156.5° for 1.82s.
+[INFO] [1765543719.041533429] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543719.045131198] [create3_wander_full_control]: Will turn 165.4° for 1.93s.
+[INFO] [1765543762.404945015] [create3_wander_full_control]: IR obstacle (max=714) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543762.408949594] [create3_wander_full_control]: Will turn 89.6° for 1.04s.
+[INFO] [1765543764.485553184] [create3_wander_full_control]: IR obstacle (max=724) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543764.489161787] [create3_wander_full_control]: Will turn -88.4° for 1.03s.
+[INFO] [1765543766.580112195] [create3_wander_full_control]: IR obstacle (max=1011) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543766.583403153] [create3_wander_full_control]: Will turn -26.1° for 0.30s.
+[INFO] [1765543767.973145696] [create3_wander_full_control]: IR obstacle (max=1166) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543767.977081386] [create3_wander_full_control]: Will turn -43.8° for 0.51s.
+[INFO] [1765543769.573902395] [create3_wander_full_control]: IR obstacle (max=1336) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543769.577829308] [create3_wander_full_control]: Will turn -148.6° for 1.73s.
+[INFO] [1765543872.297582323] [create3_wander_full_control]: IR obstacle (max=707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543872.301992711] [create3_wander_full_control]: Will turn 73.4° for 0.85s.
+[INFO] [1765543874.300106964] [create3_wander_full_control]: IR obstacle (max=707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543874.304188449] [create3_wander_full_control]: Will turn 46.4° for 0.54s.
+[INFO] [1765543875.882584228] [create3_wander_full_control]: IR obstacle (max=989) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543875.886163572] [create3_wander_full_control]: Will turn 60.7° for 0.71s.
+[INFO] [1765543877.672076849] [create3_wander_full_control]: IR obstacle (max=1392) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543877.674662760] [create3_wander_full_control]: Will turn 49.5° for 0.58s.
+[INFO] [1765543879.322383920] [create3_wander_full_control]: IR obstacle (max=2052) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543879.326264722] [create3_wander_full_control]: Will turn 174.5° for 2.03s.
+[INFO] [1765543928.682654739] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765543930.582395595] [create3_wander_full_control]: Will turn 33.5° for 0.39s.
+[INFO] [1765543932.812953342] [create3_wander_full_control]: IR obstacle (max=722) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765543935.422313716] [create3_wander_full_control]: Will turn 133.9° for 1.56s.
+[INFO] [1765544031.999945034] [create3_wander_full_control]: IR obstacle (max=800) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544032.003428712] [create3_wander_full_control]: Will turn 1.8° for 0.02s.
+[INFO] [1765544033.635043942] [create3_wander_full_control]: IR obstacle (max=774) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544033.638767746] [create3_wander_full_control]: Will turn 170.7° for 1.99s.
+[INFO] [1765544093.414830571] [create3_wander_full_control]: IR obstacle (max=704) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544093.419408530] [create3_wander_full_control]: Will turn 32.5° for 0.38s.
+[INFO] [1765544095.364807298] [create3_wander_full_control]: IR obstacle (max=772) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544095.368784247] [create3_wander_full_control]: Will turn 68.6° for 0.80s.
+[INFO] [1765544097.174272648] [create3_wander_full_control]: IR obstacle (max=702) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544097.177210444] [create3_wander_full_control]: Will turn 137.5° for 1.60s.
+[INFO] [1765544152.776856628] [create3_wander_full_control]: IR obstacle (max=747) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544152.780875872] [create3_wander_full_control]: Will turn 62.2° for 0.72s.
+[INFO] [1765544167.308436635] [create3_wander_full_control]: IR obstacle (max=731) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544167.313059039] [create3_wander_full_control]: Will turn 96.0° for 1.12s.
+[INFO] [1765544215.868026560] [create3_wander_full_control]: IR obstacle (max=756) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544215.871997546] [create3_wander_full_control]: Will turn -112.8° for 1.31s.
+[INFO] [1765544219.773305576] [create3_wander_full_control]: IR obstacle (max=707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544219.777238581] [create3_wander_full_control]: Will turn 25.8° for 0.30s.
+[INFO] [1765544221.163772613] [create3_wander_full_control]: IR obstacle (max=707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544221.167501213] [create3_wander_full_control]: Will turn -122.8° for 1.43s.
+[INFO] [1765544250.766322707] [create3_wander_full_control]: IR obstacle (max=700) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544250.770308434] [create3_wander_full_control]: Will turn -163.8° for 1.91s.
+[INFO] [1765544282.783134778] [create3_wander_full_control]: IR obstacle (max=765) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544282.786739472] [create3_wander_full_control]: Will turn 163.3° for 1.90s.
+[INFO] [1765544318.048164263] [create3_wander_full_control]: IR obstacle (max=765) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544318.052129138] [create3_wander_full_control]: Will turn -109.4° for 1.27s.
+[INFO] [1765544355.121272689] [create3_wander_full_control]: IR obstacle (max=728) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544355.123986154] [create3_wander_full_control]: Will turn 122.9° for 1.43s.
+[INFO] [1765544358.131314742] [create3_wander_full_control]: IR obstacle (max=729) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544358.134097706] [create3_wander_full_control]: Will turn -108.7° for 1.26s.
+[INFO] [1765544360.483667663] [create3_wander_full_control]: IR obstacle (max=930) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544360.487392985] [create3_wander_full_control]: Will turn 8.5° for 0.10s.
+[INFO] [1765544361.637767000] [create3_wander_full_control]: IR obstacle (max=971) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544361.641675542] [create3_wander_full_control]: Will turn 45.6° for 0.53s.
+[INFO] [1765544363.236374396] [create3_wander_full_control]: IR obstacle (max=1146) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544363.238946363] [create3_wander_full_control]: Will turn -30.3° for 0.35s.
+[INFO] [1765544364.675172867] [create3_wander_full_control]: IR obstacle (max=1891) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544364.677771352] [create3_wander_full_control]: Will turn 132.9° for 1.55s.
+[INFO] [1765544367.281091748] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765544367.284335910] [create3_wander_full_control]: Will turn 29.5° for 0.34s.
+[INFO] [1765544368.677639225] [create3_wander_full_control]: IR obstacle (max=1417) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544368.680676464] [create3_wander_full_control]: Will turn 67.8° for 0.79s.
+[INFO] [1765544370.530782069] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765544370.533975250] [create3_wander_full_control]: Will turn -70.7° for 0.82s.
+[INFO] [1765544424.135394624] [create3_wander_full_control]: IR obstacle (max=776) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544424.138053090] [create3_wander_full_control]: Will turn -166.5° for 1.94s.
+[INFO] [1765544486.700586212] [create3_wander_full_control]: IR obstacle (max=713) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544486.703303270] [create3_wander_full_control]: Will turn -96.4° for 1.12s.
+[INFO] [1765544489.258814373] [create3_wander_full_control]: IR obstacle (max=708) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544490.385116735] [create3_wander_full_control]: Will turn -170.0° for 1.98s.
+[INFO] [1765544539.117943135] [create3_wander_full_control]: IR obstacle (max=722) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544539.121913862] [create3_wander_full_control]: Will turn 44.9° for 0.52s.
+[INFO] [1765544540.734397116] [create3_wander_full_control]: IR obstacle (max=1655) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544540.737958793] [create3_wander_full_control]: Will turn -34.9° for 0.41s.
+[INFO] [1765544542.222901077] [create3_wander_full_control]: IR obstacle (max=1654) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544542.226967154] [create3_wander_full_control]: Will turn -160.4° for 1.87s.
+[INFO] [1765544594.110067025] [create3_wander_full_control]: IR obstacle (max=781) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544594.113263114] [create3_wander_full_control]: Will turn -77.0° for 0.90s.
+[INFO] [1765544596.703887655] [create3_wander_full_control]: IR obstacle (max=718) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544596.728991424] [create3_wander_full_control]: Will turn 163.3° for 1.90s.
+[INFO] [1765544601.951731120] [create3_wander_full_control]: IR obstacle (max=772) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544601.956113638] [create3_wander_full_control]: Will turn 123.9° for 1.44s.
+[INFO] [1765544660.692518320] [create3_wander_full_control]: IR obstacle (max=732) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544660.695296784] [create3_wander_full_control]: Will turn 122.9° for 1.43s.
+[INFO] [1765544717.176869715] [create3_wander_full_control]: IR obstacle (max=748) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544717.179590143] [create3_wander_full_control]: Will turn -7.0° for 0.08s.
+[INFO] [1765544718.983088681] [create3_wander_full_control]: IR obstacle (max=777) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544718.986720894] [create3_wander_full_control]: Will turn 74.4° for 0.87s.
+[INFO] [1765544721.144782055] [create3_wander_full_control]: IR obstacle (max=708) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544721.148646505] [create3_wander_full_control]: Will turn -53.9° for 0.63s.
+[INFO] [1765544722.823044889] [create3_wander_full_control]: IR obstacle (max=1122) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544722.827125392] [create3_wander_full_control]: Will turn 86.5° for 1.01s.
+[INFO] [1765544724.921190711] [create3_wander_full_control]: IR obstacle (max=2621) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544724.925098697] [create3_wander_full_control]: Will turn -14.8° for 0.17s.
+[INFO] [1765544726.181461793] [create3_wander_full_control]: IR obstacle (max=2053) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544726.184038649] [create3_wander_full_control]: Will turn -45.5° for 0.53s.
+[INFO] [1765544727.783061484] [create3_wander_full_control]: IR obstacle (max=2005) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544727.786759344] [create3_wander_full_control]: Will turn -81.4° for 0.95s.
+[INFO] [1765544729.782894681] [create3_wander_full_control]: IR obstacle (max=1974) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544729.786485949] [create3_wander_full_control]: Will turn -40.5° for 0.47s.
+[INFO] [1765544731.321625292] [create3_wander_full_control]: IR obstacle (max=1972) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544731.325521112] [create3_wander_full_control]: Will turn -63.9° for 0.74s.
+[INFO] [1765544733.124281174] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765544733.126636292] [create3_wander_full_control]: Will turn -13.2° for 0.15s.
+[INFO] [1765544734.376947706] [create3_wander_full_control]: IR obstacle (max=1418) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544734.380596974] [create3_wander_full_control]: Will turn -129.1° for 1.50s.
+[INFO] [1765544736.984003202] [create3_wander_full_control]: IR obstacle (max=1224) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544736.987573285] [create3_wander_full_control]: Will turn -165.2° for 1.92s.
+[INFO] [1765544739.977307673] [create3_wander_full_control]: IR obstacle (max=1705) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544741.222073529] [create3_wander_full_control]: Will turn -144.3° for 1.68s.
+[INFO] [1765544783.177678973] [create3_wander_full_control]: IR obstacle (max=730) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544783.180347346] [create3_wander_full_control]: Will turn 46.4° for 0.54s.
+[INFO] [1765544785.403412226] [create3_wander_full_control]: IR obstacle (max=740) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544785.407536488] [create3_wander_full_control]: Will turn -85.7° for 1.00s.
+[INFO] [1765544787.755455725] [create3_wander_full_control]: IR obstacle (max=742) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544787.758746757] [create3_wander_full_control]: Will turn -157.0° for 1.83s.
+[INFO] [1765544828.012897851] [create3_wander_full_control]: IR obstacle (max=865) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544828.016922040] [create3_wander_full_control]: Will turn 27.8° for 0.32s.
+[INFO] [1765544830.064462271] [create3_wander_full_control]: IR obstacle (max=823) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544830.068701420] [create3_wander_full_control]: Will turn 51.7° for 0.60s.
+[INFO] [1765544832.049205236] [create3_wander_full_control]: IR obstacle (max=717) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544832.053347053] [create3_wander_full_control]: Will turn 170.8° for 1.99s.
+[INFO] [1765544874.510604377] [create3_wander_full_control]: IR obstacle (max=812) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544874.514708194] [create3_wander_full_control]: Will turn -106.1° for 1.24s.
+[INFO] [1765544881.454550151] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544883.665980329] [create3_wander_full_control]: Will turn 73.7° for 0.86s.
+[INFO] [1765544885.584119004] [create3_wander_full_control]: IR obstacle (max=2798) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544885.587735068] [create3_wander_full_control]: Will turn 160.7° for 1.87s.
+[INFO] [1765544888.528297940] [create3_wander_full_control]: IR obstacle (max=3030) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544888.531431752] [create3_wander_full_control]: Will turn 32.0° for 0.37s.
+[INFO] [1765544889.984293338] [create3_wander_full_control]: IR obstacle (max=3818) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544889.988231954] [create3_wander_full_control]: Will turn -33.3° for 0.39s.
+[INFO] [1765544930.353942242] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544930.357896913] [create3_wander_full_control]: Will turn -152.0° for 1.77s.
+[INFO] [1765544980.771666818] [create3_wander_full_control]: IR obstacle (max=766) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544980.774252414] [create3_wander_full_control]: Will turn 47.2° for 0.55s.
+[INFO] [1765544983.011746957] [create3_wander_full_control]: IR obstacle (max=740) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544983.015399354] [create3_wander_full_control]: Will turn -152.3° for 1.77s.
+[INFO] [1765544986.613535579] [create3_wander_full_control]: IR obstacle (max=704) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544986.617670432] [create3_wander_full_control]: Will turn 121.3° for 1.41s.
+[INFO] [1765544989.076599986] [create3_wander_full_control]: IR obstacle (max=789) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544989.079210100] [create3_wander_full_control]: Will turn -53.3° for 0.62s.
+[INFO] [1765544990.789191130] [create3_wander_full_control]: IR obstacle (max=742) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544990.792721824] [create3_wander_full_control]: Will turn -56.2° for 0.65s.
+[INFO] [1765544992.533617508] [create3_wander_full_control]: IR obstacle (max=1670) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544992.537199480] [create3_wander_full_control]: Will turn -86.7° for 1.01s.
+[INFO] [1765544994.627869542] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765544994.630667691] [create3_wander_full_control]: Will turn -111.3° for 1.29s.
+[INFO] [1765544996.981386003] [create3_wander_full_control]: IR obstacle (max=1835) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765544996.984792385] [create3_wander_full_control]: Will turn -118.1° for 1.37s.
+[INFO] [1765544999.429371291] [create3_wander_full_control]: IR obstacle (max=1831) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545000.314969852] [create3_wander_full_control]: Will turn 136.9° for 1.59s.
+[INFO] [1765545050.568837505] [create3_wander_full_control]: IR obstacle (max=705) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545050.572848453] [create3_wander_full_control]: Will turn -128.4° for 1.49s.
+[INFO] [1765545060.182951339] [create3_wander_full_control]: IR obstacle (max=746) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545060.185467713] [create3_wander_full_control]: Will turn -3.0° for 0.04s.
+[INFO] [1765545061.975917105] [create3_wander_full_control]: IR obstacle (max=722) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545061.978619551] [create3_wander_full_control]: Will turn -131.9° for 1.54s.
+[INFO] [1765545104.364163899] [create3_wander_full_control]: IR obstacle (max=712) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545104.368136180] [create3_wander_full_control]: Will turn 158.1° for 1.84s.
+[INFO] [1765545153.454941692] [create3_wander_full_control]: IR obstacle (max=707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545153.458480886] [create3_wander_full_control]: Will turn -65.9° for 0.77s.
+[INFO] [1765545241.124364157] [create3_wander_full_control]: IR obstacle (max=738) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545241.128016183] [create3_wander_full_control]: Will turn -98.0° for 1.14s.
+[INFO] [1765545262.929281790] [create3_wander_full_control]: IR obstacle (max=708) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545262.931876794] [create3_wander_full_control]: Will turn 177.6° for 2.07s.
+[INFO] [1765545275.812314592] [create3_wander_full_control]: IR obstacle (max=718) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545275.816314003] [create3_wander_full_control]: Will turn 2.4° for 0.03s.
+[INFO] [1765545277.462685785] [create3_wander_full_control]: IR obstacle (max=701) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545278.363431483] [create3_wander_full_control]: Will turn 53.0° for 0.62s.
+[INFO] [1765545280.021857017] [create3_wander_full_control]: IR obstacle (max=2408) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545280.024700887] [create3_wander_full_control]: Will turn 141.4° for 1.65s.
+[INFO] [1765545282.723960538] [create3_wander_full_control]: IR obstacle (max=2406) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545282.726931499] [create3_wander_full_control]: Will turn 15.9° for 0.18s.
+[INFO] [1765545283.974308654] [create3_wander_full_control]: IR obstacle (max=978) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545283.978861558] [create3_wander_full_control]: Will turn 2.4° for 0.03s.
+[INFO] [1765545285.076986431] [create3_wander_full_control]: IR obstacle (max=979) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545285.080584810] [create3_wander_full_control]: Will turn 4.7° for 0.05s.
+[INFO] [1765545286.229876499] [create3_wander_full_control]: IR obstacle (max=977) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545286.258238890] [create3_wander_full_control]: Will turn -0.6° for 0.01s.
+[INFO] [1765545287.333258952] [create3_wander_full_control]: IR obstacle (max=975) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545287.335976342] [create3_wander_full_control]: Will turn -159.5° for 1.86s.
+[INFO] [1765545290.276984665] [create3_wander_full_control]: IR obstacle (max=1720) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545290.280427750] [create3_wander_full_control]: Will turn 140.5° for 1.63s.
+[INFO] [1765545292.982658307] [create3_wander_full_control]: IR obstacle (max=3142) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545292.986248668] [create3_wander_full_control]: Will turn 170.4° for 1.98s.
+[INFO] [1765545366.363087431] [create3_wander_full_control]: IR obstacle (max=797) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545366.367180841] [create3_wander_full_control]: Will turn 70.6° for 0.82s.
+[INFO] [1765545369.064827290] [create3_wander_full_control]: IR obstacle (max=710) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545369.067748382] [create3_wander_full_control]: Will turn 162.1° for 1.89s.
+[INFO] [1765545405.805124969] [create3_wander_full_control]: IR obstacle (max=729) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545405.809018400] [create3_wander_full_control]: Will turn -137.9° for 1.60s.
+[INFO] [1765545436.028838604] [create3_wander_full_control]: IR obstacle (max=781) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545436.032453965] [create3_wander_full_control]: Will turn 168.0° for 1.95s.
+[INFO] [1765545495.106695772] [create3_wander_full_control]: IR obstacle (max=778) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545495.111240176] [create3_wander_full_control]: Will turn 57.4° for 0.67s.
+[INFO] [1765545497.424976635] [create3_wander_full_control]: IR obstacle (max=731) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545497.428373739] [create3_wander_full_control]: Will turn 63.1° for 0.73s.
+[INFO] [1765545499.711083749] [create3_wander_full_control]: IR obstacle (max=730) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545500.402856256] [create3_wander_full_control]: Will turn 27.3° for 0.32s.
+[INFO] [1765545501.777283889] [create3_wander_full_control]: IR obstacle (max=1708) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545501.780852231] [create3_wander_full_control]: Will turn 20.9° for 0.24s.
+[INFO] [1765545503.073844756] [create3_wander_full_control]: IR obstacle (max=1707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545503.077764353] [create3_wander_full_control]: Will turn 61.3° for 0.71s.
+[INFO] [1765545504.880948116] [create3_wander_full_control]: IR obstacle (max=1739) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545504.884283776] [create3_wander_full_control]: Will turn -7.5° for 0.09s.
+[INFO] [1765545506.031895228] [create3_wander_full_control]: IR obstacle (max=946) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545506.035960212] [create3_wander_full_control]: Will turn 112.8° for 1.31s.
+[INFO] [1765545525.937491163] [create3_wander_full_control]: IR obstacle (max=751) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545525.940939674] [create3_wander_full_control]: Will turn -39.0° for 0.45s.
+[INFO] [1765545563.123719288] [create3_wander_full_control]: IR obstacle (max=711) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545563.126358698] [create3_wander_full_control]: Will turn 34.9° for 0.41s.
+[INFO] [1765545565.428373291] [create3_wander_full_control]: IR obstacle (max=747) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545565.431693563] [create3_wander_full_control]: Will turn 25.6° for 0.30s.
+[INFO] [1765545568.580496036] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545568.583812845] [create3_wander_full_control]: Will turn -70.2° for 0.82s.
+[INFO] [1765545570.484944075] [create3_wander_full_control]: IR obstacle (max=895) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545570.536710125] [create3_wander_full_control]: Will turn 54.1° for 0.63s.
+[INFO] [1765545572.229007921] [create3_wander_full_control]: IR obstacle (max=1019) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545572.232754521] [create3_wander_full_control]: Will turn 8.4° for 0.10s.
+[INFO] [1765545573.380894669] [create3_wander_full_control]: IR obstacle (max=1493) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545573.384468845] [create3_wander_full_control]: Will turn -155.1° for 1.81s.
+[INFO] [1765545576.276569378] [create3_wander_full_control]: IR obstacle (max=3016) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545576.280999358] [create3_wander_full_control]: Will turn -39.7° for 0.46s.
+[INFO] [1765545577.828109227] [create3_wander_full_control]: IR obstacle (max=2402) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545577.831240594] [create3_wander_full_control]: Will turn -49.8° for 0.58s.
+[INFO] [1765545579.476716833] [create3_wander_full_control]: IR obstacle (max=971) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545579.480194732] [create3_wander_full_control]: Will turn -29.7° for 0.35s.
+[INFO] [1765545580.885990698] [create3_wander_full_control]: IR obstacle (max=2103) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545580.889920054] [create3_wander_full_control]: Will turn 19.6° for 0.23s.
+[INFO] [1765545582.179166831] [create3_wander_full_control]: IR obstacle (max=2049) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545582.181734168] [create3_wander_full_control]: Will turn 84.4° for 0.98s.
+[INFO] [1765545584.226067000] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765545584.228410895] [create3_wander_full_control]: Will turn -52.6° for 0.61s.
+[INFO] [1765545585.925306132] [create3_wander_full_control]: IR obstacle (max=1220) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545585.928824494] [create3_wander_full_control]: Will turn 15.7° for 0.18s.
+[INFO] [1765545633.864806448] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545633.868780341] [create3_wander_full_control]: Will turn -169.0° for 1.97s.
+[INFO] [1765545682.776728768] [create3_wander_full_control]: IR obstacle (max=748) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545682.779415122] [create3_wander_full_control]: Will turn 54.8° for 0.64s.
+[INFO] [1765545685.115260590] [create3_wander_full_control]: IR obstacle (max=734) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545685.119756642] [create3_wander_full_control]: Will turn -102.8° for 1.20s.
+[INFO] [1765545687.673155912] [create3_wander_full_control]: IR obstacle (max=708) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545687.675760433] [create3_wander_full_control]: Will turn -14.5° for 0.17s.
+[INFO] [1765545689.371053135] [create3_wander_full_control]: IR obstacle (max=723) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545689.375097953] [create3_wander_full_control]: Will turn -28.0° for 0.33s.
+[INFO] [1765545690.778125603] [create3_wander_full_control]: IR obstacle (max=1113) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545690.781524429] [create3_wander_full_control]: Will turn 131.7° for 1.53s.
+[INFO] [1765545693.372264620] [create3_wander_full_control]: IR obstacle (max=2098) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545693.376153347] [create3_wander_full_control]: Will turn -140.9° for 1.64s.
+[INFO] [1765545696.073891037] [create3_wander_full_control]: IR obstacle (max=2108) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545696.076500225] [create3_wander_full_control]: Will turn 136.2° for 1.59s.
+[INFO] [1765545698.730769590] [create3_wander_full_control]: IR obstacle (max=1827) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545698.734439691] [create3_wander_full_control]: Will turn 96.3° for 1.12s.
+[INFO] [1765545700.924285167] [create3_wander_full_control]: IR obstacle (max=1677) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545700.927991360] [create3_wander_full_control]: Will turn -63.7° for 0.74s.
+[INFO] [1765545702.730533483] [create3_wander_full_control]: IR obstacle (max=1171) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545702.734148417] [create3_wander_full_control]: Will turn 35.9° for 0.42s.
+[INFO] [1765545704.587204754] [create3_wander_full_control]: IR obstacle (max=781) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545704.590906002] [create3_wander_full_control]: Will turn -126.7° for 1.47s.
+[INFO] [1765545753.740589437] [create3_wander_full_control]: IR obstacle (max=729) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545753.743175218] [create3_wander_full_control]: Will turn -152.5° for 1.77s.
+[INFO] [1765545786.239222276] [create3_wander_full_control]: IR obstacle (max=865) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545786.242080739] [create3_wander_full_control]: Will turn -154.4° for 1.80s.
+[INFO] [1765545832.821308330] [create3_wander_full_control]: IR obstacle (max=744) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545832.825390055] [create3_wander_full_control]: Will turn -93.5° for 1.09s.
+[INFO] [1765545835.330113161] [create3_wander_full_control]: IR obstacle (max=701) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545835.333445062] [create3_wander_full_control]: Will turn -154.0° for 1.79s.
+[INFO] [1765545859.283039964] [create3_wander_full_control]: IR obstacle (max=731) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545859.285638930] [create3_wander_full_control]: Will turn -113.3° for 1.32s.
+[INFO] [1765545913.641967274] [create3_wander_full_control]: IR obstacle (max=730) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545913.644597110] [create3_wander_full_control]: Will turn -92.9° for 1.08s.
+[INFO] [1765545965.720955221] [create3_wander_full_control]: IR obstacle (max=830) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545965.723687500] [create3_wander_full_control]: Will turn -145.6° for 1.69s.
+[INFO] [1765545983.769139678] [create3_wander_full_control]: IR obstacle (max=734) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545983.772125979] [create3_wander_full_control]: Will turn 42.9° for 0.50s.
+[INFO] [1765545988.412625015] [create3_wander_full_control]: IR obstacle (max=726) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765545988.416613621] [create3_wander_full_control]: Will turn -107.4° for 1.25s.
+[INFO] [1765546034.125771134] [create3_wander_full_control]: IR obstacle (max=800) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546034.128527068] [create3_wander_full_control]: Will turn -94.4° for 1.10s.
+[INFO] [1765546038.220267585] [create3_wander_full_control]: IR obstacle (max=710) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546038.222943945] [create3_wander_full_control]: Will turn 71.8° for 0.84s.
+[INFO] [1765546040.125435141] [create3_wander_full_control]: IR obstacle (max=1081) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546040.128898567] [create3_wander_full_control]: Will turn 20.5° for 0.24s.
+[INFO] [1765546041.422330187] [create3_wander_full_control]: IR obstacle (max=727) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546041.425970352] [create3_wander_full_control]: Will turn -102.3° for 1.19s.
+[INFO] [1765546043.677067380] [create3_wander_full_control]: IR obstacle (max=1207) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546043.680220013] [create3_wander_full_control]: Will turn -103.1° for 1.20s.
+[INFO] [1765546097.954787557] [create3_wander_full_control]: IR obstacle (max=790) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546097.958912420] [create3_wander_full_control]: Will turn 38.5° for 0.45s.
+[INFO] [1765546100.096690443] [create3_wander_full_control]: IR obstacle (max=749) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546100.100693103] [create3_wander_full_control]: Will turn -28.5° for 0.33s.
+[INFO] [1765546102.004119826] [create3_wander_full_control]: IR obstacle (max=777) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546102.008432817] [create3_wander_full_control]: Will turn 118.9° for 1.38s.
+[INFO] [1765546129.379291212] [create3_wander_full_control]: IR obstacle (max=704) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546129.384018994] [create3_wander_full_control]: Will turn 90.9° for 1.06s.
+[INFO] [1765546154.226854537] [create3_wander_full_control]: IR obstacle (max=754) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546154.230801143] [create3_wander_full_control]: Will turn 151.5° for 1.76s.
+[INFO] [1765546195.513601732] [create3_wander_full_control]: IR obstacle (max=735) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546195.517992703] [create3_wander_full_control]: Will turn -179.8° for 2.09s.
+[INFO] [1765546237.050033489] [create3_wander_full_control]: IR obstacle (max=727) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546237.053995187] [create3_wander_full_control]: Will turn -175.6° for 2.04s.
+[INFO] [1765546261.386878110] [create3_wander_full_control]: IR obstacle (max=753) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546261.390432701] [create3_wander_full_control]: Will turn 147.0° for 1.71s.
+[INFO] [1765546297.117293004] [create3_wander_full_control]: IR obstacle (max=769) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546297.121272369] [create3_wander_full_control]: Will turn 66.9° for 0.78s.
+[INFO] [1765546299.549229648] [create3_wander_full_control]: IR obstacle (max=756) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546299.553215568] [create3_wander_full_control]: Will turn 171.9° for 2.00s.
+[INFO] [1765546348.192932781] [create3_wander_full_control]: IR obstacle (max=767) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546348.196947646] [create3_wander_full_control]: Will turn -110.4° for 1.28s.
+[INFO] [1765546354.239079363] [create3_wander_full_control]: IR obstacle (max=783) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546354.241745408] [create3_wander_full_control]: Will turn 142.5° for 1.66s.
+[INFO] [1765546358.223870380] [create3_wander_full_control]: IR obstacle (max=803) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546358.226441408] [create3_wander_full_control]: Will turn -79.8° for 0.93s.
+[INFO] [1765546361.105414625] [create3_wander_full_control]: IR obstacle (max=730) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546361.109842392] [create3_wander_full_control]: Will turn 158.5° for 1.84s.
+[INFO] [1765546410.081348953] [create3_wander_full_control]: IR obstacle (max=716) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546410.084956321] [create3_wander_full_control]: Will turn -52.3° for 0.61s.
+[INFO] [1765546412.339186705] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546412.343247847] [create3_wander_full_control]: Will turn 27.6° for 0.32s.
+[INFO] [1765546414.275826979] [create3_wander_full_control]: IR obstacle (max=741) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546414.279583346] [create3_wander_full_control]: Will turn -172.8° for 2.01s.
+[INFO] [1765546439.877927058] [create3_wander_full_control]: IR obstacle (max=752) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546439.881500945] [create3_wander_full_control]: Will turn -91.5° for 1.07s.
+[INFO] [1765546486.617313517] [create3_wander_full_control]: IR obstacle (max=725) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546486.621329326] [create3_wander_full_control]: Will turn 4.0° for 0.05s.
+[INFO] [1765546491.464584353] [create3_wander_full_control]: IR obstacle (max=774) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546491.468219851] [create3_wander_full_control]: Will turn -2.0° for 0.02s.
+[INFO] [1765546493.064760107] [create3_wander_full_control]: IR obstacle (max=718) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546493.068679751] [create3_wander_full_control]: Will turn -121.9° for 1.42s.
+[INFO] [1765546509.865661077] [create3_wander_full_control]: IR obstacle (max=763) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546509.869634201] [create3_wander_full_control]: Will turn 11.6° for 0.13s.
+[INFO] [1765546511.674167670] [create3_wander_full_control]: IR obstacle (max=717) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546511.676776939] [create3_wander_full_control]: Will turn 71.2° for 0.83s.
+[INFO] [1765546513.576395850] [create3_wander_full_control]: IR obstacle (max=1294) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546513.580157458] [create3_wander_full_control]: Will turn 104.5° for 1.22s.
+[INFO] [1765546515.879286471] [create3_wander_full_control]: IR obstacle (max=2557) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546515.882608769] [create3_wander_full_control]: Will turn 54.4° for 0.63s.
+[INFO] [1765546517.577201677] [create3_wander_full_control]: IR obstacle (max=1912) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546517.580807805] [create3_wander_full_control]: Will turn 60.4° for 0.70s.
+[INFO] [1765546519.382122679] [create3_wander_full_control]: IR obstacle (max=2186) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546519.384778780] [create3_wander_full_control]: Will turn -149.2° for 1.74s.
+[INFO] [1765546522.185601076] [create3_wander_full_control]: IR obstacle (max=2067) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546522.189206371] [create3_wander_full_control]: Will turn -12.7° for 0.15s.
+[INFO] [1765546523.386128231] [create3_wander_full_control]: IR obstacle (max=2691) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546523.391268342] [create3_wander_full_control]: Will turn -69.2° for 0.80s.
+[INFO] [1765546525.272364045] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765546525.275343550] [create3_wander_full_control]: Will turn -25.6° for 0.30s.
+[INFO] [1765546577.803215265] [create3_wander_full_control]: IR obstacle (max=710) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546577.807171834] [create3_wander_full_control]: Will turn 66.1° for 0.77s.
+[INFO] [1765546592.939872279] [create3_wander_full_control]: IR obstacle (max=733) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546592.943469315] [create3_wander_full_control]: Will turn -13.3° for 0.15s.
+[INFO] [1765546594.925475916] [create3_wander_full_control]: IR obstacle (max=707) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546594.928966046] [create3_wander_full_control]: Will turn -65.6° for 0.76s.
+[INFO] [1765546597.101675619] [create3_wander_full_control]: IR obstacle (max=705) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546597.106287940] [create3_wander_full_control]: Will turn 21.1° for 0.25s.
+[INFO] [1765546598.733208741] [create3_wander_full_control]: IR obstacle (max=705) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546598.737152051] [create3_wander_full_control]: Will turn 11.3° for 0.13s.
+[INFO] [1765546599.933521268] [create3_wander_full_control]: IR obstacle (max=1322) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546599.936835010] [create3_wander_full_control]: Will turn -1.1° for 0.01s.
+[INFO] [1765546601.023017299] [create3_wander_full_control]: IR obstacle (max=1319) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546601.027139440] [create3_wander_full_control]: Will turn -133.1° for 1.55s.
+[INFO] [1765546607.119743375] [create3_wander_full_control]: IR obstacle (max=764) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546607.806655856] [create3_wander_full_control]: Will turn -117.3° for 1.36s.
+[INFO] [1765546670.385332236] [create3_wander_full_control]: IR obstacle (max=712) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546670.389312712] [create3_wander_full_control]: Will turn -40.1° for 0.47s.
+[INFO] [1765546672.449793286] [create3_wander_full_control]: IR obstacle (max=790) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546672.453737948] [create3_wander_full_control]: Will turn 37.9° for 0.44s.
+[INFO] [1765546674.323022518] [create3_wander_full_control]: IR obstacle (max=747) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546674.327110807] [create3_wander_full_control]: Will turn 76.5° for 0.89s.
+[INFO] [1765546676.275865210] [create3_wander_full_control]: IR obstacle (max=1432) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546676.278866900] [create3_wander_full_control]: Will turn 168.8° for 1.96s.
+[INFO] [1765546735.235421344] [create3_wander_full_control]: IR obstacle (max=819) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546735.238106329] [create3_wander_full_control]: Will turn 40.3° for 0.47s.
+[INFO] [1765546737.494604840] [create3_wander_full_control]: IR obstacle (max=704) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546737.500304212] [create3_wander_full_control]: Will turn -100.3° for 1.17s.
+[INFO] [1765546739.988523049] [create3_wander_full_control]: IR obstacle (max=708) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546739.992112374] [create3_wander_full_control]: Will turn 147.5° for 1.72s.
+[INFO] [1765546753.029539189] [create3_wander_full_control]: IR obstacle (max=733) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546753.033167328] [create3_wander_full_control]: Will turn -80.8° for 0.94s.
+[INFO] [1765546757.799582329] [create3_wander_full_control]: IR obstacle (max=743) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546757.804044995] [create3_wander_full_control]: Will turn 41.6° for 0.48s.
+[INFO] [1765546759.925725478] [create3_wander_full_control]: IR obstacle (max=714) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546759.929104862] [create3_wander_full_control]: Will turn 0.3° for 0.00s.
+[INFO] [1765546761.589012690] [create3_wander_full_control]: IR obstacle (max=807) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546761.592603256] [create3_wander_full_control]: Will turn -33.4° for 0.39s.
+[INFO] [1765546763.028974229] [create3_wander_full_control]: IR obstacle (max=827) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546763.032279650] [create3_wander_full_control]: Will turn 131.8° for 1.53s.
+[INFO] [1765546828.347574592] [create3_wander_full_control]: IR obstacle (max=726) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546828.351114677] [create3_wander_full_control]: Will turn 78.1° for 0.91s.
+[INFO] [1765546878.076963695] [create3_wander_full_control]: IR obstacle (max=764) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546878.080466707] [create3_wander_full_control]: Will turn 35.4° for 0.41s.
+[INFO] [1765546879.997616948] [create3_wander_full_control]: IR obstacle (max=712) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546880.002054855] [create3_wander_full_control]: Will turn 56.1° for 0.65s.
+[INFO] [1765546881.724675617] [create3_wander_full_control]: IR obstacle (max=781) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546881.728033574] [create3_wander_full_control]: Will turn 146.5° for 1.70s.
+[INFO] [1765546884.523648527] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765546884.527033966] [create3_wander_full_control]: Will turn -65.5° for 0.76s.
+[INFO] [1765546920.365619524] [create3_wander_full_control]: IR obstacle (max=717) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546920.369332459] [create3_wander_full_control]: Will turn 157.4° for 1.83s.
+[INFO] [1765546968.626180100] [create3_wander_full_control]: IR obstacle (max=791) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765546968.629593020] [create3_wander_full_control]: Will turn 133.9° for 1.56s.
+[INFO] [1765547072.615240897] [create3_wander_full_control]: IR obstacle (max=709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547072.619375215] [create3_wander_full_control]: Will turn 24.7° for 0.29s.
+[INFO] [1765547074.327302958] [create3_wander_full_control]: IR obstacle (max=743) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547074.330553083] [create3_wander_full_control]: Will turn 130.7° for 1.52s.
+[INFO] [1765547076.924242284] [create3_wander_full_control]: IR obstacle (max=736) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547076.928524378] [create3_wander_full_control]: Will turn 109.0° for 1.27s.
+[INFO] [1765547135.145660869] [create3_wander_full_control]: IR obstacle (max=741) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547135.149963092] [create3_wander_full_control]: Will turn 122.0° for 1.42s.
+[INFO] [1765547138.377978536] [create3_wander_full_control]: IR obstacle (max=704) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547138.381418326] [create3_wander_full_control]: Will turn -133.3° for 1.55s.
+[INFO] [1765547141.483332260] [create3_wander_full_control]: IR obstacle (max=711) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547141.487216137] [create3_wander_full_control]: Will turn -107.7° for 1.25s.
+[INFO] [1765547211.551455350] [create3_wander_full_control]: IR obstacle (max=755) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547211.555983255] [create3_wander_full_control]: Will turn 149.8° for 1.74s.
+[INFO] [1765547259.872382107] [create3_wander_full_control]: IR obstacle (max=746) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547259.875012518] [create3_wander_full_control]: Will turn 126.6° for 1.47s.
+[INFO] [1765547332.453344165] [create3_wander_full_control]: IR obstacle (max=759) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547332.457007656] [create3_wander_full_control]: Will turn -112.3° for 1.31s.
+[INFO] [1765547353.975479855] [create3_wander_full_control]: IR obstacle (max=721) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547353.978760146] [create3_wander_full_control]: Will turn -34.9° for 0.41s.
+[INFO] [1765547356.071288321] [create3_wander_full_control]: IR obstacle (max=700) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547356.075360288] [create3_wander_full_control]: Will turn 57.6° for 0.67s.
+[INFO] [1765547358.103521891] [create3_wander_full_control]: IR obstacle (max=737) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547358.107438360] [create3_wander_full_control]: Will turn 27.4° for 0.32s.
+[INFO] [1765547359.478261975] [create3_wander_full_control]: IR obstacle (max=779) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547359.481715839] [create3_wander_full_control]: Will turn 88.9° for 1.03s.
+[INFO] [1765547361.575980047] [create3_wander_full_control]: IR obstacle (max=1944) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547361.580053384] [create3_wander_full_control]: Will turn 0.1° for 0.00s.
+[INFO] [1765547362.677909650] [create3_wander_full_control]: IR obstacle (max=1413) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547362.680676948] [create3_wander_full_control]: Will turn -42.2° for 0.49s.
+[INFO] [1765547364.229552099] [create3_wander_full_control]: IR obstacle (max=1418) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547364.232162770] [create3_wander_full_control]: Will turn -55.9° for 0.65s.
+[INFO] [1765547365.976635308] [create3_wander_full_control]: IR obstacle (max=1756) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547365.980366094] [create3_wander_full_control]: Will turn 8.4° for 0.10s.
+[INFO] [1765547367.128687441] [create3_wander_full_control]: IR obstacle (max=1502) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547367.131799661] [create3_wander_full_control]: Will turn -144.6° for 1.68s.
+[INFO] [1765547369.878093499] [create3_wander_full_control]: IR obstacle (max=2451) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547369.880789520] [create3_wander_full_control]: Will turn -34.1° for 0.40s.
+[INFO] [1765547371.321210992] [create3_wander_full_control]: IR obstacle (max=820) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547371.325114887] [create3_wander_full_control]: Will turn 167.0° for 1.94s.
+[INFO] [1765547374.327519622] [create3_wander_full_control]: IR obstacle (max=2714) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547374.330487344] [create3_wander_full_control]: Will turn 29.5° for 0.34s.
+[INFO] [1765547375.721022208] [create3_wander_full_control]: IR obstacle (max=2816) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547375.723657230] [create3_wander_full_control]: Will turn 99.0° for 1.15s.
+[INFO] [1765547377.973641443] [create3_wander_full_control]: Hazard 1 detected -> back off + random turn.
+[INFO] [1765547377.976169522] [create3_wander_full_control]: Will turn 161.1° for 1.87s.
+[INFO] [1765547441.577059218] [create3_wander_full_control]: IR obstacle (max=729) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547441.580194734] [create3_wander_full_control]: Will turn 110.7° for 1.29s.
+[INFO] [1765547444.447753440] [create3_wander_full_control]: IR obstacle (max=786) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547444.453517867] [create3_wander_full_control]: Will turn -119.1° for 1.39s.
+[INFO] [1765547446.876024260] [create3_wander_full_control]: IR obstacle (max=885) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547446.879734472] [create3_wander_full_control]: Will turn -111.1° for 1.29s.
+[INFO] [1765547451.004980692] [create3_wander_full_control]: IR obstacle (max=716) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547451.008933993] [create3_wander_full_control]: Will turn -123.5° for 1.44s.
+[INFO] [1765547507.918468140] [create3_wander_full_control]: IR obstacle (max=783) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547507.922228351] [create3_wander_full_control]: Will turn -132.2° for 1.54s.
+[INFO] [1765547512.511259665] [create3_wander_full_control]: IR obstacle (max=717) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547513.722827839] [create3_wander_full_control]: Will turn -38.8° for 0.45s.
+[INFO] [1765547515.276653686] [create3_wander_full_control]: IR obstacle (max=1110) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547515.279471354] [create3_wander_full_control]: Will turn 60.6° for 0.71s.
+[INFO] [1765547517.071075608] [create3_wander_full_control]: IR obstacle (max=1709) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547517.074193143] [create3_wander_full_control]: Will turn -132.5° for 1.54s.
+[INFO] [1765547537.360449059] [create3_wander_full_control]: IR obstacle (max=759) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547537.364074124] [create3_wander_full_control]: Will turn 165.0° for 1.92s.
+[INFO] [1765547556.995753406] [create3_wander_full_control]: IR obstacle (max=746) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547557.000798361] [create3_wander_full_control]: Will turn -95.8° for 1.11s.
+[INFO] [1765547580.130122145] [create3_wander_full_control]: IR obstacle (max=781) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547580.133222291] [create3_wander_full_control]: Will turn -88.6° for 1.03s.
+[INFO] [1765547583.267336242] [create3_wander_full_control]: IR obstacle (max=737) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547583.271324395] [create3_wander_full_control]: Will turn -100.7° for 1.17s.
+[INFO] [1765547607.233647271] [create3_wander_full_control]: IR obstacle (max=756) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547607.236273719] [create3_wander_full_control]: Will turn -33.1° for 0.39s.
+[INFO] [1765547611.989272377] [create3_wander_full_control]: IR obstacle (max=719) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547611.993244715] [create3_wander_full_control]: Will turn 119.6° for 1.39s.
+[INFO] [1765547659.863044886] [create3_wander_full_control]: IR obstacle (max=753) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547659.865885313] [create3_wander_full_control]: Will turn -75.0° for 0.87s.
+[INFO] [1765547662.533534039] [create3_wander_full_control]: IR obstacle (max=751) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547662.536904329] [create3_wander_full_control]: Will turn -19.4° for 0.23s.
+[INFO] [1765547665.208482597] [create3_wander_full_control]: IR obstacle (max=721) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547665.212862875] [create3_wander_full_control]: Will turn 164.5° for 1.91s.
+[INFO] [1765547668.182370268] [create3_wander_full_control]: IR obstacle (max=1081) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547668.185036475] [create3_wander_full_control]: Will turn -15.1° for 0.18s.
+[INFO] [1765547669.977057205] [create3_wander_full_control]: IR obstacle (max=714) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547669.980681696] [create3_wander_full_control]: Will turn -161.9° for 1.88s.
+[INFO] [1765547672.921904171] [create3_wander_full_control]: IR obstacle (max=1515) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547672.925790418] [create3_wander_full_control]: Will turn -42.0° for 0.49s.
+[INFO] [1765547674.475785110] [create3_wander_full_control]: IR obstacle (max=1822) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547674.480783046] [create3_wander_full_control]: Will turn -157.3° for 1.83s.
+[INFO] [1765547721.162920870] [create3_wander_full_control]: IR obstacle (max=726) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547721.166814173] [create3_wander_full_control]: Will turn 131.2° for 1.53s.
+[INFO] [1765547823.039277506] [create3_wander_full_control]: IR obstacle (max=786) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547823.042932515] [create3_wander_full_control]: Will turn -93.3° for 1.09s.
+[INFO] [1765547825.852882100] [create3_wander_full_control]: IR obstacle (max=714) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547825.855587510] [create3_wander_full_control]: Will turn -110.2° for 1.28s.
+[INFO] [1765547877.537374896] [create3_wander_full_control]: IR obstacle (max=724) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547877.540779704] [create3_wander_full_control]: Will turn -36.0° for 0.42s.
+[INFO] [1765547879.828685176] [create3_wander_full_control]: IR obstacle (max=701) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547880.041152886] [create3_wander_full_control]: Will turn 28.5° for 0.33s.
+[INFO] [1765547881.429306207] [create3_wander_full_control]: IR obstacle (max=962) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547881.432644758] [create3_wander_full_control]: Will turn 50.8° for 0.59s.
+[INFO] [1765547883.075001851] [create3_wander_full_control]: IR obstacle (max=1244) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547884.057337565] [create3_wander_full_control]: Will turn 40.4° for 0.47s.
+[INFO] [1765547885.572486626] [create3_wander_full_control]: IR obstacle (max=1561) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547885.576085913] [create3_wander_full_control]: Will turn -5.1° for 0.06s.
+[INFO] [1765547886.724748164] [create3_wander_full_control]: IR obstacle (max=2609) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547886.730128206] [create3_wander_full_control]: Will turn 119.3° for 1.39s.
+[INFO] [1765547889.171514619] [create3_wander_full_control]: IR obstacle (max=1604) -> EMERGENCY STOP + back off + turn.
+[INFO] [1765547889.174123938] [create3_wander_full_control]: Will turn 175.0° for 2.04s.
+Traceback (most recent call last):
+  File "/home/fieldlab/wander.py", line 169, in main
+    rclpy.spin(node)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 773, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 762, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 745, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 646, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/fieldlab/wander.py", line 181, in <module>
+    main()
+  File "/home/fieldlab/wander.py", line 175, in main
+    node.cmd_pub.publish(stop)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/publisher.py", line 70, in publish
+    self.__publisher.publish(msg)
+rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
