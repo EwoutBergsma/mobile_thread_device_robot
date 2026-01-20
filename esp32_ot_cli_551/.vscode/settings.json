@@ -16,5 +16,5 @@
     "--compile-commands-dir=c:\\Repositories\\mobile_thread_device_robot\\esp32_ot_cli_551_redo\\build"
   ],
   "idf.flashType": "UART",
-  "idf.portWin": "COM16"
+  "idf.portWin": "COM15"
 }
