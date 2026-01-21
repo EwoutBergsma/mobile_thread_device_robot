@@ -47,6 +47,77 @@ TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
 
 # -----------------------------------------------------------------------------
+# RLOC16 -> Router number mapping
+# -----------------------------------------------------------------------------
+# NOTE: Routers 2 and 4 have two possible RLOC16 values (RLOC16 changed over time).
+RLOC16_TO_ROUTER_NUM: Dict[str, int] = {
+    "7000": 1,
+    "C400": 2,
+    "7800": 2,
+    "E000": 3,
+    "C800": 4,
+    "2400": 4,
+    "0C00": 5,
+}
+
+# Always show these labels on the parent subplot, even if absent in the data.
+BASE_PARENT_LABELS: List[str] = [
+    "No Parent",
+    "Router 1",
+    "Router 2",
+    "Router 3",
+    "Router 4",
+    "Router 5",
+]
+
+
+def _normalize_rloc16(rloc16: str) -> str:
+    """
+    Normalize an RLOC16 string to a canonical 4-hex-digit uppercase representation.
+    Examples: "0xc400" -> "C400", "0c00" -> "0C00"
+    """
+    s = str(rloc16).strip()
+    if s.lower().startswith("0x"):
+        s = s[2:]
+    s = s.upper()
+    # Keep only hex characters if the string is noisy (defensive).
+    s = "".join(ch for ch in s if ch in "0123456789ABCDEF")
+    if len(s) == 0:
+        return ""
+    # Left-pad to 4 chars if shorter than expected.
+    if len(s) < 4:
+        s = s.zfill(4)
+    return s
+
+
+def _rloc16_value_to_router_label(value: object) -> str:
+    """
+    Convert a raw parent value (RLOC16 / "No Parent" / etc.) to a router label.
+    - Known RLOC16s map to "Router N"
+    - "No Parent" remains "No Parent"
+    - Unknown values become "Unknown (<RLOC16>)"
+    """
+    if value is None:
+        return "No Parent"
+
+    s = str(value).strip()
+    if not s:
+        return "No Parent"
+    if s.lower() == "no parent":
+        return "No Parent"
+
+    norm = _normalize_rloc16(s)
+    if not norm:
+        return "No Parent"
+
+    router_num = RLOC16_TO_ROUTER_NUM.get(norm)
+    if router_num is not None:
+        return f"Router {router_num}"
+
+    return f"Unknown ({norm})"
+
+
+# -----------------------------------------------------------------------------
 # Stats helpers
 # -----------------------------------------------------------------------------
 
@@ -471,20 +542,34 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
     """
     Gantt-style parent connectivity timeline.
 
-    If end_time is provided, the last segment is extended to that value (in seconds).
+    This plot translates Parent RLOC16 values into Router numbers (Router 1..5),
+    merging segments when a router's RLOC16 changes over time (e.g., C400 <-> 7800).
+
+    The y-axis ALWAYS includes:
+      - No Parent
+      - Router 1..5
+    even if some of them do not appear in the data.
     """
     parent_ts, parent_vals = _select_parent_series(metrics)
 
     if not parent_ts:
-        ax.set_title("Connected to Parent")
+        ax.set_title("Connected to Parent (nParents=0)")
         ax.text(0.5, 0.5, "No parent data", transform=ax.transAxes, ha="center", va="center")
-        ax.set_yticks([])
-        ax.grid(True)
+
+        # Still show the fixed labels even if there is no data
+        ax.set_ylabel("Parent Router")
+        ax.set_yticks(range(len(BASE_PARENT_LABELS)))
+        ax.set_yticklabels(BASE_PARENT_LABELS)
+        ax.set_ylim(-0.5, len(BASE_PARENT_LABELS) - 0.5)
+        ax.grid(True, axis="y")
+        ax.grid(False, axis="x")
         return
 
     pairs = sorted(zip(parent_ts, parent_vals), key=lambda x: float(x[0]))
     parent_ts_sorted = [float(t) for t, _ in pairs]
-    parent_vals_sorted = [p for _, p in pairs]
+
+    # Translate RLOC16 -> Router label here (this merges “RLOC16 changed” cases).
+    parent_router_labels = [_rloc16_value_to_router_label(p) for _, p in pairs]
 
     # Establish an end time for the final segment.
     if end_time is not None:
@@ -503,12 +588,12 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
                 all_ts.extend([float(v) for v in vals])
         overall_end = max(all_ts) if all_ts else parent_ts_sorted[-1]
 
-    # Build change-point segments: (start, end, parent)
+    # Build change-point segments: (start, end, parent_router_label)
     segments: List[Tuple[float, float, str]] = []
-    cur_parent = parent_vals_sorted[0]
+    cur_parent = parent_router_labels[0]
     cur_start = parent_ts_sorted[0]
 
-    for t, p in zip(parent_ts_sorted[1:], parent_vals_sorted[1:]):
+    for t, p in zip(parent_ts_sorted[1:], parent_router_labels[1:]):
         if p != cur_parent:
             segments.append((cur_start, t, cur_parent))
             cur_parent = p
@@ -516,26 +601,12 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
 
     segments.append((cur_start, overall_end, cur_parent))
 
-    # Compute dwell time per parent for ordering.
-    dwell: Dict[str, float] = {}
-    for s, e, p in segments:
-        dwell[p] = dwell.get(p, 0.0) + max(0.0, e - s)
+    # Y-axis ordering: always include fixed labels, plus any extras (e.g., Unknown(...)).
+    unique_set = set(parent_router_labels)
+    unique_parents: List[str] = list(BASE_PARENT_LABELS)
 
-    unique_set = set(parent_vals_sorted)
-
-    def _hex_key(p: str) -> int:
-        try:
-            return int(p, 16)
-        except Exception:
-            return 1_000_000_000
-
-    others = [p for p in unique_set if p != "No Parent"]
-    others_sorted = sorted(others, key=lambda p: (-dwell.get(p, 0.0), _hex_key(p), p))
-
-    if "No Parent" in unique_set:
-        unique_parents = ["No Parent"] + others_sorted
-    else:
-        unique_parents = others_sorted
+    extras = sorted([p for p in unique_set if p not in set(BASE_PARENT_LABELS)])
+    unique_parents.extend(extras)
 
     parent_to_index = {p: i for i, p in enumerate(unique_parents)}
 
@@ -577,9 +648,9 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
             zorder=4,
         )
 
-    ax.set_ylabel("Parent RLOC16")
+    ax.set_ylabel("Parent Router")
     ax.set_yticks(range(len(unique_parents)))
-    ax.set_yticklabels(unique_parents, fontfamily="monospace")
+    ax.set_yticklabels(unique_parents)
     ax.set_ylim(-0.5, len(unique_parents) - 0.5)
 
     n_parents = max(0, len(segments))
