@@ -54,13 +54,13 @@ SHOW_RTT_SUBPLOT: bool = False
 # -----------------------------------------------------------------------------
 # NOTE: Routers 2 and 4 have two possible RLOC16 values (RLOC16 changed over time).
 RLOC16_TO_ROUTER_NUM: Dict[str, int] = {
-    "7000": 1,
-    "C400": 2,
-    "7800": 2,
-    "E000": 3,
-    "C800": 4,
-    "2400": 4,
-    "0C00": 5,
+    "7000": 2,
+    "C400": 3,
+    "7800": 3,
+    "E000": 1,
+    "C800": 5,
+    "2400": 5,
+    "0C00": 4,
 }
 
 # Always show these labels on the parent subplot, even if absent in the data.
