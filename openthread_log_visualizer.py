@@ -29,8 +29,8 @@ RSS_YLIM: Optional[Tuple[float, float]] = (-120, 0)  # dBm
 # Horizontal threshold line on RSS subplot
 PPS_RSS_THRESHOLD_DBM: float = -65.0
 
-# Packet-loss "rug" settings (fraction of y-range at the top)
-LOSS_RUG_FRACTION: float = 1  # fraction of y-range at top
+# TX-failed "rug" settings (fraction of y-range at the top)
+TXFAIL_RUG_FRACTION: float = 1  # fraction of y-range at top
 
 # Legend styling
 LEGEND_FRAME_ALPHA: float = 1.0
@@ -44,6 +44,80 @@ NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
 
 # Trim settings
 TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
+
+# Toggle: enable/disable the top RTT subplot
+SHOW_RTT_SUBPLOT: bool = False
+
+
+# -----------------------------------------------------------------------------
+# RLOC16 -> Router number mapping
+# -----------------------------------------------------------------------------
+# NOTE: Routers 2 and 4 have two possible RLOC16 values (RLOC16 changed over time).
+RLOC16_TO_ROUTER_NUM: Dict[str, int] = {
+    "7000": 1,
+    "C400": 2,
+    "7800": 2,
+    "E000": 3,
+    "C800": 4,
+    "2400": 4,
+    "0C00": 5,
+}
+
+# Always show these labels on the parent subplot, even if absent in the data.
+BASE_PARENT_LABELS: List[str] = [
+    "No Parent",
+    "Router 1",
+    "Router 2",
+    "Router 3",
+    "Router 4",
+    "Router 5",
+]
+
+
+def _normalize_rloc16(rloc16: str) -> str:
+    """
+    Normalize an RLOC16 string to a canonical 4-hex-digit uppercase representation.
+    Examples: "0xc400" -> "C400", "0c00" -> "0C00"
+    """
+    s = str(rloc16).strip()
+    if s.lower().startswith("0x"):
+        s = s[2:]
+    s = s.upper()
+    # Keep only hex characters if the string is noisy (defensive).
+    s = "".join(ch for ch in s if ch in "0123456789ABCDEF")
+    if len(s) == 0:
+        return ""
+    # Left-pad to 4 chars if shorter than expected.
+    if len(s) < 4:
+        s = s.zfill(4)
+    return s
+
+
+def _rloc16_value_to_router_label(value: object) -> str:
+    """
+    Convert a raw parent value (RLOC16 / "No Parent" / etc.) to a router label.
+    - Known RLOC16s map to "Router N"
+    - "No Parent" remains "No Parent"
+    - Unknown values become "Unknown (<RLOC16>)"
+    """
+    if value is None:
+        return "No Parent"
+
+    s = str(value).strip()
+    if not s:
+        return "No Parent"
+    if s.lower() == "no parent":
+        return "No Parent"
+
+    norm = _normalize_rloc16(s)
+    if not norm:
+        return "No Parent"
+
+    router_num = RLOC16_TO_ROUTER_NUM.get(norm)
+    if router_num is not None:
+        return f"Router {router_num}"
+
+    return f"Unknown ({norm})"
 
 
 # -----------------------------------------------------------------------------
@@ -127,7 +201,9 @@ def _convert_metrics_timestamps_to_relative_seconds(metrics: LogMetrics) -> None
     ts_attr_names = [
         "ping_rtt_timestamps",
         "ping_rss_timestamps",
-        "ping_packet_loss_timestamps",
+        # REPLACED: packet loss timestamps removed from the plot pipeline
+        # "ping_packet_loss_timestamps",
+        "mac_frame_tx_attempt_16_16_failed_timestamps",
         "parent_router_from_rloc16_transition_timestamps",
         "parent_rloc16_from_query_timestamps",
     ]
@@ -253,7 +329,9 @@ def _rebase_timestamps(metrics: LogMetrics, offset: float) -> None:
     ts_attr_names = [
         "ping_rtt_timestamps",
         "ping_rss_timestamps",
-        "ping_packet_loss_timestamps",
+        # REPLACED: packet loss removed from plot pipeline
+        # "ping_packet_loss_timestamps",
+        "mac_frame_tx_attempt_16_16_failed_timestamps",
         "parent_router_from_rloc16_transition_timestamps",
         "parent_rloc16_from_query_timestamps",
     ]
@@ -273,7 +351,7 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
     ts_attr_names = [
         "ping_rtt_timestamps",
         "ping_rss_timestamps",
-        "ping_packet_loss_timestamps",
+        "mac_frame_tx_attempt_16_16_failed_timestamps",
         "parent_router_from_rloc16_transition_timestamps",
         "parent_rloc16_from_query_timestamps",
     ]
@@ -323,9 +401,9 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
         window_end,
     )
 
-    # Packet loss (timestamps only)
-    metrics.ping_packet_loss_timestamps = _filter_t(
-        [float(t) for t in getattr(metrics, "ping_packet_loss_timestamps", [])],
+    # TX failed 16/16 (timestamps only)
+    metrics.mac_frame_tx_attempt_16_16_failed_timestamps = _filter_t(
+        [float(t) for t in getattr(metrics, "mac_frame_tx_attempt_16_16_failed_timestamps", [])],
         window_start,
         window_end,
     )
@@ -352,7 +430,7 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
 
 
 # -----------------------------------------------------------------------------
-# Plotting primitives (3-panel figure)
+# Plotting primitives
 # -----------------------------------------------------------------------------
 
 def plot_rtt(ax, metrics: LogMetrics) -> None:
@@ -385,10 +463,14 @@ def plot_rtt(ax, metrics: LogMetrics) -> None:
     ax.set_ylim(0.0, upper)
 
 
-def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
+def plot_rss_and_txfail(ax, metrics: LogMetrics) -> None:
+    """
+    RSS scatter + vertical 'rug' for Frame tx attempt 16/16 failed events.
+    (Replaces the prior packet-loss rug.)
+    """
     ts_rss = metrics.ping_rss_timestamps
     rss = metrics.ping_rss_dbm_values
-    loss_ts = metrics.ping_packet_loss_timestamps
+    txfail_ts = getattr(metrics, "mac_frame_tx_attempt_16_16_failed_timestamps", [])
 
     if RSS_YLIM is not None:
         y_min, y_max = RSS_YLIM
@@ -404,18 +486,19 @@ def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
 
     ax.set_ylim(y_min, y_max)
 
-    if loss_ts:
+    # TX failed 16/16 rug (vertical markers)
+    if txfail_ts:
         y_range = y_max - y_min
-        rug_bottom = y_max - (LOSS_RUG_FRACTION * y_range)
+        rug_bottom = y_max - (TXFAIL_RUG_FRACTION * y_range)
         rug_top = y_max
         ax.vlines(
-            loss_ts,
+            txfail_ts,
             rug_bottom,
             rug_top,
             colors="red",
             linestyles="--",
             linewidth=0.5,
-            label="Packet loss",
+            label="Frame tx attempt 16/16 failed",
             zorder=6,
         )
 
@@ -439,14 +522,17 @@ def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
 
     pdr = _overall_pdr(metrics)
     n_rss = len(rss)
+    n_txfail = len(txfail_ts)
     mu, sigma = _mean_std(rss)
 
-    title = "Ping to Parent RSS & Packet Loss"
+    title = "Ping to Parent RSS & TX Fail (16/16)"
     suffix_parts: List[str] = []
     if pdr is not None:
         suffix_parts.append(f"PDR={pdr:.1f}%")
     if n_rss > 0:
         suffix_parts.append(f"nRSS={n_rss}")
+    if n_txfail > 0:
+        suffix_parts.append(f"nTxFail16/16={n_txfail}")
     if mu is not None and sigma is not None:
         suffix_parts.append(f"avgRSS={mu:.1f} dBm, stdRSS={sigma:.1f} dB")
     if suffix_parts:
@@ -471,20 +557,31 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
     """
     Gantt-style parent connectivity timeline.
 
-    If end_time is provided, the last segment is extended to that value (in seconds).
+    This plot translates Parent RLOC16 values into Router numbers (Router 1..5),
+    merging segments when a router's RLOC16 changes over time (e.g., C400 <-> 7800).
+
+    The y-axis ALWAYS includes:
+      - No Parent
+      - Router 1..5
+    even if some of them do not appear in the data.
     """
     parent_ts, parent_vals = _select_parent_series(metrics)
 
     if not parent_ts:
-        ax.set_title("Connected to Parent")
+        ax.set_title("Connected to Parent (nParents=0)")
         ax.text(0.5, 0.5, "No parent data", transform=ax.transAxes, ha="center", va="center")
-        ax.set_yticks([])
-        ax.grid(True)
+
+        ax.set_ylabel("Parent Router")
+        ax.set_yticks(range(len(BASE_PARENT_LABELS)))
+        ax.set_yticklabels(BASE_PARENT_LABELS)
+        ax.set_ylim(-0.5, len(BASE_PARENT_LABELS) - 0.5)
+        ax.grid(True, axis="y")
+        ax.grid(False, axis="x")
         return
 
     pairs = sorted(zip(parent_ts, parent_vals), key=lambda x: float(x[0]))
     parent_ts_sorted = [float(t) for t, _ in pairs]
-    parent_vals_sorted = [p for _, p in pairs]
+    parent_router_labels = [_rloc16_value_to_router_label(p) for _, p in pairs]
 
     # Establish an end time for the final segment.
     if end_time is not None:
@@ -494,7 +591,7 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
         for name in (
             "ping_rtt_timestamps",
             "ping_rss_timestamps",
-            "ping_packet_loss_timestamps",
+            "mac_frame_tx_attempt_16_16_failed_timestamps",
             "parent_router_from_rloc16_transition_timestamps",
             "parent_rloc16_from_query_timestamps",
         ):
@@ -503,12 +600,12 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
                 all_ts.extend([float(v) for v in vals])
         overall_end = max(all_ts) if all_ts else parent_ts_sorted[-1]
 
-    # Build change-point segments: (start, end, parent)
+    # Build change-point segments: (start, end, parent_router_label)
     segments: List[Tuple[float, float, str]] = []
-    cur_parent = parent_vals_sorted[0]
+    cur_parent = parent_router_labels[0]
     cur_start = parent_ts_sorted[0]
 
-    for t, p in zip(parent_ts_sorted[1:], parent_vals_sorted[1:]):
+    for t, p in zip(parent_ts_sorted[1:], parent_router_labels[1:]):
         if p != cur_parent:
             segments.append((cur_start, t, cur_parent))
             cur_parent = p
@@ -516,26 +613,10 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
 
     segments.append((cur_start, overall_end, cur_parent))
 
-    # Compute dwell time per parent for ordering.
-    dwell: Dict[str, float] = {}
-    for s, e, p in segments:
-        dwell[p] = dwell.get(p, 0.0) + max(0.0, e - s)
-
-    unique_set = set(parent_vals_sorted)
-
-    def _hex_key(p: str) -> int:
-        try:
-            return int(p, 16)
-        except Exception:
-            return 1_000_000_000
-
-    others = [p for p in unique_set if p != "No Parent"]
-    others_sorted = sorted(others, key=lambda p: (-dwell.get(p, 0.0), _hex_key(p), p))
-
-    if "No Parent" in unique_set:
-        unique_parents = ["No Parent"] + others_sorted
-    else:
-        unique_parents = others_sorted
+    unique_set = set(parent_router_labels)
+    unique_parents: List[str] = list(BASE_PARENT_LABELS)
+    extras = sorted([p for p in unique_set if p not in set(BASE_PARENT_LABELS)])
+    unique_parents.extend(extras)
 
     parent_to_index = {p: i for i, p in enumerate(unique_parents)}
 
@@ -577,9 +658,9 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
             zorder=4,
         )
 
-    ax.set_ylabel("Parent RLOC16")
+    ax.set_ylabel("Parent Router")
     ax.set_yticks(range(len(unique_parents)))
-    ax.set_yticklabels(unique_parents, fontfamily="monospace")
+    ax.set_yticklabels(unique_parents)
     ax.set_ylim(-0.5, len(unique_parents) - 0.5)
 
     n_parents = max(0, len(segments))
@@ -590,14 +671,16 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
 
 
 # -----------------------------------------------------------------------------
-# Per-file processing (save the 3-panel figure)
+# Per-file processing (save the figure)
 # -----------------------------------------------------------------------------
 
 def process_log_file(
     log_path: str,
     rtt_by_file: Dict[str, List[float]],
     rss_by_file: Dict[str, List[float]],
+    *,
     show: bool = False,
+    show_rtt: bool = SHOW_RTT_SUBPLOT,
 ) -> None:
     log_path_obj = Path(log_path)
     data_dir_path = Path(DATA_DIR)
@@ -623,9 +706,9 @@ def process_log_file(
         rss_by_file[label_for_file] = metrics.ping_rss_dbm_values
 
     has_any = (
-        bool(metrics.ping_rtt_timestamps)
+        (show_rtt and bool(metrics.ping_rtt_timestamps))
         or bool(metrics.ping_rss_timestamps)
-        or bool(metrics.ping_packet_loss_timestamps)
+        or bool(getattr(metrics, "mac_frame_tx_attempt_16_16_failed_timestamps", []))
         or bool(getattr(metrics, "parent_router_from_rloc16_transition_timestamps", []))
         or bool(getattr(metrics, "parent_rloc16_from_query_timestamps", []))
     )
@@ -633,11 +716,16 @@ def process_log_file(
         print(f"[INFO] {label_for_file}: no time-series data to plot; skipping figure.")
         return
 
-    fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(12, 8))
-    ax_rtt, ax_rss, ax_parent = axes
+    # Create either a 3-panel (with RTT) or 2-panel (without RTT) figure.
+    if show_rtt:
+        fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(12, 8))
+        ax_rtt, ax_rss, ax_parent = axes
+        plot_rtt(ax_rtt, metrics)
+    else:
+        fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(12, 6))
+        ax_rss, ax_parent = axes
 
-    plot_rtt(ax_rtt, metrics)
-    plot_rss_and_loss(ax_rss, metrics)
+    plot_rss_and_txfail(ax_rss, metrics)
 
     # If we successfully trimmed to a 2-hour window, force parent bars to extend to that window end.
     parent_end = None
@@ -678,7 +766,7 @@ def create_rtt_boxplot(rtt_by_file: Dict[str, List[float]]) -> None:
     plt.figure()
     plt.boxplot(data, labels=labels, showfliers=False)
     plt.ylabel("RTT (ms)")
-    plt.title("Ping to Parent Round-trip Time per File")
+    plt.title("Ping to Parent Round-trip Time")
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
 
@@ -709,7 +797,7 @@ def create_rss_boxplot(rss_by_file: Dict[str, List[float]]) -> None:
     print(f"[OK] Saved RSS box plot -> {boxplot_path}")
 
 
-def main(show: bool = False) -> None:
+def main(show: bool = False, show_rtt: bool = SHOW_RTT_SUBPLOT) -> None:
     data_dir_path = Path(DATA_DIR)
 
     pattern = str(data_dir_path / "**" / "*.log")
@@ -741,11 +829,30 @@ def main(show: bool = False) -> None:
     rss_by_file: Dict[str, List[float]] = {}
 
     for log_path in log_files:
-        process_log_file(log_path, rtt_by_file, rss_by_file, show=show)
+        process_log_file(log_path, rtt_by_file, rss_by_file, show=show, show_rtt=show_rtt)
 
     create_rtt_boxplot(rtt_by_file)
     create_rss_boxplot(rss_by_file)
 
 
 if __name__ == "__main__":
-    main(show=False)
+    import argparse
+
+    parser = argparse.ArgumentParser(description="OpenThread log visualizer")
+    parser.add_argument("--show", action="store_true", help="Display figures interactively")
+
+    # Mutually exclusive RTT toggles (optional overrides)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--rtt", action="store_true", help="Enable the top RTT subplot")
+    group.add_argument("--no-rtt", action="store_true", help="Disable the top RTT subplot")
+
+    args = parser.parse_args()
+
+    # Default comes from the config constant unless user overrides via CLI.
+    show_rtt = SHOW_RTT_SUBPLOT
+    if args.rtt:
+        show_rtt = True
+    elif args.no_rtt:
+        show_rtt = False
+
+    main(show=args.show, show_rtt=show_rtt)

@@ -33,7 +33,6 @@ ping_rtt_regex = re.compile(
     re.VERBOSE,
 )
 
-
 # Regex for packet summary lines with packet loss.
 ping_packet_loss_regex = re.compile(
     r"""
@@ -53,6 +52,20 @@ mac_frame_tx_noack_failed_regex = re.compile(
     .*?Mac-----------:\s+
     Frame\s+tx\s+attempt\s+\d+/\d+\s+
     failed,\s+error:\s*NoAck\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+# NEW: Regex for MAC frame tx failure attempts (captures attempt/total), any error or none.
+# We will specifically record 16/16 failures.
+mac_frame_tx_attempt_failed_regex = re.compile(
+    r"""
+    \[(?P<ts>[^\]]+)\]\s+
+    .*?Mac-----------:\s+
+    Frame\s+tx\s+attempt\s+
+    (?P<attempt>\d+)\s*/\s*(?P<total>\d+)\s+
+    failed
+    (?:,\s*error:\s*(?P<error>.*))?
     """,
     re.IGNORECASE | re.VERBOSE,
 )
@@ -235,6 +248,9 @@ class LogMetrics:
 
     mac_frame_tx_noack_failed_timestamps: List[datetime]
 
+    # NEW: Frame tx attempt 16/16 failed (any error/no error)
+    mac_frame_tx_attempt_16_16_failed_timestamps: List[datetime]
+
     ping_rss_timestamps: List[datetime]
     ping_rss_dbm_values: List[float]
 
@@ -299,6 +315,7 @@ def parse_log_file(log_path: str) -> LogMetrics:
         ping_rtt_avg_ms=[],
         ping_packet_loss_timestamps=[],
         mac_frame_tx_noack_failed_timestamps=[],
+        mac_frame_tx_attempt_16_16_failed_timestamps=[],  # NEW
         ping_rss_timestamps=[],
         ping_rss_dbm_values=[],
         role_from_transition_timestamps=[],
@@ -410,6 +427,23 @@ def parse_log_file(log_path: str) -> LogMetrics:
                 if loss_pct > 0.0:
                     print(f"  [LOSS] Packet loss {loss_pct}% at {ts_loss_str}")
                     metrics.ping_packet_loss_timestamps.append(ts_loss)
+
+            # NEW: Frame tx attempt N/N failed -> specifically track 16/16.
+            m_attempt_fail = mac_frame_tx_attempt_failed_regex.search(line_stripped)
+            if m_attempt_fail:
+                ts_str = m_attempt_fail.group("ts")
+                attempt = int(m_attempt_fail.group("attempt"))
+                total = int(m_attempt_fail.group("total"))
+                err = (m_attempt_fail.group("error") or "").strip()
+
+                if attempt == 16 and total == 16:
+                    ts = parse_timestamp(ts_str)
+                    if err:
+                        print(f"  [TX FAIL 16/16] Frame tx attempt 16/16 failed (error: {err}) at {ts_str}")
+                    else:
+                        print(f"  [TX FAIL 16/16] Frame tx attempt 16/16 failed at {ts_str}")
+
+                    metrics.mac_frame_tx_attempt_16_16_failed_timestamps.append(ts)
 
             # MAC NoAck tx failures.
             m_noack = mac_frame_tx_noack_failed_regex.search(line_stripped)
@@ -583,7 +617,11 @@ def _discover_time_series(metrics: LogMetrics) -> List[Dict[str, Any]]:
                     suffix = val_name
                 pretty_suffix = suffix.replace("_", " ").title()
 
-                label = f"{root_label} – {pretty_suffix}" if pretty_suffix and pretty_suffix.lower() != root_label.lower() else root_label
+                label = (
+                    f"{root_label} – {pretty_suffix}"
+                    if pretty_suffix and pretty_suffix.lower() != root_label.lower()
+                    else root_label
+                )
 
                 series.append(
                     {
@@ -713,6 +751,7 @@ def main() -> None:
         print(f"  Parent RLOC16 queries:               {len(metrics.parent_rloc16_from_query_timestamps)}")
         print(f"  Parent router points:                {len(metrics.parent_router_from_rloc16_transition_timestamps)}")
         print(f"  MAC NoAck tx failures:               {len(metrics.mac_frame_tx_noack_failed_timestamps)}")
+        print(f"  MAC Frame tx attempt 16/16 failed:   {len(metrics.mac_frame_tx_attempt_16_16_failed_timestamps)}")
         print(f"  Loss events:                         {len(metrics.ping_packet_loss_timestamps)}")
         print(f"  PPS backoff passed events:           {len(metrics.pps_backoff_interval_passed_timestamps)}")
         print(f"  PPS Parent RSS samples:              {len(metrics.pps_parent_rss_timestamps)}")
