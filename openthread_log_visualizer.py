@@ -766,7 +766,7 @@ def create_rtt_boxplot(rtt_by_file: Dict[str, List[float]]) -> None:
     plt.figure()
     plt.boxplot(data, labels=labels, showfliers=False)
     plt.ylabel("RTT (ms)")
-    plt.title("Ping to Parent Round-trip Time per File")
+    plt.title("Ping to Parent Round-trip Time")
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
 
