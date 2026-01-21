@@ -54,6 +54,9 @@ SHOW_RTT_SUBPLOT: bool = False
 # - False => absolute timestamps (requires datetime timestamps from parser)
 USE_RELATIVE_TIME_AXIS: bool = True
 
+# Subplot height ratios (make "Connected to Parent" slightly less tall)
+PARENT_SUBPLOT_HEIGHT_RATIO: float = 0.5
+
 
 # -----------------------------------------------------------------------------
 # RLOC16 -> Router number mapping
@@ -969,12 +972,25 @@ def process_log_file(
         return
 
     # Create either a 3-panel (with RTT) or 2-panel (without RTT) figure.
+    # Make the "Connected to Parent" subplot slightly shorter via height_ratios.
     if show_rtt:
-        fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(12, 8))
+        fig, axes = plt.subplots(
+            nrows=3,
+            ncols=1,
+            sharex=True,
+            figsize=(12, 8),
+            gridspec_kw={"height_ratios": [1.0, 1.0, PARENT_SUBPLOT_HEIGHT_RATIO]},
+        )
         ax_rtt, ax_rss, ax_parent = axes
         plot_rtt(ax_rtt, metrics)
     else:
-        fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(12, 6))
+        fig, axes = plt.subplots(
+            nrows=2,
+            ncols=1,
+            sharex=True,
+            figsize=(12, 6),
+            gridspec_kw={"height_ratios": [1.0, PARENT_SUBPLOT_HEIGHT_RATIO]},
+        )
         ax_rss, ax_parent = axes
 
     plot_rss_and_txfail(ax_rss, metrics)
