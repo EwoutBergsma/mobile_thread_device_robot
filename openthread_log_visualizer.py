@@ -29,8 +29,8 @@ RSS_YLIM: Optional[Tuple[float, float]] = (-120, 0)  # dBm
 # Horizontal threshold line on RSS subplot
 PPS_RSS_THRESHOLD_DBM: float = -65.0
 
-# Packet-loss "rug" settings (fraction of y-range at the top)
-LOSS_RUG_FRACTION: float = 1  # fraction of y-range at top
+# TX-failed "rug" settings (fraction of y-range at the top)
+TXFAIL_RUG_FRACTION: float = 1  # fraction of y-range at top
 
 # Legend styling
 LEGEND_FRAME_ALPHA: float = 1.0
@@ -47,7 +47,6 @@ TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
 # Toggle: enable/disable the top RTT subplot
 SHOW_RTT_SUBPLOT: bool = False
-
 
 
 # -----------------------------------------------------------------------------
@@ -202,7 +201,9 @@ def _convert_metrics_timestamps_to_relative_seconds(metrics: LogMetrics) -> None
     ts_attr_names = [
         "ping_rtt_timestamps",
         "ping_rss_timestamps",
-        "ping_packet_loss_timestamps",
+        # REPLACED: packet loss timestamps removed from the plot pipeline
+        # "ping_packet_loss_timestamps",
+        "mac_frame_tx_attempt_16_16_failed_timestamps",
         "parent_router_from_rloc16_transition_timestamps",
         "parent_rloc16_from_query_timestamps",
     ]
@@ -328,7 +329,9 @@ def _rebase_timestamps(metrics: LogMetrics, offset: float) -> None:
     ts_attr_names = [
         "ping_rtt_timestamps",
         "ping_rss_timestamps",
-        "ping_packet_loss_timestamps",
+        # REPLACED: packet loss removed from plot pipeline
+        # "ping_packet_loss_timestamps",
+        "mac_frame_tx_attempt_16_16_failed_timestamps",
         "parent_router_from_rloc16_transition_timestamps",
         "parent_rloc16_from_query_timestamps",
     ]
@@ -348,7 +351,7 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
     ts_attr_names = [
         "ping_rtt_timestamps",
         "ping_rss_timestamps",
-        "ping_packet_loss_timestamps",
+        "mac_frame_tx_attempt_16_16_failed_timestamps",
         "parent_router_from_rloc16_transition_timestamps",
         "parent_rloc16_from_query_timestamps",
     ]
@@ -398,9 +401,9 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
         window_end,
     )
 
-    # Packet loss (timestamps only)
-    metrics.ping_packet_loss_timestamps = _filter_t(
-        [float(t) for t in getattr(metrics, "ping_packet_loss_timestamps", [])],
+    # TX failed 16/16 (timestamps only)
+    metrics.mac_frame_tx_attempt_16_16_failed_timestamps = _filter_t(
+        [float(t) for t in getattr(metrics, "mac_frame_tx_attempt_16_16_failed_timestamps", [])],
         window_start,
         window_end,
     )
@@ -460,10 +463,14 @@ def plot_rtt(ax, metrics: LogMetrics) -> None:
     ax.set_ylim(0.0, upper)
 
 
-def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
+def plot_rss_and_txfail(ax, metrics: LogMetrics) -> None:
+    """
+    RSS scatter + vertical 'rug' for Frame tx attempt 16/16 failed events.
+    (Replaces the prior packet-loss rug.)
+    """
     ts_rss = metrics.ping_rss_timestamps
     rss = metrics.ping_rss_dbm_values
-    loss_ts = metrics.ping_packet_loss_timestamps
+    txfail_ts = getattr(metrics, "mac_frame_tx_attempt_16_16_failed_timestamps", [])
 
     if RSS_YLIM is not None:
         y_min, y_max = RSS_YLIM
@@ -479,18 +486,19 @@ def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
 
     ax.set_ylim(y_min, y_max)
 
-    if loss_ts:
+    # TX failed 16/16 rug (vertical markers)
+    if txfail_ts:
         y_range = y_max - y_min
-        rug_bottom = y_max - (LOSS_RUG_FRACTION * y_range)
+        rug_bottom = y_max - (TXFAIL_RUG_FRACTION * y_range)
         rug_top = y_max
         ax.vlines(
-            loss_ts,
+            txfail_ts,
             rug_bottom,
             rug_top,
             colors="red",
             linestyles="--",
             linewidth=0.5,
-            label="Packet loss",
+            label="Frame tx attempt 16/16 failed",
             zorder=6,
         )
 
@@ -514,14 +522,17 @@ def plot_rss_and_loss(ax, metrics: LogMetrics) -> None:
 
     pdr = _overall_pdr(metrics)
     n_rss = len(rss)
+    n_txfail = len(txfail_ts)
     mu, sigma = _mean_std(rss)
 
-    title = "Ping to Parent RSS & Packet Loss"
+    title = "Ping to Parent RSS & TX Fail (16/16)"
     suffix_parts: List[str] = []
     if pdr is not None:
         suffix_parts.append(f"PDR={pdr:.1f}%")
     if n_rss > 0:
         suffix_parts.append(f"nRSS={n_rss}")
+    if n_txfail > 0:
+        suffix_parts.append(f"nTxFail16/16={n_txfail}")
     if mu is not None and sigma is not None:
         suffix_parts.append(f"avgRSS={mu:.1f} dBm, stdRSS={sigma:.1f} dB")
     if suffix_parts:
@@ -580,7 +591,7 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
         for name in (
             "ping_rtt_timestamps",
             "ping_rss_timestamps",
-            "ping_packet_loss_timestamps",
+            "mac_frame_tx_attempt_16_16_failed_timestamps",
             "parent_router_from_rloc16_transition_timestamps",
             "parent_rloc16_from_query_timestamps",
         ):
@@ -697,7 +708,7 @@ def process_log_file(
     has_any = (
         (show_rtt and bool(metrics.ping_rtt_timestamps))
         or bool(metrics.ping_rss_timestamps)
-        or bool(metrics.ping_packet_loss_timestamps)
+        or bool(getattr(metrics, "mac_frame_tx_attempt_16_16_failed_timestamps", []))
         or bool(getattr(metrics, "parent_router_from_rloc16_transition_timestamps", []))
         or bool(getattr(metrics, "parent_rloc16_from_query_timestamps", []))
     )
@@ -714,7 +725,7 @@ def process_log_file(
         fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(12, 6))
         ax_rss, ax_parent = axes
 
-    plot_rss_and_loss(ax_rss, metrics)
+    plot_rss_and_txfail(ax_rss, metrics)
 
     # If we successfully trimmed to a 2-hour window, force parent bars to extend to that window end.
     parent_end = None
@@ -845,4 +856,3 @@ if __name__ == "__main__":
         show_rtt = False
 
     main(show=args.show, show_rtt=show_rtt)
-
