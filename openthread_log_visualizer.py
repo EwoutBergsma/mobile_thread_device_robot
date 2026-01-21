@@ -54,9 +54,10 @@ SHOW_RTT_SUBPLOT: bool = False
 # - False => absolute timestamps (requires datetime timestamps from parser)
 USE_RELATIVE_TIME_AXIS: bool = True
 
-# Subplot height ratios (make "Connected to Parent" slightly less tall)
+# Subplot height ratios
 PARENT_SUBPLOT_HEIGHT_RATIO: float = 0.5
-
+RTT_SUBPLOT_HEIGHT_RATIO: float = 1.0
+RSS_SUBPLOT_HEIGHT_RATIO: float = 1.0
 
 # -----------------------------------------------------------------------------
 # RLOC16 -> Router number mapping
@@ -979,7 +980,7 @@ def process_log_file(
             ncols=1,
             sharex=True,
             figsize=(12, 8),
-            gridspec_kw={"height_ratios": [1.0, 1.0, PARENT_SUBPLOT_HEIGHT_RATIO]},
+            gridspec_kw={"height_ratios": [RTT_SUBPLOT_HEIGHT_RATIO, RSS_SUBPLOT_HEIGHT_RATIO, PARENT_SUBPLOT_HEIGHT_RATIO]},
         )
         ax_rtt, ax_rss, ax_parent = axes
         plot_rtt(ax_rtt, metrics)
@@ -989,7 +990,7 @@ def process_log_file(
             ncols=1,
             sharex=True,
             figsize=(12, 6),
-            gridspec_kw={"height_ratios": [1.0, PARENT_SUBPLOT_HEIGHT_RATIO]},
+            gridspec_kw={"height_ratios": [RSS_SUBPLOT_HEIGHT_RATIO, PARENT_SUBPLOT_HEIGHT_RATIO]},
         )
         ax_rss, ax_parent = axes
 
