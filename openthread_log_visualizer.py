@@ -55,7 +55,7 @@ SHOW_RTT_SUBPLOT: bool = False
 USE_RELATIVE_TIME_AXIS: bool = True
 
 # Subplot height ratios
-PARENT_SUBPLOT_HEIGHT_RATIO: float = 0.5
+PARENT_SUBPLOT_HEIGHT_RATIO: float = 0.8
 RTT_SUBPLOT_HEIGHT_RATIO: float = 1.0
 RSS_SUBPLOT_HEIGHT_RATIO: float = 1.0
 
@@ -979,7 +979,7 @@ def process_log_file(
             nrows=3,
             ncols=1,
             sharex=True,
-            figsize=(12, 8),
+            figsize=(12, 7),
             gridspec_kw={"height_ratios": [RTT_SUBPLOT_HEIGHT_RATIO, RSS_SUBPLOT_HEIGHT_RATIO, PARENT_SUBPLOT_HEIGHT_RATIO]},
         )
         ax_rtt, ax_rss, ax_parent = axes
@@ -989,7 +989,7 @@ def process_log_file(
             nrows=2,
             ncols=1,
             sharex=True,
-            figsize=(12, 6),
+            figsize=(12, 5),
             gridspec_kw={"height_ratios": [RSS_SUBPLOT_HEIGHT_RATIO, PARENT_SUBPLOT_HEIGHT_RATIO]},
         )
         ax_rss, ax_parent = axes
