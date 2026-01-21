@@ -46,7 +46,7 @@ NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
 TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
 # Toggle: enable/disable the top RTT subplot
-SHOW_RTT_SUBPLOT: bool = True
+SHOW_RTT_SUBPLOT: bool = False
 
 
 
@@ -829,7 +829,20 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="OpenThread log visualizer")
     parser.add_argument("--show", action="store_true", help="Display figures interactively")
-    parser.add_argument("--no-rtt", action="store_true", help="Disable the top RTT subplot")
+
+    # Mutually exclusive RTT toggles (optional overrides)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--rtt", action="store_true", help="Enable the top RTT subplot")
+    group.add_argument("--no-rtt", action="store_true", help="Disable the top RTT subplot")
 
     args = parser.parse_args()
-    main(show=args.show, show_rtt=not args.no_rtt)
+
+    # Default comes from the config constant unless user overrides via CLI.
+    show_rtt = SHOW_RTT_SUBPLOT
+    if args.rtt:
+        show_rtt = True
+    elif args.no_rtt:
+        show_rtt = False
+
+    main(show=args.show, show_rtt=show_rtt)
+
