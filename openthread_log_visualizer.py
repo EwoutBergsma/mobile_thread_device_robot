@@ -37,8 +37,8 @@ TXFAIL_RUG_FRACTION: float = 1  # fraction of y-range at top
 LEGEND_FRAME_ALPHA: float = 1.0
 LEGEND_ZORDER: int = 50
 
-# X-axis (relative time) formatting
-TIME_TICK_INTERVAL_MINUTES: int = 10
+# X-axis tick interval (used for BOTH relative and absolute time axes)
+TIME_TICK_INTERVAL_MINUTES: int = 5
 
 # Parent plot styling
 NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
@@ -182,7 +182,7 @@ def _format_elapsed_hhmm(x_seconds: float, _pos: int) -> str:
 
 
 def _configure_elapsed_time_axis_hhmm(axes, *, interval_minutes: int = TIME_TICK_INTERVAL_MINUTES) -> None:
-    tick_step_seconds = interval_minutes * 60
+    tick_step_seconds = max(1, interval_minutes) * 60
     locator = MultipleLocator(tick_step_seconds)
     formatter = FuncFormatter(_format_elapsed_hhmm)
 
@@ -196,11 +196,24 @@ def _configure_elapsed_time_axis_hhmm(axes, *, interval_minutes: int = TIME_TICK
 
 
 # -----------------------------------------------------------------------------
-# Absolute-time axis formatting
+# Absolute-time axis formatting (FIXED interval; honors TIME_TICK_INTERVAL_MINUTES)
 # -----------------------------------------------------------------------------
 
-def _configure_absolute_time_axis(axes) -> None:
-    locator = mdates.AutoDateLocator(minticks=5, maxticks=10)
+def _configure_absolute_time_axis(axes, *, interval_minutes: int = TIME_TICK_INTERVAL_MINUTES) -> None:
+    """
+    Configure absolute datetime x-axis ticks using a fixed minute/hour interval.
+    This makes TIME_TICK_INTERVAL_MINUTES effective in absolute mode.
+    """
+    if interval_minutes <= 0:
+        interval_minutes = 1
+
+    # Use hour-based ticks if interval is large and divisible by 60.
+    if interval_minutes >= 60 and interval_minutes % 60 == 0:
+        hour_interval = max(1, interval_minutes // 60)
+        locator = mdates.HourLocator(interval=hour_interval)
+    else:
+        locator = mdates.MinuteLocator(interval=interval_minutes)
+
     formatter = mdates.ConciseDateFormatter(locator)
 
     for ax in axes:
@@ -212,11 +225,16 @@ def _configure_absolute_time_axis(axes) -> None:
             lbl.set_horizontalalignment("center")
 
 
-def _configure_time_axis(axes, *, use_relative_time: bool) -> None:
+def _configure_time_axis(
+    axes,
+    *,
+    use_relative_time: bool,
+    interval_minutes: int = TIME_TICK_INTERVAL_MINUTES,
+) -> None:
     if use_relative_time:
-        _configure_elapsed_time_axis_hhmm(axes, interval_minutes=TIME_TICK_INTERVAL_MINUTES)
+        _configure_elapsed_time_axis_hhmm(axes, interval_minutes=interval_minutes)
     else:
-        _configure_absolute_time_axis(axes)
+        _configure_absolute_time_axis(axes, interval_minutes=interval_minutes)
 
 
 # -----------------------------------------------------------------------------
@@ -244,7 +262,6 @@ def _metrics_has_datetime_timestamps(metrics: LogMetrics) -> bool:
         "parent_router_from_rloc16_transition_timestamps",
         "parent_rloc16_from_query_timestamps",
     ]
-
     for name in ts_attr_names:
         vals = getattr(metrics, name, [])
         if not vals:
@@ -307,12 +324,7 @@ def _convert_metrics_timestamps_to_relative_seconds(metrics: LogMetrics) -> None
             setattr(metrics, name, [_to_seconds(t) for t in vals])
 
 
-def _filter_xy(
-    ts: List[float],
-    ys: List[float],
-    start: float,
-    end: float,
-) -> Tuple[List[float], List[float]]:
+def _filter_xy(ts: List[float], ys: List[float], start: float, end: float) -> Tuple[List[float], List[float]]:
     if not ts or not ys:
         return [], []
     out_ts: List[float] = []
@@ -325,11 +337,7 @@ def _filter_xy(
     return out_ts, out_ys
 
 
-def _filter_t(
-    ts: List[float],
-    start: float,
-    end: float,
-) -> List[float]:
+def _filter_t(ts: List[float], start: float, end: float) -> List[float]:
     if not ts:
         return []
     return [float(t) for t in ts if start <= float(t) <= end]
@@ -352,22 +360,13 @@ def _filter_xy_dt(
     return out_ts, out_ys
 
 
-def _filter_t_dt(
-    ts: List[datetime],
-    start: datetime,
-    end: datetime,
-) -> List[datetime]:
+def _filter_t_dt(ts: List[datetime], start: datetime, end: datetime) -> List[datetime]:
     if not ts:
         return []
     return [t for t in ts if start <= t <= end]
 
 
-def _trim_parent_series(
-    ts: List[float],
-    vals: List[str],
-    start: float,
-    end: float,
-) -> Tuple[List[float], List[str]]:
+def _trim_parent_series(ts: List[float], vals: List[str], start: float, end: float) -> Tuple[List[float], List[str]]:
     """
     Trim a change-point parent series to [start, end] while preserving the parent state at 'start'.
     """
@@ -386,10 +385,7 @@ def _trim_parent_series(
         else:
             break
 
-    if idx is not None:
-        start_val = vals_sorted[idx]
-    else:
-        start_val = vals_sorted[0]
+    start_val = vals_sorted[idx] if idx is not None else vals_sorted[0]
 
     new_ts: List[float] = [start]
     new_vals: List[str] = [start_val]
@@ -425,10 +421,7 @@ def _trim_parent_series_dt(
         else:
             break
 
-    if idx is not None:
-        start_val = vals_sorted[idx]
-    else:
-        start_val = vals_sorted[0]
+    start_val = vals_sorted[idx] if idx is not None else vals_sorted[0]
 
     new_ts: List[datetime] = [start]
     new_vals: List[str] = [start_val]
@@ -526,15 +519,15 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
     v1 = list(getattr(metrics, "parent_router_from_rloc16_transition_values", []))
     if ts1 and v1:
         new_ts1, new_v1 = _trim_parent_series(ts1, v1, window_start, window_end)
-        setattr(metrics, "parent_router_from_rloc16_transition_timestamps", new_ts1)
-        setattr(metrics, "parent_router_from_rloc16_transition_values", new_v1)
+        metrics.parent_router_from_rloc16_transition_timestamps = new_ts1
+        metrics.parent_router_from_rloc16_transition_values = new_v1
 
     ts2 = [float(t) for t in getattr(metrics, "parent_rloc16_from_query_timestamps", [])]
     v2 = list(getattr(metrics, "parent_rloc16_from_query_values", []))
     if ts2 and v2:
         new_ts2, new_v2 = _trim_parent_series(ts2, v2, window_start, window_end)
-        setattr(metrics, "parent_rloc16_from_query_timestamps", new_ts2)
-        setattr(metrics, "parent_rloc16_from_query_values", new_v2)
+        metrics.parent_rloc16_from_query_timestamps = new_ts2
+        metrics.parent_rloc16_from_query_values = new_v2
 
     _rebase_timestamps(metrics, window_start)
     return plotted_duration
@@ -559,7 +552,6 @@ def _trim_metrics_centered_to_window_absolute(
         "parent_rloc16_from_query_timestamps",
     ]
 
-    # Gather all datetime timestamps
     all_dt: List[datetime] = []
     for name in ts_attr_names:
         vals = getattr(metrics, name, [])
@@ -576,7 +568,6 @@ def _trim_metrics_centered_to_window_absolute(
     t_min = min(all_dt)
     t_max = max(all_dt)
     duration = (t_max - t_min).total_seconds()
-    window_td = timedelta(seconds=window_seconds)
 
     if duration <= window_seconds:
         window_start = t_min
@@ -587,16 +578,13 @@ def _trim_metrics_centered_to_window_absolute(
         window_start = t_min + cut
         window_end = t_max - cut
 
-    # Normalize timestamp arrays to datetime (in-place)
     def _get_dt_list(attr: str) -> List[datetime]:
         raw = getattr(metrics, attr, [])
         out: List[datetime] = []
         for t in raw:
             dt = _to_datetime(t)
-            if dt is None:
-                # If a non-datetime leaks in, skip it defensively
-                continue
-            out.append(dt)
+            if dt is not None:
+                out.append(dt)
         return out
 
     # RTT
@@ -635,8 +623,6 @@ def _trim_metrics_centered_to_window_absolute(
         metrics.parent_rloc16_from_query_timestamps = new_ts2
         metrics.parent_rloc16_from_query_values = new_v2
 
-    # If caller expects an exact 2h window, window_end - window_start should equal window_td in trimmed case.
-    # We still return the actual resulting bounds here.
     return window_start, window_end
 
 
@@ -785,12 +771,11 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[object] = None) 
         ax.grid(False, axis="x")
         return
 
-    # Determine whether this series is absolute time
     is_dt = isinstance(parent_ts[0], (datetime, date))
 
     if is_dt:
         pairs = sorted(
-            [( _to_datetime(t), v) for t, v in zip(parent_ts, parent_vals) if _to_datetime(t) is not None],
+            [(_to_datetime(t), v) for t, v in zip(parent_ts, parent_vals) if _to_datetime(t) is not None],
             key=lambda x: x[0],
         )
         parent_ts_sorted: List[datetime] = [t for t, _ in pairs]
@@ -951,10 +936,12 @@ def process_log_file(
 
     # If absolute time was requested but timestamps aren't datetimes, fall back to relative.
     if not use_relative_time and not _metrics_has_datetime_timestamps(metrics):
-        print(f"[INFO] {label_for_file}: absolute time requested but no datetime timestamps detected; falling back to relative time.")
+        print(
+            f"[INFO] {label_for_file}: absolute time requested but no datetime timestamps detected; "
+            f"falling back to relative time."
+        )
         use_relative_time = True
 
-    # Relative mode: convert->trim->rebase to 0..2h
     plotted_duration: Optional[float] = None
     abs_window: Optional[Tuple[datetime, datetime]] = None
 
@@ -992,7 +979,7 @@ def process_log_file(
 
     plot_rss_and_txfail(ax_rss, metrics)
 
-    # Parent end handling:
+    # Parent end handling
     parent_end: Optional[object] = None
     if use_relative_time:
         if plotted_duration is not None and abs(plotted_duration - TRIM_WINDOW_SECONDS) < 1e-6:
@@ -1004,7 +991,13 @@ def process_log_file(
     plot_parents(ax_parent, metrics, end_time=parent_end)
 
     _remove_x_whitespace(axes)
-    _configure_time_axis(axes, use_relative_time=use_relative_time)
+
+    # IMPORTANT: interval now applies to BOTH relative and absolute axes.
+    _configure_time_axis(
+        axes,
+        use_relative_time=use_relative_time,
+        interval_minutes=TIME_TICK_INTERVAL_MINUTES,
+    )
 
     if use_relative_time:
         ax_parent.set_xlabel("Elapsed time (HH:MM)")
@@ -1015,8 +1008,7 @@ def process_log_file(
     if use_relative_time and parent_end is not None:
         ax_parent.set_xlim(0.0, TRIM_WINDOW_SECONDS)
     elif (not use_relative_time) and abs_window is not None:
-        # Matplotlib accepts datetime x-limits for plots/vlines; for broken_barh we used date2num,
-        # so enforce numeric x-limits on that axis.
+        # Parent axis uses broken_barh with date2num floats, so enforce numeric xlim.
         ax_parent.set_xlim(mdates.date2num(abs_window[0]), mdates.date2num(abs_window[1]))
 
     fig.suptitle(label_for_file, y=0.98)
@@ -1162,4 +1154,8 @@ if __name__ == "__main__":
     elif args.absolute_time:
         use_relative_time = False
 
-    main(show=args.show, show_rtt=show_rtt, use_relative_time=use_relative_time)
+    main(
+        show=args.show,
+        show_rtt=show_rtt,
+        use_relative_time=use_relative_time,
+    )
