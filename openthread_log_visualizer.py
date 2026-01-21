@@ -34,7 +34,7 @@ PPS_RSS_THRESHOLD_DBM: float = -65.0
 TXFAIL_RUG_FRACTION: float = 1  # fraction of y-range at top
 
 # Legend styling
-LEGEND_FRAME_ALPHA: float = 1.0
+LEGEND_FRAME_ALPHA: float = 0.5
 LEGEND_ZORDER: int = 50
 
 # X-axis tick interval (used for BOTH relative and absolute time axes)
@@ -47,7 +47,7 @@ NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
 TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
 # Toggle: enable/disable the top RTT subplot
-SHOW_RTT_SUBPLOT: bool = False
+SHOW_RTT_SUBPLOT: bool = True
 
 # Toggle: relative elapsed time vs absolute timestamps on x-axis
 # - True  => elapsed time (HH:MM)
