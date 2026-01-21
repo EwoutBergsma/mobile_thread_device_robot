@@ -2,11 +2,12 @@
 from __future__ import annotations
 
 import os
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from glob import glob
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 
@@ -47,6 +48,11 @@ TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
 # Toggle: enable/disable the top RTT subplot
 SHOW_RTT_SUBPLOT: bool = False
+
+# Toggle: relative elapsed time vs absolute timestamps on x-axis
+# - True  => elapsed time (HH:MM)
+# - False => absolute timestamps (requires datetime timestamps from parser)
+USE_RELATIVE_TIME_AXIS: bool = True
 
 
 # -----------------------------------------------------------------------------
@@ -190,8 +196,64 @@ def _configure_elapsed_time_axis_hhmm(axes, *, interval_minutes: int = TIME_TICK
 
 
 # -----------------------------------------------------------------------------
-# Timestamp normalization + trimming
+# Absolute-time axis formatting
 # -----------------------------------------------------------------------------
+
+def _configure_absolute_time_axis(axes) -> None:
+    locator = mdates.AutoDateLocator(minticks=5, maxticks=10)
+    formatter = mdates.ConciseDateFormatter(locator)
+
+    for ax in axes:
+        ax.xaxis.set_major_locator(locator)
+        ax.xaxis.set_major_formatter(formatter)
+        ax.xaxis.offsetText.set_visible(False)
+        for lbl in ax.get_xticklabels(which="major"):
+            lbl.set_rotation(0)
+            lbl.set_horizontalalignment("center")
+
+
+def _configure_time_axis(axes, *, use_relative_time: bool) -> None:
+    if use_relative_time:
+        _configure_elapsed_time_axis_hhmm(axes, interval_minutes=TIME_TICK_INTERVAL_MINUTES)
+    else:
+        _configure_absolute_time_axis(axes)
+
+
+# -----------------------------------------------------------------------------
+# Timestamp normalization + trimming helpers
+# -----------------------------------------------------------------------------
+
+_TS_FLOAT = float
+_TS_DT = datetime
+TimeStamp = Union[_TS_FLOAT, _TS_DT]
+
+
+def _to_datetime(t: object) -> Optional[datetime]:
+    if isinstance(t, datetime):
+        return t
+    if isinstance(t, date):
+        return datetime.combine(t, datetime.min.time())
+    return None
+
+
+def _metrics_has_datetime_timestamps(metrics: LogMetrics) -> bool:
+    ts_attr_names = [
+        "ping_rtt_timestamps",
+        "ping_rss_timestamps",
+        "mac_frame_tx_attempt_16_16_failed_timestamps",
+        "parent_router_from_rloc16_transition_timestamps",
+        "parent_rloc16_from_query_timestamps",
+    ]
+
+    for name in ts_attr_names:
+        vals = getattr(metrics, name, [])
+        if not vals:
+            continue
+        for t in vals:
+            if isinstance(t, (datetime, date)):
+                return True
+    return False
+
 
 def _convert_metrics_timestamps_to_relative_seconds(metrics: LogMetrics) -> None:
     """
@@ -201,8 +263,6 @@ def _convert_metrics_timestamps_to_relative_seconds(metrics: LogMetrics) -> None
     ts_attr_names = [
         "ping_rtt_timestamps",
         "ping_rss_timestamps",
-        # REPLACED: packet loss timestamps removed from the plot pipeline
-        # "ping_packet_loss_timestamps",
         "mac_frame_tx_attempt_16_16_failed_timestamps",
         "parent_router_from_rloc16_transition_timestamps",
         "parent_rloc16_from_query_timestamps",
@@ -222,20 +282,17 @@ def _convert_metrics_timestamps_to_relative_seconds(metrics: LogMetrics) -> None
     if has_dt:
         dt_values: List[datetime] = []
         for t in all_ts:
-            if isinstance(t, datetime):
-                dt_values.append(t)
-            elif isinstance(t, date):
-                dt_values.append(datetime.combine(t, datetime.min.time()))
+            dt = _to_datetime(t)
+            if dt is not None:
+                dt_values.append(dt)
         if not dt_values:
             return
         t0 = min(dt_values)
 
         def _to_seconds(t: object) -> float:
-            if isinstance(t, datetime):
-                return max(0.0, (t - t0).total_seconds())
-            if isinstance(t, date):
-                td = datetime.combine(t, datetime.min.time()) - t0
-                return max(0.0, td.total_seconds())
+            dt = _to_datetime(t)
+            if dt is not None:
+                return max(0.0, (dt - t0).total_seconds())
             return 0.0
 
     else:
@@ -278,6 +335,33 @@ def _filter_t(
     return [float(t) for t in ts if start <= float(t) <= end]
 
 
+def _filter_xy_dt(
+    ts: List[datetime],
+    ys: List[float],
+    start: datetime,
+    end: datetime,
+) -> Tuple[List[datetime], List[float]]:
+    if not ts or not ys:
+        return [], []
+    out_ts: List[datetime] = []
+    out_ys: List[float] = []
+    for t, y in zip(ts, ys):
+        if start <= t <= end:
+            out_ts.append(t)
+            out_ys.append(y)
+    return out_ts, out_ys
+
+
+def _filter_t_dt(
+    ts: List[datetime],
+    start: datetime,
+    end: datetime,
+) -> List[datetime]:
+    if not ts:
+        return []
+    return [t for t in ts if start <= t <= end]
+
+
 def _trim_parent_series(
     ts: List[float],
     vals: List[str],
@@ -286,11 +370,6 @@ def _trim_parent_series(
 ) -> Tuple[List[float], List[str]]:
     """
     Trim a change-point parent series to [start, end] while preserving the parent state at 'start'.
-
-    Strategy:
-      - Determine the last sample at or before 'start' to establish the value at window start.
-      - Insert a synthetic sample exactly at 'start' with that value.
-      - Keep all subsequent change points with start < t <= end.
     """
     if not ts or not vals:
         return [], []
@@ -310,10 +389,48 @@ def _trim_parent_series(
     if idx is not None:
         start_val = vals_sorted[idx]
     else:
-        # No samples before window start; best available is the first sample's value.
         start_val = vals_sorted[0]
 
     new_ts: List[float] = [start]
+    new_vals: List[str] = [start_val]
+
+    for t, v in zip(ts_sorted, vals_sorted):
+        if start < t <= end:
+            new_ts.append(t)
+            new_vals.append(v)
+
+    return new_ts, new_vals
+
+
+def _trim_parent_series_dt(
+    ts: List[datetime],
+    vals: List[str],
+    start: datetime,
+    end: datetime,
+) -> Tuple[List[datetime], List[str]]:
+    """
+    Datetime version of _trim_parent_series().
+    """
+    if not ts or not vals:
+        return [], []
+
+    pairs = sorted(zip(ts, vals), key=lambda x: x[0])
+    ts_sorted = [t for t, _ in pairs]
+    vals_sorted = [v for _, v in pairs]
+
+    idx = None
+    for i, t in enumerate(ts_sorted):
+        if t <= start:
+            idx = i
+        else:
+            break
+
+    if idx is not None:
+        start_val = vals_sorted[idx]
+    else:
+        start_val = vals_sorted[0]
+
+    new_ts: List[datetime] = [start]
     new_vals: List[str] = [start_val]
 
     for t, v in zip(ts_sorted, vals_sorted):
@@ -329,8 +446,6 @@ def _rebase_timestamps(metrics: LogMetrics, offset: float) -> None:
     ts_attr_names = [
         "ping_rtt_timestamps",
         "ping_rss_timestamps",
-        # REPLACED: packet loss removed from plot pipeline
-        # "ping_packet_loss_timestamps",
         "mac_frame_tx_attempt_16_16_failed_timestamps",
         "parent_router_from_rloc16_transition_timestamps",
         "parent_rloc16_from_query_timestamps",
@@ -343,10 +458,11 @@ def _rebase_timestamps(metrics: LogMetrics, offset: float) -> None:
 
 def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float) -> Optional[float]:
     """
+    Float-seconds version:
     Trim all metric series to a centered window of length 'window_seconds',
-    removing equal time from the beginning and end based on the *per-file* overall duration.
+    rebasing timestamps so the plotted window starts at 0.
 
-    Returns the resulting plotted duration (normally == window_seconds), or None if no timestamps exist.
+    Returns plotted duration, or None if no timestamps exist.
     """
     ts_attr_names = [
         "ping_rtt_timestamps",
@@ -369,13 +485,10 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
     t_max = max(all_ts)
     duration = t_max - t_min
 
-    # If the available duration is shorter than the window, keep as-is (still rebase to start).
     if duration <= window_seconds:
         window_start = t_min
         window_end = t_max
         plotted_duration = window_end - window_start
-
-        # Rebase so the plot starts at 0.
         _rebase_timestamps(metrics, window_start)
         return plotted_duration
 
@@ -383,7 +496,7 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
     cut = excess / 2.0
     window_start = t_min + cut
     window_end = t_max - cut
-    plotted_duration = window_end - window_start  # should be == window_seconds
+    plotted_duration = window_end - window_start
 
     # RTT
     metrics.ping_rtt_timestamps, metrics.ping_rtt_avg_ms = _filter_xy(
@@ -423,10 +536,108 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
         setattr(metrics, "parent_rloc16_from_query_timestamps", new_ts2)
         setattr(metrics, "parent_rloc16_from_query_values", new_v2)
 
-    # Rebase timestamps so the plotted window starts at 0.
     _rebase_timestamps(metrics, window_start)
-
     return plotted_duration
+
+
+def _trim_metrics_centered_to_window_absolute(
+    metrics: LogMetrics,
+    window_seconds: float,
+) -> Optional[Tuple[datetime, datetime]]:
+    """
+    Absolute (datetime) version:
+    Trim all metric series to a centered window of length 'window_seconds',
+    WITHOUT rebasing. Returns (window_start, window_end), or None if no timestamps exist.
+
+    Requires datetime/date timestamps from the parser.
+    """
+    ts_attr_names = [
+        "ping_rtt_timestamps",
+        "ping_rss_timestamps",
+        "mac_frame_tx_attempt_16_16_failed_timestamps",
+        "parent_router_from_rloc16_transition_timestamps",
+        "parent_rloc16_from_query_timestamps",
+    ]
+
+    # Gather all datetime timestamps
+    all_dt: List[datetime] = []
+    for name in ts_attr_names:
+        vals = getattr(metrics, name, [])
+        if not vals:
+            continue
+        for t in vals:
+            dt = _to_datetime(t)
+            if dt is not None:
+                all_dt.append(dt)
+
+    if not all_dt:
+        return None
+
+    t_min = min(all_dt)
+    t_max = max(all_dt)
+    duration = (t_max - t_min).total_seconds()
+    window_td = timedelta(seconds=window_seconds)
+
+    if duration <= window_seconds:
+        window_start = t_min
+        window_end = t_max
+    else:
+        excess_seconds = duration - window_seconds
+        cut = timedelta(seconds=excess_seconds / 2.0)
+        window_start = t_min + cut
+        window_end = t_max - cut
+
+    # Normalize timestamp arrays to datetime (in-place)
+    def _get_dt_list(attr: str) -> List[datetime]:
+        raw = getattr(metrics, attr, [])
+        out: List[datetime] = []
+        for t in raw:
+            dt = _to_datetime(t)
+            if dt is None:
+                # If a non-datetime leaks in, skip it defensively
+                continue
+            out.append(dt)
+        return out
+
+    # RTT
+    rtt_ts = _get_dt_list("ping_rtt_timestamps")
+    rtt_vals = list(getattr(metrics, "ping_rtt_avg_ms", []))
+    if rtt_ts and rtt_vals:
+        new_ts, new_vals = _filter_xy_dt(rtt_ts, rtt_vals, window_start, window_end)
+        metrics.ping_rtt_timestamps = new_ts
+        metrics.ping_rtt_avg_ms = new_vals
+
+    # RSS
+    rss_ts = _get_dt_list("ping_rss_timestamps")
+    rss_vals = list(getattr(metrics, "ping_rss_dbm_values", []))
+    if rss_ts and rss_vals:
+        new_ts, new_vals = _filter_xy_dt(rss_ts, rss_vals, window_start, window_end)
+        metrics.ping_rss_timestamps = new_ts
+        metrics.ping_rss_dbm_values = new_vals
+
+    # TX fail
+    tx_ts = _get_dt_list("mac_frame_tx_attempt_16_16_failed_timestamps")
+    if tx_ts:
+        metrics.mac_frame_tx_attempt_16_16_failed_timestamps = _filter_t_dt(tx_ts, window_start, window_end)
+
+    # Parent series (preserve state at window_start)
+    ts1 = _get_dt_list("parent_router_from_rloc16_transition_timestamps")
+    v1 = list(getattr(metrics, "parent_router_from_rloc16_transition_values", []))
+    if ts1 and v1:
+        new_ts1, new_v1 = _trim_parent_series_dt(ts1, v1, window_start, window_end)
+        metrics.parent_router_from_rloc16_transition_timestamps = new_ts1
+        metrics.parent_router_from_rloc16_transition_values = new_v1
+
+    ts2 = _get_dt_list("parent_rloc16_from_query_timestamps")
+    v2 = list(getattr(metrics, "parent_rloc16_from_query_values", []))
+    if ts2 and v2:
+        new_ts2, new_v2 = _trim_parent_series_dt(ts2, v2, window_start, window_end)
+        metrics.parent_rloc16_from_query_timestamps = new_ts2
+        metrics.parent_rloc16_from_query_values = new_v2
+
+    # If caller expects an exact 2h window, window_end - window_start should equal window_td in trimmed case.
+    # We still return the actual resulting bounds here.
+    return window_start, window_end
 
 
 # -----------------------------------------------------------------------------
@@ -466,7 +677,6 @@ def plot_rtt(ax, metrics: LogMetrics) -> None:
 def plot_rss_and_txfail(ax, metrics: LogMetrics) -> None:
     """
     RSS scatter + vertical 'rug' for Frame tx attempt 16/16 failed events.
-    (Replaces the prior packet-loss rug.)
     """
     ts_rss = metrics.ping_rss_timestamps
     rss = metrics.ping_rss_dbm_values
@@ -553,17 +763,13 @@ def _select_parent_series(metrics: LogMetrics):
     return ts2, vals2
 
 
-def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -> None:
+def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[object] = None) -> None:
     """
     Gantt-style parent connectivity timeline.
 
-    This plot translates Parent RLOC16 values into Router numbers (Router 1..5),
-    merging segments when a router's RLOC16 changes over time (e.g., C400 <-> 7800).
-
-    The y-axis ALWAYS includes:
-      - No Parent
-      - Router 1..5
-    even if some of them do not appear in the data.
+    Supports both:
+      - relative float seconds
+      - absolute datetime timestamps
     """
     parent_ts, parent_vals = _select_parent_series(metrics)
 
@@ -579,29 +785,58 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
         ax.grid(False, axis="x")
         return
 
-    pairs = sorted(zip(parent_ts, parent_vals), key=lambda x: float(x[0]))
-    parent_ts_sorted = [float(t) for t, _ in pairs]
-    parent_router_labels = [_rloc16_value_to_router_label(p) for _, p in pairs]
+    # Determine whether this series is absolute time
+    is_dt = isinstance(parent_ts[0], (datetime, date))
+
+    if is_dt:
+        pairs = sorted(
+            [( _to_datetime(t), v) for t, v in zip(parent_ts, parent_vals) if _to_datetime(t) is not None],
+            key=lambda x: x[0],
+        )
+        parent_ts_sorted: List[datetime] = [t for t, _ in pairs]
+        parent_router_labels = [_rloc16_value_to_router_label(p) for _, p in pairs]
+    else:
+        pairs = sorted(zip(parent_ts, parent_vals), key=lambda x: float(x[0]))
+        parent_ts_sorted = [float(t) for t, _ in pairs]
+        parent_router_labels = [_rloc16_value_to_router_label(p) for _, p in pairs]
 
     # Establish an end time for the final segment.
     if end_time is not None:
-        overall_end = float(end_time)
+        overall_end = end_time
     else:
-        all_ts: List[float] = []
-        for name in (
-            "ping_rtt_timestamps",
-            "ping_rss_timestamps",
-            "mac_frame_tx_attempt_16_16_failed_timestamps",
-            "parent_router_from_rloc16_transition_timestamps",
-            "parent_rloc16_from_query_timestamps",
-        ):
-            vals = getattr(metrics, name, [])
-            if vals:
-                all_ts.extend([float(v) for v in vals])
-        overall_end = max(all_ts) if all_ts else parent_ts_sorted[-1]
+        if is_dt:
+            all_dt: List[datetime] = []
+            for name in (
+                "ping_rtt_timestamps",
+                "ping_rss_timestamps",
+                "mac_frame_tx_attempt_16_16_failed_timestamps",
+                "parent_router_from_rloc16_transition_timestamps",
+                "parent_rloc16_from_query_timestamps",
+            ):
+                vals = getattr(metrics, name, [])
+                if not vals:
+                    continue
+                for t in vals:
+                    dt = _to_datetime(t)
+                    if dt is not None:
+                        all_dt.append(dt)
+            overall_end = max(all_dt) if all_dt else parent_ts_sorted[-1]
+        else:
+            all_ts: List[float] = []
+            for name in (
+                "ping_rtt_timestamps",
+                "ping_rss_timestamps",
+                "mac_frame_tx_attempt_16_16_failed_timestamps",
+                "parent_router_from_rloc16_transition_timestamps",
+                "parent_rloc16_from_query_timestamps",
+            ):
+                vals = getattr(metrics, name, [])
+                if vals:
+                    all_ts.extend([float(v) for v in vals])
+            overall_end = max(all_ts) if all_ts else parent_ts_sorted[-1]
 
     # Build change-point segments: (start, end, parent_router_label)
-    segments: List[Tuple[float, float, str]] = []
+    segments: List[Tuple[object, object, str]] = []
     cur_parent = parent_router_labels[0]
     cur_start = parent_ts_sorted[0]
 
@@ -645,18 +880,38 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
         if y is None:
             continue
 
-        dur = e - s
-        if dur <= 0:
-            dur = eps
-
-        ax.broken_barh(
-            [(s, dur)],
-            (y - bar_h / 2.0, bar_h),
-            facecolors=color_map.get(p, "0.2"),
-            edgecolors="none",
-            alpha=0.9,
-            zorder=4,
-        )
+        if is_dt:
+            s_dt = _to_datetime(s)
+            e_dt = _to_datetime(e)
+            if s_dt is None or e_dt is None:
+                continue
+            s_num = mdates.date2num(s_dt)
+            e_num = mdates.date2num(e_dt)
+            dur = e_num - s_num
+            if dur <= 0:
+                dur = eps
+            ax.broken_barh(
+                [(s_num, dur)],
+                (y - bar_h / 2.0, bar_h),
+                facecolors=color_map.get(p, "0.2"),
+                edgecolors="none",
+                alpha=0.9,
+                zorder=4,
+            )
+        else:
+            s_f = float(s)
+            e_f = float(e)
+            dur = e_f - s_f
+            if dur <= 0:
+                dur = eps
+            ax.broken_barh(
+                [(s_f, dur)],
+                (y - bar_h / 2.0, bar_h),
+                facecolors=color_map.get(p, "0.2"),
+                edgecolors="none",
+                alpha=0.9,
+                zorder=4,
+            )
 
     ax.set_ylabel("Parent Router")
     ax.set_yticks(range(len(unique_parents)))
@@ -681,6 +936,7 @@ def process_log_file(
     *,
     show: bool = False,
     show_rtt: bool = SHOW_RTT_SUBPLOT,
+    use_relative_time: bool = USE_RELATIVE_TIME_AXIS,
 ) -> None:
     log_path_obj = Path(log_path)
     data_dir_path = Path(DATA_DIR)
@@ -693,11 +949,20 @@ def process_log_file(
 
     metrics = parse_log_file(log_path)
 
-    # 1) Convert to relative seconds (per file).
-    _convert_metrics_timestamps_to_relative_seconds(metrics)
+    # If absolute time was requested but timestamps aren't datetimes, fall back to relative.
+    if not use_relative_time and not _metrics_has_datetime_timestamps(metrics):
+        print(f"[INFO] {label_for_file}: absolute time requested but no datetime timestamps detected; falling back to relative time.")
+        use_relative_time = True
 
-    # 2) Center-trim to exactly 2 hours (per file), rebasing so window starts at 0.
-    plotted_duration = _trim_metrics_centered_to_window(metrics, TRIM_WINDOW_SECONDS)
+    # Relative mode: convert->trim->rebase to 0..2h
+    plotted_duration: Optional[float] = None
+    abs_window: Optional[Tuple[datetime, datetime]] = None
+
+    if use_relative_time:
+        _convert_metrics_timestamps_to_relative_seconds(metrics)
+        plotted_duration = _trim_metrics_centered_to_window(metrics, TRIM_WINDOW_SECONDS)
+    else:
+        abs_window = _trim_metrics_centered_to_window_absolute(metrics, TRIM_WINDOW_SECONDS)
 
     if metrics.ping_rtt_avg_ms:
         rtt_by_file[label_for_file] = metrics.ping_rtt_avg_ms
@@ -727,20 +992,32 @@ def process_log_file(
 
     plot_rss_and_txfail(ax_rss, metrics)
 
-    # If we successfully trimmed to a 2-hour window, force parent bars to extend to that window end.
-    parent_end = None
-    if plotted_duration is not None and abs(plotted_duration - TRIM_WINDOW_SECONDS) < 1e-6:
-        parent_end = TRIM_WINDOW_SECONDS
+    # Parent end handling:
+    parent_end: Optional[object] = None
+    if use_relative_time:
+        if plotted_duration is not None and abs(plotted_duration - TRIM_WINDOW_SECONDS) < 1e-6:
+            parent_end = TRIM_WINDOW_SECONDS
+    else:
+        if abs_window is not None:
+            parent_end = abs_window[1]
+
     plot_parents(ax_parent, metrics, end_time=parent_end)
 
     _remove_x_whitespace(axes)
-    _configure_elapsed_time_axis_hhmm(axes, interval_minutes=TIME_TICK_INTERVAL_MINUTES)
+    _configure_time_axis(axes, use_relative_time=use_relative_time)
 
-    ax_parent.set_xlabel("Elapsed time (HH:MM)")
+    if use_relative_time:
+        ax_parent.set_xlabel("Elapsed time (HH:MM)")
+    else:
+        ax_parent.set_xlabel("Time")
 
     # Force x-range to exactly 2 hours when trimming succeeded.
-    if parent_end is not None:
+    if use_relative_time and parent_end is not None:
         ax_parent.set_xlim(0.0, TRIM_WINDOW_SECONDS)
+    elif (not use_relative_time) and abs_window is not None:
+        # Matplotlib accepts datetime x-limits for plots/vlines; for broken_barh we used date2num,
+        # so enforce numeric x-limits on that axis.
+        ax_parent.set_xlim(mdates.date2num(abs_window[0]), mdates.date2num(abs_window[1]))
 
     fig.suptitle(label_for_file, y=0.98)
     fig.tight_layout(rect=[0, 0, 1, 0.96])
@@ -797,7 +1074,11 @@ def create_rss_boxplot(rss_by_file: Dict[str, List[float]]) -> None:
     print(f"[OK] Saved RSS box plot -> {boxplot_path}")
 
 
-def main(show: bool = False, show_rtt: bool = SHOW_RTT_SUBPLOT) -> None:
+def main(
+    show: bool = False,
+    show_rtt: bool = SHOW_RTT_SUBPLOT,
+    use_relative_time: bool = USE_RELATIVE_TIME_AXIS,
+) -> None:
     data_dir_path = Path(DATA_DIR)
 
     pattern = str(data_dir_path / "**" / "*.log")
@@ -829,7 +1110,14 @@ def main(show: bool = False, show_rtt: bool = SHOW_RTT_SUBPLOT) -> None:
     rss_by_file: Dict[str, List[float]] = {}
 
     for log_path in log_files:
-        process_log_file(log_path, rtt_by_file, rss_by_file, show=show, show_rtt=show_rtt)
+        process_log_file(
+            log_path,
+            rtt_by_file,
+            rss_by_file,
+            show=show,
+            show_rtt=show_rtt,
+            use_relative_time=use_relative_time,
+        )
 
     create_rtt_boxplot(rtt_by_file)
     create_rss_boxplot(rss_by_file)
@@ -842,17 +1130,36 @@ if __name__ == "__main__":
     parser.add_argument("--show", action="store_true", help="Display figures interactively")
 
     # Mutually exclusive RTT toggles (optional overrides)
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("--rtt", action="store_true", help="Enable the top RTT subplot")
-    group.add_argument("--no-rtt", action="store_true", help="Disable the top RTT subplot")
+    group_rtt = parser.add_mutually_exclusive_group()
+    group_rtt.add_argument("--rtt", action="store_true", help="Enable the top RTT subplot")
+    group_rtt.add_argument("--no-rtt", action="store_true", help="Disable the top RTT subplot")
+
+    # Mutually exclusive time-axis toggles
+    group_time = parser.add_mutually_exclusive_group()
+    group_time.add_argument(
+        "--relative-time",
+        action="store_true",
+        help="Use elapsed time (HH:MM) on x-axis (default unless config overrides)",
+    )
+    group_time.add_argument(
+        "--absolute-time",
+        action="store_true",
+        help="Use absolute timestamps on x-axis (requires datetime timestamps from parser)",
+    )
 
     args = parser.parse_args()
 
-    # Default comes from the config constant unless user overrides via CLI.
+    # Default comes from config unless user overrides via CLI.
     show_rtt = SHOW_RTT_SUBPLOT
     if args.rtt:
         show_rtt = True
     elif args.no_rtt:
         show_rtt = False
 
-    main(show=args.show, show_rtt=show_rtt)
+    use_relative_time = USE_RELATIVE_TIME_AXIS
+    if args.relative_time:
+        use_relative_time = True
+    elif args.absolute_time:
+        use_relative_time = False
+
+    main(show=args.show, show_rtt=show_rtt, use_relative_time=use_relative_time)
