@@ -45,6 +45,10 @@ NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
 # Trim settings
 TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
+# Toggle: enable/disable the top RTT subplot
+SHOW_RTT_SUBPLOT: bool = True
+
+
 
 # -----------------------------------------------------------------------------
 # RLOC16 -> Router number mapping
@@ -423,7 +427,7 @@ def _trim_metrics_centered_to_window(metrics: LogMetrics, window_seconds: float)
 
 
 # -----------------------------------------------------------------------------
-# Plotting primitives (3-panel figure)
+# Plotting primitives
 # -----------------------------------------------------------------------------
 
 def plot_rtt(ax, metrics: LogMetrics) -> None:
@@ -556,7 +560,6 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
         ax.set_title("Connected to Parent (nParents=0)")
         ax.text(0.5, 0.5, "No parent data", transform=ax.transAxes, ha="center", va="center")
 
-        # Still show the fixed labels even if there is no data
         ax.set_ylabel("Parent Router")
         ax.set_yticks(range(len(BASE_PARENT_LABELS)))
         ax.set_yticklabels(BASE_PARENT_LABELS)
@@ -567,8 +570,6 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
 
     pairs = sorted(zip(parent_ts, parent_vals), key=lambda x: float(x[0]))
     parent_ts_sorted = [float(t) for t, _ in pairs]
-
-    # Translate RLOC16 -> Router label here (this merges “RLOC16 changed” cases).
     parent_router_labels = [_rloc16_value_to_router_label(p) for _, p in pairs]
 
     # Establish an end time for the final segment.
@@ -601,10 +602,8 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
 
     segments.append((cur_start, overall_end, cur_parent))
 
-    # Y-axis ordering: always include fixed labels, plus any extras (e.g., Unknown(...)).
     unique_set = set(parent_router_labels)
     unique_parents: List[str] = list(BASE_PARENT_LABELS)
-
     extras = sorted([p for p in unique_set if p not in set(BASE_PARENT_LABELS)])
     unique_parents.extend(extras)
 
@@ -661,14 +660,16 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
 
 
 # -----------------------------------------------------------------------------
-# Per-file processing (save the 3-panel figure)
+# Per-file processing (save the figure)
 # -----------------------------------------------------------------------------
 
 def process_log_file(
     log_path: str,
     rtt_by_file: Dict[str, List[float]],
     rss_by_file: Dict[str, List[float]],
+    *,
     show: bool = False,
+    show_rtt: bool = SHOW_RTT_SUBPLOT,
 ) -> None:
     log_path_obj = Path(log_path)
     data_dir_path = Path(DATA_DIR)
@@ -694,7 +695,7 @@ def process_log_file(
         rss_by_file[label_for_file] = metrics.ping_rss_dbm_values
 
     has_any = (
-        bool(metrics.ping_rtt_timestamps)
+        (show_rtt and bool(metrics.ping_rtt_timestamps))
         or bool(metrics.ping_rss_timestamps)
         or bool(metrics.ping_packet_loss_timestamps)
         or bool(getattr(metrics, "parent_router_from_rloc16_transition_timestamps", []))
@@ -704,10 +705,15 @@ def process_log_file(
         print(f"[INFO] {label_for_file}: no time-series data to plot; skipping figure.")
         return
 
-    fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(12, 8))
-    ax_rtt, ax_rss, ax_parent = axes
+    # Create either a 3-panel (with RTT) or 2-panel (without RTT) figure.
+    if show_rtt:
+        fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(12, 8))
+        ax_rtt, ax_rss, ax_parent = axes
+        plot_rtt(ax_rtt, metrics)
+    else:
+        fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(12, 6))
+        ax_rss, ax_parent = axes
 
-    plot_rtt(ax_rtt, metrics)
     plot_rss_and_loss(ax_rss, metrics)
 
     # If we successfully trimmed to a 2-hour window, force parent bars to extend to that window end.
@@ -780,7 +786,7 @@ def create_rss_boxplot(rss_by_file: Dict[str, List[float]]) -> None:
     print(f"[OK] Saved RSS box plot -> {boxplot_path}")
 
 
-def main(show: bool = False) -> None:
+def main(show: bool = False, show_rtt: bool = SHOW_RTT_SUBPLOT) -> None:
     data_dir_path = Path(DATA_DIR)
 
     pattern = str(data_dir_path / "**" / "*.log")
@@ -812,11 +818,18 @@ def main(show: bool = False) -> None:
     rss_by_file: Dict[str, List[float]] = {}
 
     for log_path in log_files:
-        process_log_file(log_path, rtt_by_file, rss_by_file, show=show)
+        process_log_file(log_path, rtt_by_file, rss_by_file, show=show, show_rtt=show_rtt)
 
     create_rtt_boxplot(rtt_by_file)
     create_rss_boxplot(rss_by_file)
 
 
 if __name__ == "__main__":
-    main(show=False)
+    import argparse
+
+    parser = argparse.ArgumentParser(description="OpenThread log visualizer")
+    parser.add_argument("--show", action="store_true", help="Display figures interactively")
+    parser.add_argument("--no-rtt", action="store_true", help="Disable the top RTT subplot")
+
+    args = parser.parse_args()
+    main(show=args.show, show_rtt=not args.no_rtt)
