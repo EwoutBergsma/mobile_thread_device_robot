@@ -815,7 +815,7 @@ def create_rtt_boxplot(rtt_by_file: Dict[str, List[float]]) -> None:
     data = [rtt_by_file[k] for k in keys]
     display_labels = [_boxplot_display_label(k) for k in keys]
 
-    plt.figure(figsize=(8, 4))
+    plt.figure(figsize=(5, 3))
     plt.boxplot(data, labels=display_labels, showfliers=False)
     plt.ylabel("RTT (ms)")
     plt.title("Ping to Parent Round-trip Time")
