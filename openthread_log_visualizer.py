@@ -46,17 +46,37 @@ NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
 TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
 # Toggle: enable/disable the top RTT subplot
-SHOW_RTT_SUBPLOT: bool = True
+SHOW_RTT_SUBPLOT: bool = False
 
 # Subplot height ratios
 PARENT_SUBPLOT_HEIGHT_RATIO: float = 0.8
 RTT_SUBPLOT_HEIGHT_RATIO: float = 1.0
 RSS_SUBPLOT_HEIGHT_RATIO: float = 1.0
 
+INFORMATIVE_SUBPLOT_TITLE: bool = False
 
+# RSS EMA smoothing
+RSS_EMA_ALPHA: float = 1.0 / 8.0
 
+# -----------------------------------------------------------------------------
+# Main title (figure suptitle) customization (RELATIVE PATH mode only)
+# Keys are the *relative path from DATA_DIR* (POSIX), e.g. "wall_follow/12dBm_PPS.log"
+#
+# If no override exists, it falls back to using the relative path.
+# -----------------------------------------------------------------------------
+SUPTITLE_OVERRIDES: Dict[str, str] = {
+    "wall_follow/-12dBm_PPS_again.log": "-12 dBm Transmit Powers, PPS enabled",
+    "wall_follow/-12dBm_no_PPS.log": "-12 dBm Transmit Powers, PPS disabled",
+    "wall_follow/12dBm_no_PPS.log": "12 dBm Transmit Powers, PPS disabled",
+    "wall_follow/12dBm_PPS.log": "12 dBm Transmit Powers, PPS enabled",
+    "wall_follow/20dBm_PPS_identicalESP.log": "20 dBm Transmit Powers, PPS enabled",
+    "wall_follow/20dBm_no_PPS.log": "20 dBm Transmit Powers, PPS disabled",
+}
+
+# -----------------------------------------------------------------------------
 # Boxplot label customization (RELATIVE PATH mode only)
 # Keys are the *relative path from DATA_DIR* (POSIX), e.g. "wall_follow/12dBm_PPS.log"
+# -----------------------------------------------------------------------------
 BOXPLOT_LABEL_OVERRIDES: Dict[str, str] = {
     "wall_follow/-12dBm_no_PPS.log": "-12 dBm\nno PPS",
     "wall_follow/-12dBm_PPS_again.log": "-12 dBm\nwith PPS",
@@ -90,6 +110,20 @@ def _boxplot_display_label(file_key: str) -> str:
     if key in BOXPLOT_LABEL_OVERRIDES:
         return BOXPLOT_LABEL_OVERRIDES[key]
     return _default_pretty_label(key)
+
+
+def _suptitle_display_title(file_key: str) -> str:
+    """
+    Resolve the suptitle (main plot title at the very top) for a given file key.
+
+    RELATIVE PATH MODE:
+      - Only exact match on the relative path key is used.
+      - Otherwise falls back to the original behavior: use the relative path.
+    """
+    key = file_key.replace("\\", "/")
+    if key in SUPTITLE_OVERRIDES:
+        return SUPTITLE_OVERRIDES[key]
+    return key
 
 
 # -----------------------------------------------------------------------------
@@ -227,6 +261,30 @@ def _remove_x_whitespace(axes) -> None:
         ax.margins(x=0)
         if hasattr(ax, "set_xmargin"):
             ax.set_xmargin(0)
+
+
+def _exponential_moving_average(values: List[float], alpha: float) -> List[float]:
+    """
+    Exponential moving average (EMA) of a series.
+
+    EMA[0] = values[0]
+    EMA[t] = alpha * values[t] + (1 - alpha) * EMA[t-1]
+    """
+    if not values:
+        return []
+    a = float(alpha)
+    if a <= 0.0:
+        return list(values)
+    if a >= 1.0:
+        return list(values)
+
+    ema: List[float] = [float(values[0])]
+    prev = ema[0]
+    for v in values[1:]:
+        x = float(v)
+        prev = a * x + (1.0 - a) * prev
+        ema.append(prev)
+    return ema
 
 
 # -----------------------------------------------------------------------------
@@ -490,13 +548,14 @@ def plot_rtt(ax, metrics: LogMetrics) -> None:
 
     mu, sigma = _mean_std(rtt)
     title = "Ping to Parent Round-trip Time"
-    suffix_parts: List[str] = []
-    if n > 0:
-        suffix_parts.append(f"nRTT={n}")
-    if mu is not None and sigma is not None:
-        suffix_parts.append(f"avg={mu:.1f} ms, std={sigma:.1f} ms")
-    if suffix_parts:
-        title += " (" + ", ".join(suffix_parts) + ")"
+    if INFORMATIVE_SUBPLOT_TITLE:
+        suffix_parts: List[str] = []
+        if n > 0:
+            suffix_parts.append(f"nRTT={n}")
+        if mu is not None and sigma is not None:
+            suffix_parts.append(f"avg={mu:.1f} ms, std={sigma:.1f} ms")
+        if suffix_parts:
+            title += " (" + ", ".join(suffix_parts) + ")"
     ax.set_title(title)
 
     ax.grid(True)
@@ -507,11 +566,16 @@ def plot_rtt(ax, metrics: LogMetrics) -> None:
 
 def plot_rss_and_txfail(ax, metrics: LogMetrics) -> None:
     """
-    RSS scatter + vertical 'rug' for Frame tx attempt 16/16 failed events.
+    RSS scatter + EMA overlay + vertical 'rug' for Frame tx attempt 16/16 failed events.
     """
-    ts_rss = metrics.ping_rss_timestamps
-    rss = metrics.ping_rss_dbm_values
+    ts_rss = list(getattr(metrics, "ping_rss_timestamps", []) or [])
+    rss = list(getattr(metrics, "ping_rss_dbm_values", []) or [])
     txfail_ts = getattr(metrics, "mac_frame_tx_attempt_16_16_failed_timestamps", [])
+
+    # Ensure ts/rss are aligned in length (defensive)
+    n = min(len(ts_rss), len(rss))
+    ts_rss = ts_rss[:n]
+    rss = rss[:n]
 
     if RSS_YLIM is not None:
         y_min, y_max = RSS_YLIM
@@ -539,12 +603,23 @@ def plot_rss_and_txfail(ax, metrics: LogMetrics) -> None:
             colors="red",
             linestyles="--",
             linewidth=0.5,
-            label="Frame tx attempt 16/16 failed",
+            label="Tx Frame Failed",
             zorder=6,
         )
 
+    # Raw RSS scatter + EMA overlay
     if ts_rss and rss:
-        ax.plot(ts_rss, rss, marker=".", linestyle="", label="RTT RSS", zorder=7)
+        ax.plot(ts_rss, rss, marker=".", linestyle="", label="RSS", zorder=7)
+
+        rss_ema = _exponential_moving_average(rss, RSS_EMA_ALPHA)
+        ax.plot(
+            ts_rss,
+            rss_ema,
+            linestyle="-",
+            linewidth=2,
+            label=f"RSS EMA",
+            zorder=8,
+        )
     else:
         ax.text(0.5, 0.5, "No RSS data", transform=ax.transAxes, ha="center", va="center")
 
@@ -566,18 +641,19 @@ def plot_rss_and_txfail(ax, metrics: LogMetrics) -> None:
     n_txfail = len(txfail_ts)
     mu, sigma = _mean_std(rss)
 
-    title = "Ping to Parent RSS & TX Fail (16/16)"
-    suffix_parts: List[str] = []
-    if pdr is not None:
-        suffix_parts.append(f"PDR={pdr:.1f}%")
-    if n_rss > 0:
-        suffix_parts.append(f"nRSS={n_rss}")
-    if n_txfail > 0:
-        suffix_parts.append(f"nTxFail16/16={n_txfail}")
-    if mu is not None and sigma is not None:
-        suffix_parts.append(f"avgRSS={mu:.1f} dBm, stdRSS={sigma:.1f} dB")
-    if suffix_parts:
-        title += " (" + ", ".join(suffix_parts) + ")"
+    title = "Ping to Parent RSS & Tx Frame Failure"
+    if INFORMATIVE_SUBPLOT_TITLE:
+        suffix_parts: List[str] = []
+        if pdr is not None:
+            suffix_parts.append(f"PDR={pdr:.1f}%")
+        if n_rss > 0:
+            suffix_parts.append(f"nRSS={n_rss}")
+        if n_txfail > 0:
+            suffix_parts.append(f"nTxFail16/16={n_txfail}")
+        if mu is not None and sigma is not None:
+            suffix_parts.append(f"avgRSS={mu:.1f} dBm, stdRSS={sigma:.1f} dB")
+        if suffix_parts:
+            title += " (" + ", ".join(suffix_parts) + ")"
     ax.set_title(title)
 
     ax.grid(True)
@@ -601,7 +677,10 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
     parent_ts, parent_vals = _select_parent_series(metrics)
 
     if not parent_ts:
-        ax.set_title("Connected to Parent (nParents=0)")
+        if INFORMATIVE_SUBPLOT_TITLE:
+            ax.set_title("Connected to Parent (nParents=0)")
+        else:
+            ax.set_title("Connected to Parent")
         ax.text(0.5, 0.5, "No parent data", transform=ax.transAxes, ha="center", va="center")
 
         ax.set_ylabel("Parent Router")
@@ -697,7 +776,10 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
     ax.set_ylim(-0.5, len(unique_parents) - 0.5)
 
     n_parents = max(0, len(segments))
-    ax.set_title(f"Connected to Parent (nParents={n_parents})")
+    if INFORMATIVE_SUBPLOT_TITLE:
+        ax.set_title(f"Connected to Parent (nParents={n_parents})")
+    else:
+        ax.set_title("Connected to Parent")
 
     ax.grid(True, axis="y")
     ax.grid(False, axis="x")
@@ -793,7 +875,9 @@ def process_log_file(
     if parent_end is not None:
         ax_parent.set_xlim(0.0, TRIM_WINDOW_SECONDS)
 
-    fig.suptitle(label_for_file, y=0.98)
+    # Main title (suptitle): allow user overrides keyed by relative path
+    fig.suptitle(_suptitle_display_title(label_for_file), y=0.98)
+
     fig.tight_layout(rect=[0, 0, 1, 0.96])
 
     out_name = log_path_obj.stem + "_timeseries.png"
