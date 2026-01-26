@@ -172,12 +172,12 @@ RLOC16_TO_ROUTER_NUM: Dict[str, int] = {
 
 # Always show these labels on the parent subplot, even if absent in the data.
 BASE_PARENT_LABELS: List[str] = [
-    "No Parent",
-    "Router 1",
-    "Router 2",
-    "Router 3",
-    "Router 4",
-    "Router 5",
+    "None",
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
 ]
 
 
@@ -202,24 +202,24 @@ def _normalize_rloc16(rloc16: str) -> str:
 
 def _rloc16_value_to_router_label(value: object) -> str:
     """
-    Convert a raw parent value (RLOC16 / "No Parent" / etc.) to a router label.
+    Convert a raw parent value (RLOC16 / "No Parent" / etc.) to a compact router label.
     """
     if value is None:
-        return "No Parent"
+        return "None"
 
     s = str(value).strip()
     if not s:
-        return "No Parent"
+        return "None"
     if s.lower() == "no parent":
-        return "No Parent"
+        return "None"
 
     norm = _normalize_rloc16(s)
     if not norm:
-        return "No Parent"
+        return "None"
 
     router_num = RLOC16_TO_ROUTER_NUM.get(norm)
     if router_num is not None:
-        return f"Router {router_num}"
+        return f"R{router_num}"
 
     return f"Unknown ({norm})"
 
@@ -761,7 +761,7 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
 
     next_idx = 0
     for p in unique_parents:
-        if p == "No Parent":
+        if p == "None":
             color_map[p] = NO_PARENT_COLOR
         else:
             if cycle_colors:
@@ -906,7 +906,7 @@ def process_log_file(
     # Main title (suptitle): allow user overrides keyed by relative path
     fig.suptitle(_suptitle_display_title(label_for_file), y=0.98)
 
-    fig.tight_layout(rect=[0, 0, 1, 0.96])
+    fig.tight_layout(rect=[0, 0, 1, 0.96], pad=0.5)
 
     out_name = log_path_obj.stem + "_timeseries.png"
     out_path = graph_dir / out_name
