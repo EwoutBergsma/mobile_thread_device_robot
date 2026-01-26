@@ -46,7 +46,7 @@ NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
 TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
 # Toggle: enable/disable the top RTT subplot
-SHOW_RTT_SUBPLOT: bool = False
+SHOW_RTT_SUBPLOT: bool = True
 
 # Subplot height ratios
 PARENT_SUBPLOT_HEIGHT_RATIO: float = 0.8
@@ -137,7 +137,7 @@ RLOC16_TO_ROUTER_NUM: Dict[str, int] = {
 
 # Always show these labels on the parent subplot, even if absent in the data.
 BASE_PARENT_LABELS: List[str] = [
-    "Detached",
+    "No Parent",
     "Router 1",
     "Router 2",
     "Router 3",
