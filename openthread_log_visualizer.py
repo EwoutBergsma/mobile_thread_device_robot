@@ -37,7 +37,7 @@ LEGEND_FRAME_ALPHA: float = 0.5
 LEGEND_ZORDER: int = 50
 
 # X-axis tick interval (relative elapsed time)
-TIME_TICK_INTERVAL_MINUTES: int = 5
+TIME_TICK_INTERVAL_MINUTES: int = 10
 
 # Parent plot styling
 NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
@@ -46,7 +46,7 @@ NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
 TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
 # Toggle: enable/disable the top RTT subplot
-SHOW_RTT_SUBPLOT: bool = True
+SHOW_RTT_SUBPLOT: bool = False
 
 # Subplot height ratios
 PARENT_SUBPLOT_HEIGHT_RATIO: float = 0.8
@@ -616,7 +616,7 @@ def plot_rss_and_txfail(ax, metrics: LogMetrics) -> None:
             ts_rss,
             rss_ema,
             linestyle="-",
-            linewidth=2,
+            linewidth=1.5,
             label=f"RSS EMA",
             zorder=8,
         )
@@ -858,7 +858,8 @@ def process_log_file(
             nrows=2,
             ncols=1,
             sharex=True,
-            figsize=(12, 5),
+            # figsize=(12, 5),
+            figsize=(6, 5),
             gridspec_kw={"height_ratios": [RSS_SUBPLOT_HEIGHT_RATIO, PARENT_SUBPLOT_HEIGHT_RATIO]},
         )
         ax_rss, ax_parent = axes
