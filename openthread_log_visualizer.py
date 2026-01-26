@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter, MultipleLocator
+from matplotlib.ticker import FuncFormatter, MultipleLocator, NullFormatter
 
 from openthread_log_parser import DATA_DIR as PARSER_DATA_DIR
 from openthread_log_parser import LogMetrics, parse_log_file
@@ -38,6 +38,7 @@ LEGEND_ZORDER: int = 50
 
 # X-axis tick interval (relative elapsed time)
 TIME_TICK_INTERVAL_MINUTES: int = 10
+TIME_MINOR_TICK_INTERVAL_MINUTES: int = 1  # minor tick marks between major ticks
 
 # Parent plot styling
 NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
@@ -302,15 +303,31 @@ def _format_elapsed_hhmm(x_seconds: float, _pos: int) -> str:
     return f"{hours:02d}:{minutes:02d}"
 
 
-def _configure_elapsed_time_axis_hhmm(axes, *, interval_minutes: int = TIME_TICK_INTERVAL_MINUTES) -> None:
-    tick_step_seconds = max(1, interval_minutes) * 60
-    locator = MultipleLocator(tick_step_seconds)
-    formatter = FuncFormatter(_format_elapsed_hhmm)
+def _configure_elapsed_time_axis_hhmm(
+    axes,
+    *,
+    interval_minutes: int = TIME_TICK_INTERVAL_MINUTES,
+    minor_interval_minutes: int = TIME_MINOR_TICK_INTERVAL_MINUTES,
+) -> None:
+    major_step_seconds = max(1, interval_minutes) * 60
+    minor_step_seconds = max(1, minor_interval_minutes) * 60
+
+    major_locator = MultipleLocator(major_step_seconds)
+    minor_locator = MultipleLocator(minor_step_seconds)
+    major_formatter = FuncFormatter(_format_elapsed_hhmm)
 
     for ax in axes:
-        ax.xaxis.set_major_locator(locator)
-        ax.xaxis.set_major_formatter(formatter)
+        ax.xaxis.set_major_locator(major_locator)
+        ax.xaxis.set_major_formatter(major_formatter)
+        ax.xaxis.set_minor_locator(minor_locator)
+        ax.xaxis.set_minor_formatter(NullFormatter())
+
         ax.xaxis.offsetText.set_visible(False)
+
+        # Make minor ticks visible but unobtrusive.
+        ax.tick_params(axis="x", which="major", length=6)
+        ax.tick_params(axis="x", which="minor", length=3)
+
         for lbl in ax.get_xticklabels(which="major"):
             lbl.set_rotation(0)
             lbl.set_horizontalalignment("center")
@@ -617,7 +634,7 @@ def plot_rss_and_txfail(ax, metrics: LogMetrics) -> None:
             rss_ema,
             linestyle="-",
             linewidth=1.5,
-            label=f"RSS EMA",
+            label="RSS EMA",
             zorder=8,
         )
     else:
@@ -874,7 +891,11 @@ def process_log_file(
     plot_parents(ax_parent, metrics, end_time=parent_end)
 
     _remove_x_whitespace(axes)
-    _configure_elapsed_time_axis_hhmm(axes, interval_minutes=TIME_TICK_INTERVAL_MINUTES)
+    _configure_elapsed_time_axis_hhmm(
+        axes,
+        interval_minutes=TIME_TICK_INTERVAL_MINUTES,
+        minor_interval_minutes=TIME_MINOR_TICK_INTERVAL_MINUTES,
+    )
 
     ax_parent.set_xlabel("Elapsed time (HH:MM)")
 
