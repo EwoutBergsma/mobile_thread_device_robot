@@ -46,7 +46,7 @@ NO_PARENT_COLOR: str = "0.35"  # dark grey (0=black, 1=white)
 TRIM_WINDOW_SECONDS: float = 2 * 60 * 60  # exactly 2 hours
 
 # Toggle: enable/disable the top RTT subplot
-SHOW_RTT_SUBPLOT: bool = False
+SHOW_RTT_SUBPLOT: bool = True
 
 # Subplot height ratios
 PARENT_SUBPLOT_HEIGHT_RATIO: float = 0.8
@@ -676,6 +676,9 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
     """
     parent_ts, parent_vals = _select_parent_series(metrics)
 
+    # Ensure grid (including vertical lines) is drawn behind the bars.
+    ax.set_axisbelow(True)
+
     if not parent_ts:
         if INFORMATIVE_SUBPLOT_TITLE:
             ax.set_title("Connected to Parent (nParents=0)")
@@ -687,8 +690,10 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
         ax.set_yticks(range(len(BASE_PARENT_LABELS)))
         ax.set_yticklabels(BASE_PARENT_LABELS)
         ax.set_ylim(-0.5, len(BASE_PARENT_LABELS) - 0.5)
+
+        # Horizontal grid on categories + vertical grid at elapsed-time ticks
         ax.grid(True, axis="y")
-        ax.grid(False, axis="x")
+        ax.grid(True, axis="x")
         return
 
     pairs = sorted(zip(parent_ts, parent_vals), key=lambda x: float(x[0]))
@@ -781,8 +786,9 @@ def plot_parents(ax, metrics: LogMetrics, *, end_time: Optional[float] = None) -
     else:
         ax.set_title("Connected to Parent")
 
+    # Horizontal grid on categories + vertical grid at elapsed-time ticks
     ax.grid(True, axis="y")
-    ax.grid(False, axis="x")
+    ax.grid(True, axis="x")
 
 
 # -----------------------------------------------------------------------------
