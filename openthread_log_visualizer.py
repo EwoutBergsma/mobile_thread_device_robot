@@ -24,6 +24,18 @@ DATA_DIR = Path(PARSER_DATA_DIR) if PARSER_DATA_DIR is not None else (SCRIPT_DIR
 GRAPHS_DIR = SCRIPT_DIR / "graphs"
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
+# Save outputs in multiple formats (e.g., PNG + PDF)
+OUTPUT_FORMATS: Tuple[str, ...] = ("png", "pdf")
+PNG_DPI: int = 200  # used for raster formats like PNG
+
+# Make PDF text more editable/portable in common tools
+plt.rcParams.update(
+    {
+        "pdf.fonttype": 42,  # TrueType
+        "ps.fonttype": 42,   # TrueType
+    }
+)
+
 RSS_YLIM: Optional[Tuple[float, float]] = (-120, 0)  # dBm
 
 # Horizontal threshold line on RSS subplot
@@ -33,8 +45,9 @@ PPS_RSS_THRESHOLD_DBM: float = -65.0
 TXFAIL_RUG_FRACTION: float = 1  # fraction of y-range at top
 
 # Legend styling
-LEGEND_FRAME_ALPHA: float = 0.5
+LEGEND_FRAME_ALPHA: float = 0.3
 LEGEND_ZORDER: int = 50
+LEGEND_LOC: str = "upper right"  # <-- Always place legends top-right
 
 # X-axis tick interval (relative elapsed time)
 TIME_TICK_INTERVAL_MINUTES: int = 10
@@ -56,8 +69,38 @@ RSS_SUBPLOT_HEIGHT_RATIO: float = 1.0
 
 INFORMATIVE_SUBPLOT_TITLE: bool = False
 
+PLOT_SUPTITLE: bool = False
+
 # RSS EMA smoothing
 RSS_EMA_ALPHA: float = 1.0 / 8.0
+
+
+def _save_figure_all_formats(fig, out_base_path: Path) -> List[Path]:
+    """
+    Save a figure to all OUTPUT_FORMATS.
+
+    Args:
+        fig: matplotlib figure
+        out_base_path: path WITHOUT suffix (e.g., ".../foo_timeseries")
+
+    Returns:
+        List of written output paths.
+    """
+    written: List[Path] = []
+    for fmt in OUTPUT_FORMATS:
+        fmt_l = fmt.lower().lstrip(".")
+        out_path = out_base_path.with_suffix(f".{fmt_l}")
+
+        save_kwargs = {}
+        # Use DPI only for raster formats; PDF is vector.
+        if fmt_l in {"png", "jpg", "jpeg", "tif", "tiff", "webp"}:
+            save_kwargs["dpi"] = PNG_DPI
+
+        fig.savefig(out_path, **save_kwargs)
+        written.append(out_path)
+
+    return written
+
 
 # -----------------------------------------------------------------------------
 # Main title (figure suptitle) customization (RELATIVE PATH mode only)
@@ -248,8 +291,10 @@ def _overall_pdr(metrics: LogMetrics) -> Optional[float]:
 
 
 def _add_legend_on_top(ax) -> None:
-    """Make legend opaque (no transparency) and ensure it draws above plot artists."""
-    leg = ax.legend(framealpha=LEGEND_FRAME_ALPHA)
+    """
+    Place legend in the top-right of the subplot and ensure it draws above plot artists.
+    """
+    leg = ax.legend(loc=LEGEND_LOC, framealpha=LEGEND_FRAME_ALPHA)
     if leg is not None:
         leg.set_zorder(LEGEND_ZORDER)
         frame = leg.get_frame()
@@ -875,8 +920,7 @@ def process_log_file(
             nrows=2,
             ncols=1,
             sharex=True,
-            # figsize=(12, 5),
-            figsize=(6, 5),
+            figsize=(8, 4),
             gridspec_kw={"height_ratios": [RSS_SUBPLOT_HEIGHT_RATIO, PARENT_SUBPLOT_HEIGHT_RATIO]},
         )
         ax_rss, ax_parent = axes
@@ -904,14 +948,15 @@ def process_log_file(
         ax_parent.set_xlim(0.0, TRIM_WINDOW_SECONDS)
 
     # Main title (suptitle): allow user overrides keyed by relative path
-    fig.suptitle(_suptitle_display_title(label_for_file), y=0.98)
+    if PLOT_SUPTITLE:
+        fig.suptitle(_suptitle_display_title(label_for_file), y=0.98)
 
     fig.tight_layout(rect=[0, 0, 1, 0.96], pad=0.5)
 
-    out_name = log_path_obj.stem + "_timeseries.png"
-    out_path = graph_dir / out_name
-    fig.savefig(out_path)
-    print(f"[OK] Saved combined time-series graph for {label_for_file} -> {out_path}")
+    # Save PNG + PDF (and any other formats in OUTPUT_FORMATS)
+    out_base = graph_dir / f"{log_path_obj.stem}_timeseries"
+    written = _save_figure_all_formats(fig, out_base)
+    print(f"[OK] Saved combined time-series graph for {label_for_file} -> " + ", ".join(str(p) for p in written))
 
     if show:
         plt.show()
@@ -927,7 +972,7 @@ def create_rtt_boxplot(rtt_by_file: Dict[str, List[float]]) -> None:
     data = [rtt_by_file[k] for k in keys]
     display_labels = [_boxplot_display_label(k) for k in keys]
 
-    plt.figure(figsize=(5, 3))
+    fig = plt.figure(figsize=(5, 3))
     plt.boxplot(data, labels=display_labels, showfliers=False)
     plt.ylabel("RTT (ms)")
     plt.title("Ping to Parent Round-trip Time")
@@ -937,10 +982,10 @@ def create_rtt_boxplot(rtt_by_file: Dict[str, List[float]]) -> None:
 
     plt.tight_layout()
 
-    boxplot_path = GRAPHS_DIR / "all_files_rtt_boxplot.png"
-    plt.savefig(boxplot_path)
-    plt.close()
-    print(f"[OK] Saved RTT box plot -> {boxplot_path}")
+    out_base = GRAPHS_DIR / "all_files_rtt_boxplot"
+    written = _save_figure_all_formats(fig, out_base)
+    plt.close(fig)
+    print("[OK] Saved RTT box plot -> " + ", ".join(str(p) for p in written))
 
 
 def create_rss_boxplot(rss_by_file: Dict[str, List[float]]) -> None:
@@ -952,7 +997,7 @@ def create_rss_boxplot(rss_by_file: Dict[str, List[float]]) -> None:
     data = [rss_by_file[k] for k in keys]
     display_labels = [_boxplot_display_label(k) for k in keys]
 
-    plt.figure(figsize=(12, 5))
+    fig = plt.figure(figsize=(12, 5))
     plt.boxplot(data, labels=display_labels, showfliers=False)
     plt.ylabel("RSS (dBm)")
     plt.title("Ping to Parent RSS per File")
@@ -962,10 +1007,10 @@ def create_rss_boxplot(rss_by_file: Dict[str, List[float]]) -> None:
 
     plt.tight_layout()
 
-    boxplot_path = GRAPHS_DIR / "all_files_rss_boxplot.png"
-    plt.savefig(boxplot_path)
-    plt.close()
-    print(f"[OK] Saved RSS box plot -> {boxplot_path}")
+    out_base = GRAPHS_DIR / "all_files_rss_boxplot"
+    written = _save_figure_all_formats(fig, out_base)
+    plt.close(fig)
+    print("[OK] Saved RSS box plot -> " + ", ".join(str(p) for p in written))
 
 
 def main(show: bool = False, show_rtt: bool = SHOW_RTT_SUBPLOT) -> None:
